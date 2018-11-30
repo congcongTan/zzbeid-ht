@@ -236,7 +236,7 @@
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
                     <td>{{v.id}}</td>
-                    <td><img :src="`http://manager.zzb110.cn${v.headimgUrl}`" width="100%"></td>
+                    <td><a :href="`${v.headimgUrl}`" data-fancybox="gallery"><img :src="`${v.headimgUrl}`" width="100%"></a></td>
                     <td>{{v.realName}}</td>
                     <td>{{v.mobile}}</td>
                     <td>{{v.identityCard}}</td>
@@ -443,6 +443,9 @@
 <script src="../../plugins/adminLTE/js/adminlte.min.js"></script>
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
+
+<link rel="stylesheet" href="__STATIC__/fancybox/fancybox.min.css">
+<script src="__STATIC__/fancybox/fancybox.min.js"></script>
 
 <script>
 var app = new Vue({
