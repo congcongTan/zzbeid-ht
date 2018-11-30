@@ -1,0 +1,121 @@
+<div id="loading">
+  <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+  <span class="sr-only">Loading...</span>
+</div>
+
+<div class="wrapper" id="app" style="display: none">
+
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="../../" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>A</b>D</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>A</b>dmin</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <span class="hidden-xs">{{admin.account}}</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <p>
+                  {{admin.account}}
+                  <small>管理员</small>
+                </p>
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <!-- <a href="#" class="btn btn-default btn-flat">设置</a> -->
+                </div>
+                <div class="pull-right">
+                  <a href="../../account/?logout=1" class="btn btn-default btn-flat">登出</a>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <!-- Control Sidebar Toggle Button -->
+          <li>
+            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+
+  <aside class="main-sidebar">
+
+    <section class="sidebar">
+
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+          <p>{{admin.account}}</p>
+          <i class="fa fa-circle text-success"></i> 在线
+        </div>
+      </div>
+
+      <form action="#" method="get" class="sidebar-form">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Search...">
+          <span class="input-group-btn">
+            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div>
+      </form>
+
+      <ul class="sidebar-menu" data-widget="tree">
+
+        <li :class="{'treeview': v.children.length != 0, 'active': v.title == mca.c}" v-for="(v, i) in sidemenu">
+
+          <a :href="`../${v.url == '#' ? v.url : v.url + '.html'}`">
+            <i :class="`fa fa-${v.icon}`"></i> <span>{{v.title}}</span>
+            <span class="pull-right-container" v-if="v.children.length != 0">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu" v-if="v.children.length != 0">
+
+            <li :class="{'treeview': v2.children.length != 0, 'active': v2.title == mca.a}" v-for="(v2, i2) in v.children">
+
+              <a :href="`../${v2.url == '#' ? v2.url : v2.url + '.html'}`">
+                <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
+                <span class="pull-right-container" v-if="v2.children.length != 0">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu" v-if="v2.children.length != 0">
+
+                <li v-for="(v3, i3) in v2.children">
+                  <a :href="`../${v3.url == '#' ? v3.url : v3.url + '.html'}`">
+                    <i :class="`fa fa-${v3.icon}`"></i> {{v3.title}}
+                  </a>
+                </li>
+
+              </ul>
+            </li>
+
+          </ul>
+        </li>
+
+      </ul>
+    </section>
+
+  </aside>

@@ -1,0 +1,1 @@
+function initLoading(){$('[data-toggle="cardloading"]').on("click",function(){var i=$(this).data("loadingEffect"),t=$(this).parents(".card").waitMe({effect:i,text:"Loading...",bg:"rgba(255,255,255,0.90)",color:"#555"});setTimeout(function(){t.waitMe("hide")},3200)})}$(function(){initLoading()});

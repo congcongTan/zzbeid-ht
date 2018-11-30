@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.9, user-scalable=no">
+<meta name="keyword" content="">
+<meta name="description" content="">
+<meta name="author" content="lightuni.com">
+
+<link rel="stylesheet" href="../../css/all.css">
+
+<!-- <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="../../plugins/adminLTE/css/AdminLTE.min.css">
+<link rel="stylesheet" href="../../plugins/adminLTE/css/skins/_all-skins.min.css">
+<link rel="stylesheet" href="../../plugins/Font-Awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/cong/cong.css">
+
+
+<script src="../../js/all.js"></script>
+
+    <title>接口认证明细</title>
+
+</head>
+<body class="hold-transition sidebar-mini skin-blue">
+
+<div id="loading">
+  <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+  <span class="sr-only">Loading...</span>
+</div>
+
+<div class="wrapper" id="app" style="display: none">
+
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="../../" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>A</b>D</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>A</b>dmin</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <span class="hidden-xs">{{admin.account}}</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <p>
+                  {{admin.account}}
+                  <small>管理员</small>
+                </p>
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <!-- <a href="#" class="btn btn-default btn-flat">设置</a> -->
+                </div>
+                <div class="pull-right">
+                  <a href="../../account/?logout=1" class="btn btn-default btn-flat">登出</a>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <!-- Control Sidebar Toggle Button -->
+          <li>
+            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+
+  <aside class="main-sidebar">
+
+    <section class="sidebar">
+
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+          <p>{{admin.account}}</p>
+          <i class="fa fa-circle text-success"></i> 在线
+        </div>
+      </div>
+
+      <form action="#" method="get" class="sidebar-form">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Search...">
+          <span class="input-group-btn">
+            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div>
+      </form>
+
+      <ul class="sidebar-menu" data-widget="tree">
+
+        <li :class="{'treeview': v.children.length != 0, 'active': v.title == mca.c}" v-for="(v, i) in sidemenu">
+
+          <a :href="`../${v.url == '#' ? v.url : v.url + '.html'}`">
+            <i :class="`fa fa-${v.icon}`"></i> <span>{{v.title}}</span>
+            <span class="pull-right-container" v-if="v.children.length != 0">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu" v-if="v.children.length != 0">
+
+            <li :class="{'treeview': v2.children.length != 0, 'active': v2.title == mca.a}" v-for="(v2, i2) in v.children">
+
+              <a :href="`../${v2.url == '#' ? v2.url : v2.url + '.html'}`">
+                <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
+                <span class="pull-right-container" v-if="v2.children.length != 0">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu" v-if="v2.children.length != 0">
+
+                <li v-for="(v3, i3) in v2.children">
+                  <a :href="`../${v3.url == '#' ? v3.url : v3.url + '.html'}`">
+                    <i :class="`fa fa-${v3.icon}`"></i> {{v3.title}}
+                  </a>
+                </li>
+
+              </ul>
+            </li>
+
+          </ul>
+        </li>
+
+      </ul>
+    </section>
+
+  </aside>
+
+
+  <div class="content-wrapper">
+
+    <section class="content-header">
+      <h1>
+        接口认证明细
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="../index/"><i class="fa fa-home"></i> 首页</a></li>
+        <li><a href="../计费管理/">计费管理</a></li>
+        <li class="active">接口认证明细</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <div class="nav-tabs-custom">
+
+            <ul class="nav nav-tabs">
+              <!-- <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
+              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+            </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane" id="操作">
+
+                <!-- <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#edit" @click="del()">删除</a> -->
+
+                <!-- <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a> -->
+
+                <!-- <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a> -->
+
+              </div>
+              <div class="tab-pane active" id="搜索">
+
+                <div class="form-horizontal">
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">发生时间</label>
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <div class="col-xs-5 col-sm-4">
+                          <input type="text" class="form-control" v-model="list.post.startTime">
+                        </div>
+                        <div class="fl w20 tc mt5">
+                          ~
+                        </div>
+                        <div class="col-xs-5 col-sm-4">
+                          <input type="text" class="form-control" v-model="list.post.endTime">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">身份证号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.identityCard">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">发起人</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.memberName">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">姓名</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.realName">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button class="btn btn-primary" @click="getList">查找</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="clearfix p10 pt0">
+
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr class="text-nowrap">
+                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
+                    <th>发起人</th>
+                    <th>姓名</th>
+                    <th>身份证号</th>
+                    <th>内部接口</th>
+                    <th>接口手续费</th>
+                    <th>外部接口</th>
+                    <th>接口手续费</th>
+                    <th>认证结果</th>
+                    <th>接口返回信息</th>
+                    <th>发生时间</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(v, i) in list.data">
+                    <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
+                    <td>{{v.memberName}}</td>
+                    <td>{{v.realName}}</td>
+                    <td :title="`${v.identityCard}`">{{v.identityCard.substr(0,4)}}****{{v.identityCard.substr(-4)}}</td>
+                    <td>{{v.interfaceName}}</td>
+                    <td>{{v.interfacePoundage}}</td>
+                    <td>{{v.interfaceInfoName}}</td>
+                    <td>{{v.interfaceInfoPoundage}}</td>
+                    <td>{{v.statusTitle}}</td>
+                    <td>{{v.msg}}</td>
+                    <td>{{v.createTime}}</td>
+                  </tr>
+                  <tr v-if="list.data.length == 0">
+                    <td colspan="99">没有数据</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="pull-left mt15">
+                <label>
+                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="getList()">
+                    <option value="2">每页 2 条</option>
+                    <option value="10">每页 10 条</option>
+                    <option value="25">每页 25 条</option>
+                    <option value="50">每页 50 条</option>
+                    <option value="100">每页 100 条</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="pull-right" v-if="list.info.pages > 1">
+                <ul class="pagination pagination-sm">
+
+                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
+
+                  <li class="paginate_button" v-for="i in list.page.prev"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+
+                  <li class="paginate_button active"><a href="#">{{list.post.pageNum}}</a></li>
+
+                  <li class="paginate_button" v-for="i in list.page.next"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+
+                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
+                  </li>
+
+                </ul>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.4.0
+    </div>
+    <strong>Copyright &copy; 2004-2016 <a href="#">Admin</a>.</strong> All rights
+    reserved.
+  </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Create the tabs -->
+    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+      <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+      <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!-- Home tab content -->
+      <div class="tab-pane" id="control-sidebar-home-tab">
+        <h3 class="control-sidebar-heading">维护团队</h3>
+        <ul class="control-sidebar-menu">
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-user bg-red"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">韦聪</h4>
+
+                <p>产品设计师</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-phone bg-green"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">电话</h4>
+
+                <p>18902300094</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">邮件</h4>
+
+                <p>57425133@qq.com</p>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- /.control-sidebar-menu -->
+
+      </div>
+      <!-- /.tab-pane -->
+      <!-- Stats tab content -->
+      <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
+      <!-- /.tab-pane -->
+      <!-- Settings tab content -->
+      <div class="tab-pane" id="control-sidebar-settings-tab">
+        <form method="post">
+          <h3 class="control-sidebar-heading">General Settings</h3>
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Report panel usage
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+
+            <p>
+              Some information about this general settings option
+            </p>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Allow mail redirect
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+
+            <p>
+              Other sets of options are available
+            </p>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Expose author name in posts
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+
+            <p>
+              Allow the user to show his name in blog posts
+            </p>
+          </div>
+          <!-- /.form-group -->
+
+          <h3 class="control-sidebar-heading">Chat Settings</h3>
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Show me as online
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Turn off notifications
+              <input type="checkbox" class="pull-right">
+            </label>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Delete chat history
+              <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
+            </label>
+          </div>
+          <!-- /.form-group -->
+        </form>
+      </div>
+      <!-- /.tab-pane -->
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- <script src="../plugins/jquery/jquery.min.js"></script> -->
+<!-- <script src="../plugins/bootstrap/js/bootstrap.min.js"></script> -->
+<script src="../../plugins/adminLTE/js/adminlte.min.js"></script>
+<script src="../../plugins/adminLTE/js/demo.js"></script>
+<script src="../../plugins/cong/cong.js"></script>
+
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+	mca: {},
+    admin: {},
+    sidemenu: {},
+
+	list: {},
+	// page: {},
+	ids: [],
+	ids_all: [],
+
+	view: {},
+
+    list: {
+      data: [],
+      post: {
+        // title: '',
+        pageNum: 1,
+        pageSize: 10
+      },
+      info: {},
+      page: {},
+      checkbox: {
+        all: [],
+        checked: [],
+      },
+    },
+
+    支付方式: {
+      1: '积分',
+      2: '卡券',
+    },
+
+    支付状态: {
+      1: '付款成功',
+      2: '付款失败',
+      3: '正在付款',
+    },
+
+  },
+  methods: {
+/*    getList: function(key, val){
+
+      _this = this
+
+      if(key == 'page'){
+
+        if(val == '+1'){
+          if( this.param.page < this.param.page_total ){
+            this.param.page++
+          }else{
+            return;
+          }
+        }
+
+        if(val == '-1'){
+          if( this.param.page > 1 ){
+            this.param.page--
+          }else{
+            return;
+          }
+        }
+
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: api + this.param.dir,
+        // data: this.param,
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success:function(re){
+
+          _this.param = re.param
+          _this.list.data = re.data
+
+          //所有id
+          for( var i in re.data ){
+            var v = re.data[i]
+
+            _this.ids_all.push(v.id)
+          }
+
+          //分页
+          _this.list.prev = []
+          for(var i = _this.param.page - 4; i < _this.param.page; i++){
+            if(i <= 0)continue;
+            _this.list.prev.push(i)
+          }
+
+          _this.list.next = []
+          for(var i = _this.param.page + 1; i < _this.param.page + 5; i++){
+            if(i > re.param.page_total)break;
+            _this.list.next.push(i)
+          }
+
+        }
+      })
+
+    },*/
+
+    checkAll: function(){
+
+      if( $('#checkAll').prop('checked') ){
+        this.list.checkbox.checked = this.list.checkbox.all
+      }else{
+        this.list.checkbox.checked = []
+      }
+
+    },
+
+/*    getView: function(id){
+
+      _this.view = {}
+
+      if(id == -1){
+        this.view = {}
+        $('#view').modal('show')
+        return;
+      }
+
+      $.ajax({
+        type: 'GET',
+        url: api + 'adm/view',
+        data: {
+          table: this.param.table,
+          id: id,
+        },
+        dataType: 'json',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view = re
+
+          $('#view').modal('show')
+
+        }
+      })
+
+    },*/
+
+
+/*    save: function(){
+
+      $.ajax({
+        type: 'POST',
+        url: api + 'adm/save?table=' + this.param.table,
+        data: this.view,
+        dataType: 'text',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re == '1'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re)
+          }
+
+        },
+      })
+
+    },*/
+
+
+    onoff: function(field, value, id){
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.ids.length == 0){
+        console.log('一个都没有选中')
+        return void(0)
+      }else{
+
+        var ids = this.ids
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: api + 'adm/onoff',
+        data: {
+          table: this.param.table,
+          field: field,
+          value: value,
+          id: ids,
+        },
+        dataType: 'text',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re == 1){
+            _this.getList()
+
+            _this.ids = []
+          }else{
+            alert(re)
+          }
+
+        }
+      })
+
+    },
+
+
+    del: function(id){
+
+      if(!confirm('确认删除？')){
+        return void(0)
+      }
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.ids.length == 0){
+        console.log('一个都没有选中')
+        return void(0)
+      }else{
+
+        var ids = this.ids
+      }
+
+
+      $.ajax({
+        type: 'POST',
+        url: api + 'adm/del',
+        data: {
+          table: this.param.table,
+          id: ids,
+        },
+        dataType: 'text',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re == 1){
+            _this.getList()
+
+            _this.ids = []
+          }else{
+            alert(re)
+          }
+
+        }
+      })
+
+    },
+
+    getList: function(key, val){
+
+      _this = this
+
+      if(key == 'page'){
+
+        if(val == '+1'){
+          if( this.list.post.pageNum < this.list.info.pages ){
+            this.list.post.pageNum++
+          }else{
+            return
+          }
+        }
+
+        if(val == '-1'){
+          if( this.list.post.pageNum > 1 ){
+            this.list.post.pageNum--
+          }else{
+            return
+          }
+        }
+
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: api + 'manager/externalInterfaceCallList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success:function(re){
+
+          _this.list.data = re.rspBody.list
+          delete re.rspBody.list
+
+          _this.list.info = re.rspBody          
+
+
+          //id
+/*          for( var i in _this.list.data ){
+            var v = _this.list.data[i]
+
+            _this.list.checkbox.all.push(v.goodId)
+          }*/
+
+          //分页
+          _this.list.page.prev = []
+          for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
+            if(i <= 0)continue;
+            _this.list.page.prev.push(i)
+          }
+
+          _this.list.page.next = []
+          for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
+            if(i > _this.list.info.pages)break;
+            _this.list.page.next.push(i)
+          }
+
+        }
+      })
+
+    },
+
+  },
+  mounted() {
+    _this = this
+
+    // console.log(LS.admin)
+
+    // 登录信息
+    if(LS.admin != undefined){
+      this.admin = JSON.parse(LS.admin)
+
+      var expire = ((this.admin.expire - new Date().getTime() ) / 1000 / 60).toFixed(0)
+
+      console.log('登录超时剩余', expire)
+
+      //过期
+      if(expire < 0){
+        //console.log('登录超时跳转')
+        location.href = '../account?logout=1'
+      }
+
+    }else{
+
+      //未登录
+      location.href = '../account'
+    }
+
+
+    // 侧栏菜单
+    $.ajax({
+      type: 'GET',
+      url: '../../db/menu.json',
+      //url: 'http://192.168.199.196:8692/token/generate',
+      dataType: 'json',
+      beforeSend: function(request){
+        //request.setRequestHeader("token", _this.admin.token)
+      },
+      success: function(re){
+
+        // $.cookie('token', re.data.token);
+
+        // re.data.info.token = re.data.token
+        // LS.admin = JSON.stringify(re.data.info)
+
+        _this.sidemenu = re
+        //console.log(_this.sidemenu)
+
+      }
+    })
+
+
+    // 显示主体
+    $('#loading').hide()
+    $('#app').show()
+
+    // mca
+    var tmp = location.pathname.split('/')
+    this.mca = {
+      m: decodeURI(tmp[1]),
+      c: decodeURI(tmp[2]),
+      a: decodeURI(tmp[3].split('.html')[0]),
+    }
+
+    // console.log(this.mca)
+
+
+
+    this.getList()
+
+  }
+})
+</script>
+</body>
+</html>

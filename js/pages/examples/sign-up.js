@@ -1,0 +1,1 @@
+$(function(){$("#sign_up").validate({rules:{terms:{required:!0},confirm:{equalTo:'[name="password"]'}},highlight:function(r){console.log(r),$(r).parents(".form-line").addClass("error")},unhighlight:function(r){$(r).parents(".form-line").removeClass("error")},errorPlacement:function(r,e){$(e).parents(".input-group").append(r),$(e).parents(".form-group").append(r)}})});
