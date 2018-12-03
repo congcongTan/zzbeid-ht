@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>会员列表</title>
+    <title>短信发送记录</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -150,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        会员列表
+        短信发送记录
       </h1>
       <ol class="breadcrumb">
         <li><a href="../index/"><i class="fa fa-home"></i> 首页</a></li>
-        <li><a href="../会员管理/">会员管理</a></li>
-        <li class="active">会员列表</li>
+        <li><a href="../日志管理/">日志管理</a></li>
+        <li class="active">短信发送记录</li>
       </ol>
     </section>
 
@@ -166,38 +166,26 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <!-- <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
-              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
+              <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane" id="操作">
+              <div class="tab-pane active" id="操作">
 
-                <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#edit" @click="del()">删除</a>
+                <!-- <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#edit" @click="del()">删除</a> -->
 
-                <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a>
+                <!-- <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a> -->
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
               </div>
-              <div class="tab-pane active" id="搜索">
+              <div class="tab-pane" id="搜索">
 
                 <div class="form-horizontal">
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">真实姓名</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.realName">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">身份证号</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.identityCard">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">手机号</label>
+                    <label class="col-sm-2 control-label">发送手机</label>
                     <div class="col-sm-3">
                       <input type="text" class="form-control" v-model="list.post.mobile">
                     </div>
@@ -218,38 +206,26 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>ID</th>
-                    <th width="100">头像</th>
-                    <th>真实姓名</th>
-                    <th>手机号</th>
-                    <th>身份证号</th>
-                    <th>籍贯</th>
-                    <th>民族</th>
-                    <th>积分</th>
-                    <th>imei</th>
-                    <th>认证状态</th>
-                    <th>账号锁定</th>
-                    <th width="1%">操作</th>
+                    <th>发送类型</th>
+                    <th>发送手机</th>
+                    <th>发送内容</th>
+                    <th>发送时间</th>
+                    <th>发送状态</th>
+                    <!-- <th width="1%">操作</th> -->
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.id}}</td>
-                    <td><a :href="`${v.headimgUrl}`" data-fancybox="gallery"><img :src="`${v.headimgUrl}`" width="100%"></a></td>
-                    <td>{{v.realName}}</td>
+                    <td>{{v.typeTitle}}</td>
                     <td>{{v.mobile}}</td>
-                    <td>{{v.identityCard}}</td>
-                    <td>{{v.address}}</td>
-                    <td>{{v.nation}}</td>
-                    <td>{{v.integral}}</td>
-                    <td>{{v.mobileMact.substr(0,4)}}***</td>
-                    <td>{{认证状态[v.isAuthentication]}}</td>
-                    <td>{{账号锁定[v.isLock]}}</td>
-                    <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" :href="`积分明细.html?id=${v.id}`">积分明细</a><br>
+                    <td>{{v.codeTitle}}</td>
+                    <td>{{v.createTime}}</td>
+                    <td>{{v.sendStatusTitle}}</td>
+<!--                     <td class="text-nowrap operation">
+                      <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
-                    </td>
+                    </td> -->
                   </tr>
                   <tr v-if="list.data.length == 0">
                     <td colspan="99">没有数据</td>
@@ -295,6 +271,76 @@
       </div>
 
     </section>
+
+
+    <div class="modal fade" id="view">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              新增
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <div class="alert alert-warning">
+              某些情况下，如用户手机号无法接受信息，可添加验证记录，再把验证码发给用户验证。
+            </div>
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">发送类型</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.type">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 发送类型">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">发送手机</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.mobile">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">6位数字验证码</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.code">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+<!--               <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">发送时间</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.integral">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 默认系统当前时间
+                </div>
+              </div> -->
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="saveView">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 
@@ -444,9 +490,6 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
-<link rel="stylesheet" href="../../plugins/fancybox/fancybox.css">
-<script src="../../plugins/fancybox/fancybox.js"></script>
-
 <script>
 var app = new Vue({
   el: '#app',
@@ -476,14 +519,16 @@ var app = new Vue({
       },
     },
 
-    认证状态: {
-      0: '否',
-      1: '是',
+    发送类型: {
+      1: '注册',
+      2: '找回密码',
+      3: '更换手机',
+      4: '等',
     },
 
-    账号锁定: {
-      0: '否',
-      1: '是',
+    状态: {
+      1: '可用',
+      2: '不可用',
     },
 
   },
@@ -735,17 +780,17 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 1,
+          clientType: 6,
           format: "json",
           version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          sign: "8D5AA5642162A6B05A08D3B6896144DD"
         },
         reqBody: this.list.post
       }
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/getMemberList/interface',
+        url: api + 'manager/logMessageList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -753,18 +798,18 @@ var app = new Vue({
         },
         success:function(re){
 
-          _this.list.data = re.rspBody.memberList
-          delete re.rspBody.memberList
+          _this.list.data = re.rspBody.logMessageList
+          delete re.rspBody.logMessageList
 
           _this.list.info = re.rspBody          
 
 
           //id
-/*          for( var i in _this.list.data ){
+          for( var i in _this.list.data ){
             var v = _this.list.data[i]
 
             _this.list.checkbox.all.push(v.goodId)
-          }*/
+          }
 
           //分页
           _this.list.page.prev = []
@@ -793,7 +838,7 @@ var app = new Vue({
         return
       }
 
-      var data = {
+/*      var data = {
         "reqHead":
         {
           clientType: 1,
@@ -808,7 +853,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/getGood/interface',
+        url: api + 'manager/logMessageList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -821,7 +866,7 @@ var app = new Vue({
           $('#view').modal('show')
 
         }
-      })
+      })*/
 
     },
 
@@ -838,11 +883,9 @@ var app = new Vue({
         reqBody: this.view
       }
 
-      var add_or_edit = this.view.goodId == undefined ? 'add':'edit'
-
       $.ajax({
         type: 'POST',
-        url: api + 'manager/' + add_or_edit + 'Good/interface',
+        url: api + 'manager/addLogMessage/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -859,67 +902,6 @@ var app = new Vue({
 
         },
       })
-
-    },
-
-    del: function(id){
-
-      if(!confirm('确认删除？')){
-        return
-      }
-
-      //单个
-      if(id != undefined){
-        var ids = [id]
-      }
-      //多个
-      else if(this.list.checkbox.checked.length == 0){
-        alert('一个都没有选中')
-        return
-      }else{
-
-        var ids = this.list.checkbox.checked
-      }
-
-      // console.log(ids)
-
-      for( var i in ids ){
-        var id = ids[i]
-
-
-        var data = {
-          "reqHead":
-          {
-            clientType: 1,
-            format: "json",
-            version: "1.0",
-            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-          },
-          reqBody: {
-            id: id
-          }
-        }
-
-        $.ajax({
-          type: 'POST',
-          url: api + 'manager/deleteGood/interface',
-          data: JSON.stringify(data),
-          dataType: 'json',
-          beforeSend: function(request){
-            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-          },
-          success: function(re){
-
-            if(re.rspHead.retMsg != '成功'){
-              alert(re.rspHead.retMsg)
-            }
-
-          }
-        })
-
-        _this.getList()
-
-      }
 
     },
 

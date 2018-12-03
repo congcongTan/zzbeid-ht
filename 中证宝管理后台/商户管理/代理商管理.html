@@ -154,7 +154,7 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="../index/"><i class="fa fa-home"></i> 首页</a></li>
-        <li><a href="../代理商管理/">代理商管理</a></li>
+        <li><a href="../商户管理/">商户管理</a></li>
         <li class="active">代理商管理</li>
       </ol>
     </section>
@@ -181,6 +181,19 @@
 
               </div>
               <div class="tab-pane" id="搜索">
+                
+                <div class="pull-left mt6 ml5">
+                  代理商行业：
+                </div>
+
+                <div class="pull-left w100 ml5">
+                  <select class="form-control input-sm">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
+                  </select>
+                </div>
+
+                <div class="c h10"></div>
 
                 <div class="pull-left mt6 ml5">
                   代理商地址：
@@ -205,15 +218,22 @@
                 <div class="c h10"></div>
 
                 <div class="pull-left mt6 ml5">
-                  代理商名称：
+                  登录时间：
                 </div>
 
-                <div class="pull-left w150 ml5"><input type="text" class="form-control input-sm"></div>
+                <div class="pull-left w150 ml5">
+                  <select class="form-control input-sm" v-model="list.post.chooseDay">
+                    <option value="0">--请选择--</option>
+                    <option value="1">最近1天没有登录</option>
+                    <option value="3">最近3天没有登录</option>
+                    <option value="7">最近7天没有登录</option>
+                  </select>
+                </div>
 
                 <div class="c h10"></div>
 
                 <div class="pull-left mt6 ml5">
-                  代理商编号：
+                  代理商名称：
                 </div>
 
                 <div class="pull-left w150 ml5"><input type="text" class="form-control input-sm"></div>
@@ -242,36 +262,18 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td>10002</td>
-                    <td>长沙代理</td>
-                    <td>湖南省代理</td>
-                    <td>61040410015</td>
-                    <td>广东省广州市天河区人民西路29号</td>
-                    <td>2018-08-15 13:31:00</td>
-                    <td>否</td>
-                    <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
-                      <a class="btn btn-xs btn-success" @click="getView(v.id)">锁定</a><br>
-                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
-                    </td>
-                  </tr>
                   <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.id}`" v-model="ids"></td>
-                    <td>10002</td>
-                    <td>旅馆</td>
-                    <td>佳乐酒店</td>
-                    <td>61040410015</td>
-                    <td>广东省广州市天河区人民西路29号</td>
-                    <td>2018-08-15 13:31:00</td>
-                    <td>1天20小时</td>
-                    <td>0</td>
-                    <td>否</td>
+                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
+                    <td>{{v.id}}</td>
+                    <td>{{v.linkman}}</td>
+                    <td>{{行业[v.industryId]}}</td>
+                    <td>{{v.account}}</td>
+                    <td>{{v.detailedAddress}}</td>
+                    <td>{{v.payIntegral}}</td>
+                    <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
-                      <a class="btn btn-xs btn-success" @click="getView(v.id)">锁定</a><br>
-                      <a class="btn btn-xs btn-success" @click="getView(v.id)">加积分明细</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getView(v.agentId)">编辑</a><br>
+                      <a :class="`btn btn-xs btn-${v.status == '1' ? 'success':'warning'}`" @click="setStatus(v.id)">{{v.status == '1' ? '禁用':'启用'}}</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
                   </tr>
@@ -283,7 +285,7 @@
 
               <div class="pull-left mt15">
                 <label>
-                  <select class="form-control input-sm" v-model="param.limit" @change="getList()">
+                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="getList()">
                     <option value="2">每页 2 条</option>
                     <option value="10">每页 10 条</option>
                     <option value="25">每页 25 条</option>
@@ -293,16 +295,16 @@
                 </label>
               </div>
 
-              <div class="pull-right" v-if="param.page_total > 1">
+              <div class="pull-right" v-if="list.info.pages > 1">
                 <ul class="pagination pagination-sm">
 
                   <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
 
-                  <li class="paginate_button" v-for="i in list.prev"><a href="javascript:;" @click="param.page = i; getList()">{{i}}</a></li>
+                  <li class="paginate_button" v-for="i in list.page.prev"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
 
-                  <li class="paginate_button active"><a href="#">{{param.page}}</a></li>
+                  <li class="paginate_button active"><a href="#">{{list.post.pageNum}}</a></li>
 
-                  <li class="paginate_button" v-for="i in list.next"><a href="javascript:;" @click="param.page = i; getList()">{{i}}</a></li>
+                  <li class="paginate_button" v-for="i in list.page.next"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
 
                   <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
                   </li>
@@ -353,7 +355,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">代理商名称</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.代理商名称">
+                  <input type="text" class="form-control input-sm" v-model="view.title">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -361,9 +363,9 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">代理商编号</label>
+                <label class="col-sm-3 control-label">代理商帐户</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.代理商编号">
+                  <input type="text" class="form-control input-sm" v-model="view.account">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   * 首次设置后，不可修改
@@ -414,14 +416,14 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">代理商负责人</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.代理商负责人">
+                  <input type="text" class="form-control input-sm" v-model="view.linkman">
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-3 control-label">负责人手机</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.负责人手机">
+                  <input type="text" class="form-control input-sm" v-model="view.mobile">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   * 
@@ -457,7 +459,7 @@
 
           </div>
           <div class="modal-footer">
-            <a class="btn btn-primary" @click="save">确定</a>
+            <a class="btn btn-primary" @click="saveView">确定</a>
           </div>
         </div>
       </div>
@@ -626,30 +628,50 @@ var app = new Vue({
 
 	view: {},
 
-    param: {
-      table: 'administrative_team',
-      page: 1,
-      limit: 2,
-      count: 0,
+    list: {
+      data: [],
+      post: {
+        pageNum: 1,
+        pageSize: 10,
+        chooseDay: 0
+      },
+      info: {},
+      page: {},
+      checkbox: {
+        all: [],
+        checked: [],
+      },
     },
 
     行业: {
       1: '旅馆',
-      2: '酒店',
+      2: '网吧',
       3: '汽车站',
       4: '机场',
       5: '旅行社',
+      6: '访客',
+    },
+
+    状态: {
+      0: '不可用',
+      1: '可用',
     },
 
     网吧行业软件: {
-      0: '佳星',
-      1: '万象',
+      1: '佳星',
+      2: '万象',
+    },
+
+    是否加密: {
+      0: '否',
+      1: '是',
     },
 
     同步模式: {
-      0: '在线（云服务器）',
-      1: 'xml文件',
-      2: '本地数据库',
+      1: '本地数据库（LockSend）',
+      2: 'xml文件（铃铛）',
+      3: '云服务器 - 湖南湘潭',
+      4: '云服务器 - 湖南永州',
     },
 
   },
@@ -871,6 +893,291 @@ var app = new Vue({
 
         }
       })
+
+    },
+
+    getList: function(key, val){
+
+      _this = this
+
+      if(key == 'page'){
+
+        if(val == '+1'){
+          if( this.list.post.pageNum < this.list.info.pages ){
+            this.list.post.pageNum++
+          }else{
+            return
+          }
+        }
+
+        if(val == '-1'){
+          if( this.list.post.pageNum > 1 ){
+            this.list.post.pageNum--
+          }else{
+            return
+          }
+        }
+
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: api + 'manager/getAgentList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success:function(re){
+
+          _this.list.data = re.rspBody.memberList
+          delete re.rspBody.memberList
+
+          _this.list.info = re.rspBody          
+
+
+          //id
+          for( var i in _this.list.data ){
+            var v = _this.list.data[i]
+
+            _this.list.checkbox.all.push(v.id)
+          }
+
+          //分页
+          _this.list.page.prev = []
+          for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
+            if(i <= 0)continue;
+            _this.list.page.prev.push(i)
+          }
+
+          _this.list.page.next = []
+          for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
+            if(i > _this.list.info.pages)break;
+            _this.list.page.next.push(i)
+          }
+
+        }
+      })
+
+    },
+
+    getView: function(id){
+
+      this.view = {}
+
+      if(id == -1){
+        $('#view').modal('show')
+        return
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          agentId: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: api + 'manager/getAgentInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view = re.rspBody
+
+          $('#view').modal('show')
+
+        }
+      })
+
+    },
+
+    saveView: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.view
+      }
+
+      var add_or_edit = this.view.mchId == undefined ? 'add':'edit'
+
+      $.ajax({
+        type: 'POST',
+        url: api + 'manager/' + add_or_edit + 'Agent/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    editAgentStatus: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.view
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: api + 'manager/editAgentStatus/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retMsg == '成功'){
+            _this.getList()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    setStatus: function(id){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "401E79DEC2E7AA1F645D67924E6EE0F3"
+        },
+        reqBody: {
+          id: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: api + 'manager/editAgentStatus/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    del: function(id){
+
+      if(!confirm('确认删除？')){
+        return
+      }
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.list.checkbox.checked.length == 0){
+        alert('一个都没有选中')
+        return
+      }else{
+
+        var ids = this.list.checkbox.checked
+      }
+
+      // console.log(ids)
+
+      for( var i in ids ){
+        var id = ids[i]
+
+
+        var data = {
+          "reqHead":
+          {
+            clientType: 1,
+            format: "json",
+            version: "1.0",
+            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          },
+          reqBody: {
+            id: id
+          }
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: api + 'manager/deleteAgent/interface',
+          data: JSON.stringify(data),
+          dataType: 'json',
+          beforeSend: function(request){
+            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+          },
+          success: function(re){
+
+            if(re.rspHead.retCode != '1'){
+              alert(re.rspHead.retMsg)
+            }
+
+          }
+        })
+
+        _this.getList()
+
+      }
 
     },
 
