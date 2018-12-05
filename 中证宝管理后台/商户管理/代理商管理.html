@@ -154,7 +154,7 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="../index/"><i class="fa fa-home"></i> 首页</a></li>
-        <li><a href="../商户管理/">商户管理</a></li>
+        <li><a href="../代理商管理/">代理商管理</a></li>
         <li class="active">代理商管理</li>
       </ol>
     </section>
@@ -173,74 +173,67 @@
             <div class="tab-content">
               <div class="tab-pane active" id="操作">
 
-                <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#edit" @click="del()">删除</a>
-
-                <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a>
+                <a class="btn btn-sm btn-danger" @click="del()">删除</a>
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
               </div>
               <div class="tab-pane" id="搜索">
-                
-                <div class="pull-left mt6 ml5">
-                  代理商行业：
+
+
+                <div class="form-horizontal">
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">代理商地址</label>
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <div class="col-xs-4 col-sm-3">
+                          <select class="form-control">
+                            <!-- <option value="">--请选择--</option> -->
+                            <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
+                          </select>
+                        </div>
+                        <div class="col-xs-4 col-sm-3">
+                          <select class="form-control">
+                            <!-- <option value="">--请选择--</option> -->
+                            <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
+                          </select>
+                        </div>
+                        <div class="col-xs-4 col-sm-3">
+                          <select class="form-control">
+                            <!-- <option value="">--请选择--</option> -->
+                            <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">代理商行业</label>
+                    <div class="col-sm-3">
+                      <select class="form-control">
+                        <!-- <option value="">--请选择--</option> -->
+                        <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">代理商名称</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.account">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">代理商编号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.agentId">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button class="btn btn-primary" @click="getList">查找</button>
+                    </div>
+                  </div>
                 </div>
-
-                <div class="pull-left w100 ml5">
-                  <select class="form-control input-sm">
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
-                  </select>
-                </div>
-
-                <div class="c h10"></div>
-
-                <div class="pull-left mt6 ml5">
-                  代理商地址：
-                </div>
-
-                <div class="pull-left w100 ml5">
-                  <select class="form-control input-sm">
-                    <option value="">中国</option>
-                  </select>
-                </div>
-                <div class="pull-left w100 ml5">
-                  <select class="form-control input-sm">
-                    <option value="">广东</option>
-                  </select>
-                </div>
-                <div class="pull-left w100 ml5">
-                  <select class="form-control input-sm">
-                    <option value="">广州</option>
-                  </select>
-                </div>
-
-                <div class="c h10"></div>
-
-                <div class="pull-left mt6 ml5">
-                  登录时间：
-                </div>
-
-                <div class="pull-left w150 ml5">
-                  <select class="form-control input-sm" v-model="list.post.chooseDay">
-                    <option value="0">--请选择--</option>
-                    <option value="1">最近1天没有登录</option>
-                    <option value="3">最近3天没有登录</option>
-                    <option value="7">最近7天没有登录</option>
-                  </select>
-                </div>
-
-                <div class="c h10"></div>
-
-                <div class="pull-left mt6 ml5">
-                  代理商名称：
-                </div>
-
-                <div class="pull-left w150 ml5"><input type="text" class="form-control input-sm"></div>
-
-                <div class="c h10"></div>
-
-                <a class="btn btn-sm btn-primary" @click="getList">查找</a>
 
               </div>
             </div>
@@ -256,7 +249,8 @@
                     <th>上级代理商</th>
                     <th>代理商账号</th>
                     <th>详细地址</th>
-                    <th>上次登录时间</th>
+                    <th>代理商负责人</th>
+                    <th>负责人手机</th>
                     <th>账号锁定</th>
                     <th width="1%">操作</th>
                   </tr>
@@ -265,16 +259,15 @@
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td>{{v.id}}</td>
-                    <td>{{v.linkman}}</td>
-                    <td>{{行业[v.industryId]}}</td>
+                    <td>{{v.title}}</td>
+                    <td>{{v.parentTitle}}</td>
                     <td>{{v.account}}</td>
-                    <td>{{v.detailedAddress}}</td>
-                    <td>{{v.payIntegral}}</td>
+                    <td>{{v.address}}</td>
+                    <td>{{v.linkman}}</td>
+                    <td>{{v.mobile}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.agentId)">编辑</a><br>
-                      <a :class="`btn btn-xs btn-${v.status == '1' ? 'success':'warning'}`" @click="setStatus(v.id)">{{v.status == '1' ? '禁用':'启用'}}</a><br>
-                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -329,8 +322,8 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
-              <span v-if="view.id == undefined">新增</span>
-              <span v-if="view.id != undefined">编辑</span>
+              <span v-if="view.agentId == undefined">新增</span>
+              <span v-if="view.agentId != undefined">编辑</span>
             </h4>
           </div>
           <div class="modal-body">
@@ -340,9 +333,9 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">上级代理商</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.一级代理">
-                    <option value="">一级代理</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
+                  <select class="form-control" v-model="view.agentId">
+                    <option value="">--请选择--</option>
+                    <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商">{{v.title}}</option>
                   </select>
                 </div>
                 <div class="col-sm-4 text-danger mt5">
@@ -375,7 +368,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">代理商密码</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.商户密码">
+                  <input type="text" class="form-control input-sm" v-model="view.password">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -384,25 +377,29 @@
 
               <hr>
 
-              旗下商户消费分成规则 [<a href="javascript:;">增加一条</a>]
+              旗下代理商消费分成规则 [<a href="javascript:;" @click="add_rules()">增加一条</a>]
 
               <table class="table table-bordered">
                 <thead>
                   <tr>
-                    <th>旗下商户日订单总数</th>
+                    <th>旗下代理商日订单总数</th>
                     <th>自身提成</th>
-                    <th>商户提成</th>
+                    <th>代理商提成</th>
                     <th>上级代理提成</th>
                     <th>操作</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td><input type="text" class="w40"> 至 <input type="text" class="w40"></td>
-                    <td><input type="text" class="w40"> %</td>
-                    <td><input type="text" class="w40"> %</td>
-                    <td><input type="text" class="w40"> %</td>
-                    <td>删除</td>
+                  <tr v-for="(v, i) in test_rule">
+                    <td><input type="text" class="w40" v-model="v.beginNum"> 至 <input type="text" class="w40" v-model="v.endNum"></td>
+                    <td><input type="text" class="w40" v-model="v.selftRoyalty"> %</td>
+                    <td><input type="text" class="w40" v-model="v.mchRoyalty"> %</td>
+                    <td><input type="text" class="w40" v-model="v.superiorRoyalty"> %</td>
+                    <td>
+                      <a class="btn btn-xs btn-default" @click="order_rules(i, '-')"><i class="fa fa-arrow-up"></i></a>
+                      <a class="btn btn-xs btn-default" @click="order_rules(i, '+')"><i class="fa fa-arrow-down"></i></a>
+                      <a class="btn btn-xs btn-danger" @click="del_rules(i)"><i class="fa fa-remove"></i></a>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -451,7 +448,7 @@
 
               <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-9">
-                  <input type="text" class="form-control input-sm" v-model="view.address">
+                  <input type="text" class="form-control input-sm" v-model="view.detailedAddress">
                 </div>
               </div>
 
@@ -628,12 +625,13 @@ var app = new Vue({
 
 	view: {},
 
+    test_rule: [],
+
     list: {
       data: [],
       post: {
         pageNum: 1,
         pageSize: 10,
-        chooseDay: 0
       },
       info: {},
       page: {},
@@ -642,6 +640,8 @@ var app = new Vue({
         checked: [],
       },
     },
+
+    上级代理商: {},
 
     行业: {
       1: '旅馆',
@@ -655,23 +655,6 @@ var app = new Vue({
     状态: {
       0: '不可用',
       1: '可用',
-    },
-
-    网吧行业软件: {
-      1: '佳星',
-      2: '万象',
-    },
-
-    是否加密: {
-      0: '否',
-      1: '是',
-    },
-
-    同步模式: {
-      1: '本地数据库（LockSend）',
-      2: 'xml文件（铃铛）',
-      3: '云服务器 - 湖南湘潭',
-      4: '云服务器 - 湖南永州',
     },
 
   },
@@ -926,14 +909,14 @@ var app = new Vue({
           clientType: 1,
           format: "json",
           version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
         },
         reqBody: this.list.post
       }
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/getAgentList/interface',
+        url: api + 'manager/agentList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -941,8 +924,8 @@ var app = new Vue({
         },
         success:function(re){
 
-          _this.list.data = re.rspBody.memberList
-          delete re.rspBody.memberList
+          _this.list.data = re.rspBody.AgentList
+          delete re.rspBody.AgentList
 
           _this.list.info = re.rspBody          
 
@@ -977,6 +960,9 @@ var app = new Vue({
       this.view = {}
 
       if(id == -1){
+        this.test_rule = []
+        this.add_rules()
+
         $('#view').modal('show')
         return
       }
@@ -984,13 +970,13 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 1,
+          clientType: 6,
           format: "json",
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          agentId: id
+          id: id
         }
       }
 
@@ -1026,7 +1012,7 @@ var app = new Vue({
         reqBody: this.view
       }
 
-      var add_or_edit = this.view.mchId == undefined ? 'add':'edit'
+      var add_or_edit = this.view.agentId == undefined ? 'add':'edit'
 
       $.ajax({
         type: 'POST',
@@ -1050,134 +1036,49 @@ var app = new Vue({
 
     },
 
-    editAgentStatus: function(){
+    add_rules: function(){
 
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: this.view
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: api + 'manager/editAgentStatus/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retMsg == '成功'){
-            _this.getList()
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
+      this.test_rule.push({
+        beginNum: '',
+        endNum: '',
+        selftRoyalty: '',
+        mchRoyalty: '',
+        superiorRoyalty: '',
       })
 
     },
 
-    setStatus: function(id){
+    del_rules: function(i){
 
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "401E79DEC2E7AA1F645D67924E6EE0F3"
-        },
-        reqBody: {
-          id: id
+      this.test_rule.splice(i, 1)
+
+    },
+
+    order_rules: function(i, way){
+
+      var tmp = this.test_rule[i]
+
+      if(way == '-'){
+
+        if(i == 0){
+          console.log('不能上移')
+          return
         }
-      }
 
-      $.ajax({
-        type: 'POST',
-        url: api + 'manager/editAgentStatus/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
+        var new_i = i - 1
 
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
-      })
-
-    },
-
-    del: function(id){
-
-      if(!confirm('确认删除？')){
-        return
-      }
-
-      //单个
-      if(id != undefined){
-        var ids = [id]
-      }
-      //多个
-      else if(this.list.checkbox.checked.length == 0){
-        alert('一个都没有选中')
-        return
       }else{
 
-        var ids = this.list.checkbox.checked
-      }
-
-      // console.log(ids)
-
-      for( var i in ids ){
-        var id = ids[i]
-
-
-        var data = {
-          "reqHead":
-          {
-            clientType: 1,
-            format: "json",
-            version: "1.0",
-            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-          },
-          reqBody: {
-            id: id
-          }
+        if( i == this.test_rule.length - 1 ){
+          console.log('不能下移')
+          return
         }
 
-        $.ajax({
-          type: 'POST',
-          url: api + 'manager/deleteAgent/interface',
-          data: JSON.stringify(data),
-          dataType: 'json',
-          beforeSend: function(request){
-            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-          },
-          success: function(re){
-
-            if(re.rspHead.retCode != '1'){
-              alert(re.rspHead.retMsg)
-            }
-
-          }
-        })
-
-        _this.getList()
-
+        var new_i = i + 1
       }
+
+      this.test_rule.splice(i, 1)
+      this.test_rule.splice(new_i, 0, tmp)
 
     },
 
@@ -1247,10 +1148,38 @@ var app = new Vue({
 
 
 
+    //上级代理商
+    var data = {
+      "reqHead":
+      {
+        clientType: 1,
+        format: "json",
+        version: "1.0",
+        sign: "30C7398578F1F7C995BAF67D18F89B33"
+      },
+      reqBody: {}
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: api + 'manager/getFirstAgentAll/interface',
+      data: JSON.stringify(data),
+      dataType: 'json',
+      beforeSend: function(request){
+        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+      },
+      success: function(re){
+
+        _this.上级代理商 = re.rspBody.agentRspDTOS
+
+      }
+    })
+
+
     this.getList()
 
   }
-});
+})
 </script>
 </body>
 </html>
