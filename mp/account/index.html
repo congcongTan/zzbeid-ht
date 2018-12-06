@@ -26,7 +26,7 @@
 <div class="login-box" id="app">
 
   <div class="login-logo">
-    <a href="#">中证宝大数据服务商户后台</a>
+    <a href="#">商户后台</a>
   </div>
 
   <div class="login-box-body">
@@ -45,6 +45,19 @@
         <label class="col-sm-3 control-label">登录密码</label>
         <div class="col-sm-9">
           <input type="password" class="form-control" v-model="account.password">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">登录角色</label>
+        <div class="col-sm-9">
+          <label>
+            <input type="radio" value="1" v-model="account.type"> 代理商
+          </label>
+          &nbsp;&nbsp;&nbsp;
+          <label>
+            <input type="radio" value="2" v-model="account.type"> 商户
+          </label>
         </div>
       </div>
 
@@ -76,8 +89,9 @@ var app = new Vue({
 	view: {},
 
     account: {
-      account: "hwb",
+      account: "6104040759",
       password: "123456",
+      type: 1,
     },
 
   },
@@ -108,7 +122,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + this.param.dir,
+        url: mp_api + this.param.dir,
         // data: this.param,
         dataType: 'json',
         beforeSend: function(request){
@@ -166,7 +180,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'GET',
-        url: api + 'adm/view',
+        url: mp_api + 'adm/view',
         data: {
           table: this.param.table,
           id: id,
@@ -191,7 +205,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'adm/save?table=' + this.param.table,
+        url: mp_api + 'adm/save?table=' + this.param.table,
         data: this.view,
         dataType: 'text',
         beforeSend: function(request){
@@ -229,7 +243,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'adm/onoff',
+        url: mp_api + 'adm/onoff',
         data: {
           table: this.param.table,
           field: field,
@@ -278,7 +292,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'adm/del',
+        url: mp_api + 'adm/del',
         data: {
           table: this.param.table,
           id: ids,
@@ -308,18 +322,10 @@ var app = new Vue({
 
       var data = {
         reqHead: {
-          clientType:1,
-          appVersion:"1.0",
-          osVersion:"2.1",
-          imei:"设备号",
-          mobileModel:"S1",
-          mobileManufacturer:"",
-          identificationCode:"KSJALFAJIEALJF1212321",
-          lat:"1",
-          lng:"1",
-          format:"json",
-          version:"1.0",
-          sign:"4600D5BC2AACE2929E9CEBB44121B8CF"
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "4600D5BC2AACE2929E9CEBB44121B8CF"
         },
         reqBody: this.account
       }
@@ -328,7 +334,8 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/tokenGenerate/interface',
+        url: mp_api + 'mp/tokenGenerate/interface',
+        // url: 'http://mp.stage.zzbeid.cn/zzb/mp/tokenGenerate/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         success: function(re){

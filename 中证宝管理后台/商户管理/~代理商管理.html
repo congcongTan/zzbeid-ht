@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>会员列表</title>
+    <title>代理商管理</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -81,11 +81,11 @@
     </nav>
   </header>
 
-  <!-- Left side column. contains the logo and sidebar -->
+
   <aside class="main-sidebar">
-    <!-- sidebar: style can be found in sidebar.less -->
+
     <section class="sidebar">
-      <!-- Sidebar user panel -->
+
       <div class="user-panel">
         <div class="pull-left image">
           <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="img-circle" alt="User Image">
@@ -95,7 +95,7 @@
           <i class="fa fa-circle text-success"></i> 在线
         </div>
       </div>
-      <!-- search form -->
+
       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
           <input type="text" name="q" class="form-control" placeholder="Search...">
@@ -105,15 +105,9 @@
           </span>
         </div>
       </form>
-      <!-- /.search form -->
-      <!-- sidebar menu: : style can be found in sidebar.less -->
+
       <ul class="sidebar-menu" data-widget="tree">
 
-        <li>
-          <a href="#"><i class="fa fa-menu"></i> --- 动态菜单（制作中）---</a>
-        </li>
-
-        <!-- ajax menu -->
         <li :class="{'treeview': v.children.length != 0, 'active': v.title == mca.c}" v-for="(v, i) in sidemenu">
 
           <a :href="`../${v.url == '#' ? v.url : v.url + '.html'}`">
@@ -145,127 +139,10 @@
 
           </ul>
         </li>
-        <!-- ajax menu -->
-
-
-        <li>
-          <a href="#"><i class="fa fa-menu"></i> --- 静态菜单 ---</a>
-        </li>
-
-
-        <li>
-          <a href="../../index/index.html">
-            <i class="fa fa-dashboard"></i> <span>概况</span>
-          </a>
-        </li>
-
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-cog"></i> <span>系统管理</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-
-            <li><a href="../../system/menu.html"><i class="fa fa-circle-o"></i> 菜单管理</a></li>
-
-            <li><a href="../../system/user.html"><i class="fa fa-circle-o"></i> 管理员列表</a></li>
-
-<!--             <li><a href="#../bsm_admin/organizational_structure.html"><i class="fa fa-circle-o"></i> 组织架构 x</a></li> -->
-
-            <li><a href="../../system/role.html"><i class="fa fa-circle-o"></i> 角色列表</a></li>
-
-          </ul>
-        </li>
-
-
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-user-o"></i> <span>商户服务</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-
-            <li><a href="../../shang_hu_fu_wu/menu.html"><i class="fa fa-circle-o"></i> 商户后台菜单</a></li>
-
-            <li><a href="../../shang_hu_fu_wu/shang_hu_zhong_xin.html"><i class="fa fa-circle-o"></i> 商户中心</a></li>
-
-            <li class="treeview">
-              <a href="#">
-                <i class="fa fa-user-o"></i> <span>业务管理</span>
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-              </a>
-              <ul class="treeview-menu">
-
-                <li><a href="../../shang_hu_fu_wu/ye_wu_guan_li.html"><i class="fa fa-circle-o"></i> 业务管理</a></li>
-
-                <li><a href="../../shang_hu_fu_wu/ban_ben_guan_li.html"><i class="fa fa-circle-o"></i> 版本管理</a></li>
-
-              </ul>
-            </li>
-
-          </ul>
-        </li>
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-user-o"></i> <span>公共服务</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-
-            <li><a href="../../gong_gong_fu_wu/user.html"><i class="fa fa-circle-o"></i> 用户中心</a></li>
-
-            <li><a href="#../gong_gong_fu_wu/bill.html"><i class="fa fa-circle-o"></i> 订单中心 x</a></li>
-
-            <li class="treeview">
-              <a href="#">
-                <i class="fa fa-user-o"></i> <span>产品中心 x</span>
-                <span class="pull-right-container">
-                  <i class="fa fa-angle-left pull-right"></i>
-                </span>
-              </a>
-              <ul class="treeview-menu">
-
-                <li><a href="#../gong_gong_fu_wu/product_sort.html"><i class="fa fa-circle-o"></i> 产品分类 x</a></li>
-
-                <li><a href="#../gong_gong_fu_wu/product_brand.html"><i class="fa fa-circle-o"></i> 品牌管理 x</a></li>
-
-                <li><a href="#../gong_gong_fu_wu/product_attr.html"><i class="fa fa-circle-o"></i> 属性管理 x</a></li>
-
-                <li><a href="#../gong_gong_fu_wu/product_list.html"><i class="fa fa-circle-o"></i> 产品列表 x</a></li>
-
-              </ul>
-            </li>
-
-          </ul>
-        </li>
-
-        <li class="treeview">
-          <a href="#">
-            <i class="fa fa-user-o"></i> <span>支付网关</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-
-            <li><a href="../../gong_gong_fu_wu/user.html"><i class="fa fa-circle-o"></i> 支付方式管理</a></li>
-
-          </ul>
-        </li>
-
-
 
       </ul>
     </section>
-    <!-- /.sidebar -->
+
   </aside>
 
 
@@ -273,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        会员列表
+        代理商管理
       </h1>
       <ol class="breadcrumb">
         <li><a href="../index/"><i class="fa fa-home"></i> 首页</a></li>
-        <li><a href="../会员管理/">会员管理</a></li>
-        <li class="active">会员列表</li>
+        <li><a href="../代理商管理/">代理商管理</a></li>
+        <li class="active">代理商管理</li>
       </ol>
     </section>
 
@@ -290,7 +167,7 @@
 
             <ul class="nav nav-tabs">
               <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
-              <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <li class=""><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
@@ -306,26 +183,40 @@
               <div class="tab-pane" id="搜索">
 
                 <div class="pull-left mt6 ml5">
-                  真实姓名：
+                  代理商地址：
                 </div>
 
-                <div class="pull-left w150 ml5"><input type="text" class="form-control input-sm" v-model="list.post.title"></div>
+                <div class="pull-left w100 ml5">
+                  <select class="form-control input-sm">
+                    <option value="">中国</option>
+                  </select>
+                </div>
+                <div class="pull-left w100 ml5">
+                  <select class="form-control input-sm">
+                    <option value="">广东</option>
+                  </select>
+                </div>
+                <div class="pull-left w100 ml5">
+                  <select class="form-control input-sm">
+                    <option value="">广州</option>
+                  </select>
+                </div>
 
                 <div class="c h10"></div>
 
                 <div class="pull-left mt6 ml5">
-                  身份证号：
+                  代理商名称：
                 </div>
 
-                <div class="pull-left w150 ml5"><input type="text" class="form-control input-sm" v-model="list.post.title"></div>
+                <div class="pull-left w150 ml5"><input type="text" class="form-control input-sm"></div>
 
                 <div class="c h10"></div>
 
                 <div class="pull-left mt6 ml5">
-                  手机号：
+                  代理商编号：
                 </div>
 
-                <div class="pull-left w150 ml5"><input type="text" class="form-control input-sm" v-model="list.post.title"></div>
+                <div class="pull-left w150 ml5"><input type="text" class="form-control input-sm"></div>
 
                 <div class="c h10"></div>
 
@@ -341,38 +232,50 @@
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
                     <th>ID</th>
-                    <th width="100">头像</th>
-                    <th>真实姓名</th>
-                    <th>手机号</th>
-                    <th>身份证号</th>
-                    <th>籍贯</th>
-                    <th>民族</th>
-                    <th>积分</th>
-                    <th>imei</th>
-                    <th>认证状态</th>
+                    <th>代理商名称</th>
+                    <th>上级代理商</th>
+                    <th>代理商账号</th>
+                    <th>详细地址</th>
+                    <th>上次登录时间</th>
                     <th>账号锁定</th>
                     <th width="1%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.identifier}}</td>
-                    <td>{{v.typeTitle}}</td>
-                    <td>{{v.title}}</td>
-                    <td>￥{{v.price}}</td>
-                    <td>{{v.integral}}</td>
-                    <td>{{v.industryIdTitle}}</td>
-                    <td>{{v.province}}</td>
-                    <td>{{v.statusTitle}}</td>
-                    <td>{{v.statusTitle}}</td>
-                    <td>{{v.statusTitle}}</td>
+                  <tr>
+                    <td><input type="checkbox"></td>
+                    <td>10002</td>
+                    <td>长沙代理</td>
+                    <td>湖南省代理</td>
+                    <td>61040410015</td>
+                    <td>广东省广州市天河区人民西路29号</td>
+                    <td>2018-08-15 13:31:00</td>
+                    <td>否</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
-                      <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
+                      <a class="btn btn-xs btn-success" @click="getView(v.id)">锁定</a><br>
+                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
                   </tr>
-                  <tr v-if="list.data.length == 0">
+                  <tr v-for="(v, i) in list.data">
+                    <td><input type="checkbox" :value="`${v.id}`" v-model="ids"></td>
+                    <td>10002</td>
+                    <td>旅馆</td>
+                    <td>佳乐酒店</td>
+                    <td>61040410015</td>
+                    <td>广东省广州市天河区人民西路29号</td>
+                    <td>2018-08-15 13:31:00</td>
+                    <td>1天20小时</td>
+                    <td>0</td>
+                    <td>否</td>
+                    <td class="text-nowrap operation">
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
+                      <a class="btn btn-xs btn-success" @click="getView(v.id)">锁定</a><br>
+                      <a class="btn btn-xs btn-success" @click="getView(v.id)">加积分明细</a><br>
+                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
+                    </td>
+                  </tr>
+                  <tr v-if="list.length == 0">
                     <td colspan="99">没有数据</td>
                   </tr>
                 </tbody>
@@ -424,8 +327,8 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
-              <span v-if="view.goodId == undefined">新增</span>
-              <span v-if="view.goodId != undefined">编辑</span>
+              <span v-if="view.id == undefined">新增</span>
+              <span v-if="view.id != undefined">编辑</span>
             </h4>
           </div>
           <div class="modal-body">
@@ -433,19 +336,24 @@
             <form class="form-horizontal">
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">商品类型</label>
+                <label class="col-sm-3 control-label">上级代理商</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.type">
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 商品类型">{{v}}</option>
+                  <select class="form-control" v-model="view.一级代理">
+                    <option value="">一级代理</option>
+                    <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
                   </select>
+                </div>
+                <div class="col-sm-4 text-danger mt5">
+                  * 不选，默认为一级代理商
                 </div>
               </div>
 
+              <hr>
+
               <div class="form-group">
-                <label class="col-sm-3 control-label">商品编号</label>
+                <label class="col-sm-3 control-label">代理商名称</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.identifier">
+                  <input type="text" class="form-control input-sm" v-model="view.代理商名称">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -453,9 +361,19 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">商品名称</label>
+                <label class="col-sm-3 control-label">代理商编号</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.title">
+                  <input type="text" class="form-control input-sm" v-model="view.代理商编号">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 首次设置后，不可修改
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">代理商密码</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.商户密码">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -464,73 +382,74 @@
 
               <hr>
 
-              <div class="form-group">
-                <label class="col-sm-3 control-label">销售价</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.price">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
+              旗下商户消费分成规则 [<a href="javascript:;">增加一条</a>]
 
-              <div class="form-group">
-                <label class="col-sm-3 control-label">可获得积分</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.integral">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 月卡无须录入
-                </div>
-              </div>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>旗下商户日订单总数</th>
+                    <th>自身提成</th>
+                    <th>商户提成</th>
+                    <th>上级代理提成</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="text" class="w40"> 至 <input type="text" class="w40"></td>
+                    <td><input type="text" class="w40"> %</td>
+                    <td><input type="text" class="w40"> %</td>
+                    <td><input type="text" class="w40"> %</td>
+                    <td>删除</td>
+                  </tr>
+                </tbody>
+              </table>
 
-              <div class="form-group">
-                <label class="col-sm-3 control-label">状态</label>
-                <div class="col-sm-4">
-                  <select class="form-control" v-model="view.status">
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 状态">{{v}}</option>
-                  </select>
-                </div>
-              </div>
+              注意：<br>
+              1. 区间范围包括两端值，不同区间值范围不可重复<br>
+              2. 若自身是一级代理，上级代理提成默认为 0 ；不可修改<br>
 
               <hr>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">使用行业限制</label>
+                <label class="col-sm-3 control-label">代理商负责人</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.industryId">
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业类型">{{v}}</option>
-                  </select>
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 仅限月卡
+                  <input type="text" class="form-control input-sm" v-model="view.代理商负责人">
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">使用区域限制</label>
+                <label class="col-sm-3 control-label">负责人手机</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.负责人手机">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">详细地址</label>
                 <div class="col-sm-3">
-                  <select class="form-control" v-model="view.province">
+                  <select class="form-control">
                     <option>中国</option>
                   </select>
                 </div>
                 <div class="col-sm-3">
-                  <select class="form-control" v-model="view.city">
+                  <select class="form-control">
                     <option>----</option>
                   </select>
                 </div>
                 <div class="col-sm-3">
-                  <select class="form-control" v-model="view.area">
+                  <select class="form-control">
                     <option>----</option>
                   </select>
                 </div>
               </div>
 
               <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-9 text-danger">
-                  * 仅限月卡
+                <div class="col-sm-offset-3 col-sm-9">
+                  <input type="text" class="form-control input-sm" v-model="view.address">
                 </div>
               </div>
 
@@ -710,9 +629,9 @@ var app = new Vue({
     list: {
       data: [],
       post: {
-        title: '',
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        chooseDay: 0
       },
       info: {},
       page: {},
@@ -722,22 +641,26 @@ var app = new Vue({
       },
     },
 
-    商品类型: {
-      1: '积分',
-      2: '卡券',
-    },
-
-    行业类型: {
+    行业: {
       1: '旅馆',
       2: '网吧',
       3: '汽车站',
       4: '机场',
       5: '旅行社',
+      6: '访客',
     },
 
     状态: {
+      0: '不可用',
       1: '可用',
-      2: '不可用',
+    },
+
+    网吧行业软件: {
+
+    },
+
+    同步模式: {
+
     },
 
   },
@@ -768,7 +691,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + this.param.dir,
+        url: manager_api + this.param.dir,
         // data: this.param,
         dataType: 'json',
         beforeSend: function(request){
@@ -826,7 +749,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'GET',
-        url: api + 'adm/view',
+        url: manager_api + 'adm/view',
         data: {
           table: this.param.table,
           id: id,
@@ -851,7 +774,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'adm/save?table=' + this.param.table,
+        url: manager_api + 'adm/save?table=' + this.param.table,
         data: this.view,
         dataType: 'text',
         beforeSend: function(request){
@@ -889,7 +812,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'adm/onoff',
+        url: manager_api + 'adm/onoff',
         data: {
           table: this.param.table,
           field: field,
@@ -938,7 +861,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'adm/del',
+        url: manager_api + 'adm/del',
         data: {
           table: this.param.table,
           id: ids,
@@ -992,14 +915,14 @@ var app = new Vue({
           clientType: 1,
           format: "json",
           version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
         },
         reqBody: this.list.post
       }
 
       $.ajax({
         type: 'POST',
-        url: api + 'user/userList/interface',
+        url: api + 'manager/getMchList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1007,8 +930,8 @@ var app = new Vue({
         },
         success:function(re){
 
-          _this.list.data = re.rspBody.goodList
-          delete re.rspBody.goodList
+          _this.list.data = re.rspBody.mchPageList
+          delete re.rspBody.mchPageList
 
           _this.list.info = re.rspBody          
 
@@ -1017,7 +940,7 @@ var app = new Vue({
           for( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-            _this.list.checkbox.all.push(v.goodId)
+            _this.list.checkbox.all.push(v.id)
           }
 
           //分页
@@ -1062,7 +985,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/getGood/interface',
+        url: api + 'manager/editMch/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1113,67 +1036,6 @@ var app = new Vue({
 
         },
       })
-
-    },
-
-    del: function(id){
-
-      if(!confirm('确认删除？')){
-        return
-      }
-
-      //单个
-      if(id != undefined){
-        var ids = [id]
-      }
-      //多个
-      else if(this.list.checkbox.checked.length == 0){
-        alert('一个都没有选中')
-        return
-      }else{
-
-        var ids = this.list.checkbox.checked
-      }
-
-      // console.log(ids)
-
-      for( var i in ids ){
-        var id = ids[i]
-
-
-        var data = {
-          "reqHead":
-          {
-            clientType: 1,
-            format: "json",
-            version: "1.0",
-            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-          },
-          reqBody: {
-            id: id
-          }
-        }
-
-        $.ajax({
-          type: 'POST',
-          url: api + 'manager/deleteGood/interface',
-          data: JSON.stringify(data),
-          dataType: 'json',
-          beforeSend: function(request){
-            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-          },
-          success: function(re){
-
-            if(re.rspHead.retMsg != '成功'){
-              alert(re.rspHead.retMsg)
-            }
-
-          }
-        })
-
-        _this.getList()
-
-      }
 
     },
 
@@ -1246,7 +1108,7 @@ var app = new Vue({
     this.getList()
 
   }
-})
+});
 </script>
 </body>
 </html>

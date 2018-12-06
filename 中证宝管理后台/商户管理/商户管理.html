@@ -175,8 +175,6 @@
 
                 <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#edit" @click="del()">删除</a>
 
-                <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a>
-
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
               </div>
@@ -275,7 +273,7 @@
                     <td>{{v.payIntegral}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
                       <a :class="`btn btn-xs btn-${v.status == '1' ? 'success':'warning'}`" @click="setStatus(v.id)">{{v.status == '1' ? '锁定':'解锁'}}</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
@@ -332,8 +330,8 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
-              <span v-if="view.mchId == undefined">新增</span>
-              <span v-if="view.mchId != undefined">编辑</span>
+              <span v-if="view.agentId == undefined">新增</span>
+              <span v-if="view.agentId != undefined">编辑</span>
             </h4>
           </div>
           <div class="modal-body">
@@ -345,13 +343,13 @@
                 <div class="col-sm-4">
                   <select class="form-control" v-model="view.一级代理">
                     <option value="">一级代理</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 上级代理商.lv1">{{v}}</option>
                   </select>
                 </div>
                 <div class="col-sm-4">
                   <select class="form-control" v-model="view.二级代理">
                     <option value="">二级代理</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 上级代理商.lv2">{{v}}</option>
                   </select>
                 </div>
               </div>
@@ -439,7 +437,7 @@
                 <div class="form-group">
                   <label class="col-sm-3 control-label">是否加密</label>
                   <div class="col-sm-4">
-                    <select class="form-control" v-model="view.是否加密">
+                    <select class="form-control" v-model="view.isEncrypt">
                       <option value="">--请选择--</option>
                       <option :value="`${i}`" v-for="(v, i) in 是否加密">{{v}}</option>
                     </select>
@@ -478,7 +476,7 @@
                 <div class="form-group">
                   <label class="col-sm-3 control-label">酒店行业同步模式</label>
                   <div class="col-sm-4">
-                    <select class="form-control" v-model="view.同步模式">
+                    <select class="form-control" v-model="view.syncType">
                       <option value="">--请选择--</option>
                       <option :value="`${i}`" v-for="(v, i) in 同步模式">{{v}}</option>
                     </select>
@@ -488,12 +486,12 @@
                   </div>
                 </div>
 
-                <span v-if="view.同步模式 == 1">
+                <span v-if="view.syncType == 1">
 
                   <div class="form-group">
                     <label class="col-sm-3 control-label">同步IP或计算机名称</label>
                     <div class="col-sm-4">
-                      <input type="text" class="form-control input-sm" v-model="view.同步IP或计算机名称">
+                      <input type="text" class="form-control input-sm" v-model="view.databaseIp">
                     </div>
                   </div>
 
@@ -754,6 +752,11 @@ var app = new Vue({
       },
     },
 
+    上级代理商:{
+      lv1: [],
+      lv2: [],
+    },
+
     行业: {
       1: '旅馆',
       2: '网吧',
@@ -813,7 +816,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + this.param.dir,
+        url: manager_api + this.param.dir,
         // data: this.param,
         dataType: 'json',
         beforeSend: function(request){
@@ -871,7 +874,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'GET',
-        url: api + 'adm/view',
+        url: manager_api + 'adm/view',
         data: {
           table: this.param.table,
           id: id,
@@ -896,7 +899,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'adm/save?table=' + this.param.table,
+        url: manager_api + 'adm/save?table=' + this.param.table,
         data: this.view,
         dataType: 'text',
         beforeSend: function(request){
@@ -934,7 +937,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'adm/onoff',
+        url: manager_api + 'adm/onoff',
         data: {
           table: this.param.table,
           field: field,
@@ -983,7 +986,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'adm/del',
+        url: manager_api + 'adm/del',
         data: {
           table: this.param.table,
           id: ids,
@@ -1044,7 +1047,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/getMchList/interface',
+        url: manager_api + 'manager/getMchList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1101,13 +1104,13 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          mchId: id
+          id: id
         }
       }
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/getMchInfo/interface',
+        url: manager_api + 'manager/getMchInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1141,7 +1144,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/' + add_or_edit + 'Mch/interface',
+        url: manager_api + 'manager/' + add_or_edit + 'Mch/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1176,7 +1179,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/editMchStatus/interface',
+        url: manager_api + 'manager/editMchStatus/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1212,7 +1215,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/editMchStatus/interface',
+        url: manager_api + 'manager/editMchStatus/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1271,7 +1274,7 @@ var app = new Vue({
 
         $.ajax({
           type: 'POST',
-          url: api + 'manager/deleteMch/interface',
+          url: manager_api + 'manager/deleteMch/interface',
           data: JSON.stringify(data),
           dataType: 'json',
           beforeSend: function(request){
@@ -1358,10 +1361,39 @@ var app = new Vue({
 
 
 
+    //上级代理商
+    var data = {
+      "reqHead":
+      {
+        clientType: 1,
+        format: "json",
+        version: "1.0",
+        sign: "30C7398578F1F7C995BAF67D18F89B33"
+      },
+      reqBody: {}
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: manager_api + 'manager/getFirstAgentAll/interface',
+      data: JSON.stringify(data),
+      dataType: 'json',
+      beforeSend: function(request){
+        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+      },
+      success: function(re){
+
+        _this.上级代理商 = re.rspBody.agentRspDTOS
+
+      }
+    })
+
+
+
     this.getList()
 
   }
-});
+})
 </script>
 </body>
 </html>

@@ -204,7 +204,7 @@
                   </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-primary" @click="getList">查找</button>
+                      <button class="btn btn-primary" @click="getList('page', 1)">查找</button>
                     </div>
                   </div>
                 </div>
@@ -514,7 +514,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + this.param.dir,
+        url: manager_api + this.param.dir,
         // data: this.param,
         dataType: 'json',
         beforeSend: function(request){
@@ -572,7 +572,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'GET',
-        url: api + 'adm/view',
+        url: manager_api + 'adm/view',
         data: {
           table: this.param.table,
           id: id,
@@ -597,7 +597,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'adm/save?table=' + this.param.table,
+        url: manager_api + 'adm/save?table=' + this.param.table,
         data: this.view,
         dataType: 'text',
         beforeSend: function(request){
@@ -635,7 +635,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'adm/onoff',
+        url: manager_api + 'adm/onoff',
         data: {
           table: this.param.table,
           field: field,
@@ -684,7 +684,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'adm/del',
+        url: manager_api + 'adm/del',
         data: {
           table: this.param.table,
           id: ids,
@@ -745,7 +745,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/getMemberList/interface',
+        url: manager_api + 'manager/getMemberList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -808,7 +808,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/getGood/interface',
+        url: manager_api + 'manager/getGood/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -842,7 +842,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/' + add_or_edit + 'Good/interface',
+        url: manager_api + 'manager/' + add_or_edit + 'Good/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -902,7 +902,7 @@ var app = new Vue({
 
         $.ajax({
           type: 'POST',
-          url: api + 'manager/deleteGood/interface',
+          url: manager_api + 'manager/deleteGood/interface',
           data: JSON.stringify(data),
           dataType: 'json',
           beforeSend: function(request){
