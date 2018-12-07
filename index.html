@@ -3,13 +3,24 @@
 	<meta charset="UTF-8">
 </head>
 <body>
+<script>
 
-选择后台：<br>
+	if( location.hostname.indexOf('admin.') != -1 ){
+		location.href = 'manager/index.html'
+	}
+
+	if( location.hostname.indexOf('mp.') != -1 ){
+		location.href = 'mp/index.html'
+	}
+
+</script>
+
+<!-- 选择后台：<br>
 <br>
 
 <a href="manager/index.html">中证宝管理后台</a><br>
 <br>
 
-<a href="mp/index.html">商户后台</a>
+<a href="mp/index.html">商户后台</a> -->
 </body>
 </html>
