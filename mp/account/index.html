@@ -91,7 +91,7 @@ var app = new Vue({
     account: {
       account: "6104040759",
       password: "123456",
-      type: 1,
+      type: 2,
     },
 
   },
@@ -122,7 +122,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + this.param.dir,
+        url: manager_api + this.param.dir,
         // data: this.param,
         dataType: 'json',
         beforeSend: function(request){
@@ -180,7 +180,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'GET',
-        url: mp_api + 'adm/view',
+        url: manager_api + 'adm/view',
         data: {
           table: this.param.table,
           id: id,
@@ -205,7 +205,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'adm/save?table=' + this.param.table,
+        url: manager_api + 'adm/save?table=' + this.param.table,
         data: this.view,
         dataType: 'text',
         beforeSend: function(request){
@@ -243,7 +243,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'adm/onoff',
+        url: manager_api + 'adm/onoff',
         data: {
           table: this.param.table,
           field: field,
@@ -292,7 +292,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'adm/del',
+        url: manager_api + 'adm/del',
         data: {
           table: this.param.table,
           id: ids,
@@ -341,14 +341,14 @@ var app = new Vue({
         success: function(re){
 
           if(re.rspHead.retCode != 1){
-            alert(re.msg)
+            alert(re.rspHead.retMsg)
           }else{
             var admin = {}
             admin.token = re.rspBody.token
             admin.expire = new Date().getTime() + (180 * 60 * 1000)
             LS.admin = JSON.stringify(admin)
 
-            location.href = '../'
+            location.href = '../mch/index.html'
           }
 
         }

@@ -67,7 +67,7 @@
                   <!-- <a href="#" class="btn btn-default btn-flat">设置</a> -->
                 </div>
                 <div class="pull-right">
-                  <a href="../../account/?logout=1" class="btn btn-default btn-flat">登出</a>
+                  <a href="../account/?logout=1" class="btn btn-default btn-flat">登出</a>
                 </div>
               </li>
             </ul>
@@ -273,7 +273,7 @@
                     <td>{{v.payIntegral}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br>
                       <a :class="`btn btn-xs btn-${v.status == '1' ? 'success':'warning'}`" @click="setStatus(v.id)">{{v.status == '1' ? '锁定':'解锁'}}</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
@@ -341,14 +341,14 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">上级代理商</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.一级代理">
-                    <option value="">一级代理</option>
-                    <option :value="`${i}`" v-for="(v, i) in 上级代理商.lv1">{{v}}</option>
+                  <select class="form-control" v-model="view.superiorAgentId" @change="getLV2">
+                    <option value="">--请选择--</option>
+                    <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
                   </select>
                 </div>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.二级代理">
-                    <option value="">二级代理</option>
+                  <select class="form-control" v-model="view.agentId">
+                    <option value="">--请选择--</option>
                     <option :value="`${i}`" v-for="(v, i) in 上级代理商.lv2">{{v}}</option>
                   </select>
                 </div>
@@ -1104,7 +1104,7 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          id: id
+          mchId: id
         }
       }
 
@@ -1295,6 +1295,72 @@ var app = new Vue({
 
     },
 
+    getLV2: function(){
+
+      // console.log(this.view.一级代理)
+
+      //上级代理商
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {
+          id: this.view.一级代理
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getSecondAgent/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.上级代理商.lv2 = re.rspBody.agentRspDTOS
+
+        }
+      })
+
+    },
+
+    getProvince: function(){
+
+      //上级代理商
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {}
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getFirstAgentAll/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.上级代理商.lv1 = re.rspBody.agentRspDTOS
+
+        }
+      })
+
+    },
+
   },
   mounted() {
     _this = this
@@ -1383,7 +1449,7 @@ var app = new Vue({
       },
       success: function(re){
 
-        _this.上级代理商 = re.rspBody.agentRspDTOS
+        _this.上级代理商.lv1 = re.rspBody.agentRspDTOS
 
       }
     })

@@ -67,7 +67,7 @@
                   <!-- <a href="#" class="btn btn-default btn-flat">设置</a> -->
                 </div>
                 <div class="pull-right">
-                  <a href="../../account/?logout=1" class="btn btn-default btn-flat">登出</a>
+                  <a href="../account/?logout=1" class="btn btn-default btn-flat">登出</a>
                 </div>
               </li>
             </ul>
@@ -265,7 +265,7 @@
                     <td>{{v.id}}</td>
                     <td>{{行业[v.industryId]}}</td>
                     <td>{{v.title}}</td>
-                    <td :title="`${v.mchId}`">{{v.mchId.substr(0,4)}}…{{v.mchId.substr(-4)}}</td>
+                    <td>{{v.identifier}}</td>
                     <td>{{v.detailedAddress}}</td>
                     <td>{{v.lastLoginTime}}</td>
                     <td>?{{v.updateTime}}</td>
