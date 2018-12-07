@@ -52,11 +52,11 @@
         <label class="col-sm-3 control-label">登录角色</label>
         <div class="col-sm-9">
           <label>
-            <input type="radio" value="1" v-model="account.type"> 代理商
+            <input type="radio" value="2" v-model="account.type"> 代理商
           </label>
           &nbsp;&nbsp;&nbsp;
           <label>
-            <input type="radio" value="2" v-model="account.type"> 商户
+            <input type="radio" value="1" v-model="account.type"> 商户
           </label>
         </div>
       </div>
@@ -343,9 +343,14 @@ var app = new Vue({
           if(re.rspHead.retCode != 1){
             alert(re.rspHead.retMsg)
           }else{
-            var admin = {}
+            var admin = {
+              id: re.rspBody.adminResponseInfoDTO.id,
+              token: re.rspBody.token,
+              expire: new Date().getTime() + (180 * 60 * 1000)
+            }
+/*            admin.id = re.rspBody.id
             admin.token = re.rspBody.token
-            admin.expire = new Date().getTime() + (180 * 60 * 1000)
+            admin.expire = new Date().getTime() + (180 * 60 * 1000)*/
             LS.admin = JSON.stringify(admin)
 
             location.href = '../mch/index.html'
