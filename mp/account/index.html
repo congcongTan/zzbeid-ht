@@ -128,7 +128,7 @@ var app = new Vue({
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
-        success:function(re){
+        success: function(re){
 
           _this.param = re.param
           _this.list.data = re.data

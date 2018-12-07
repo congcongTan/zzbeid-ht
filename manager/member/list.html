@@ -173,7 +173,7 @@
             <div class="tab-content">
               <div class="tab-pane" id="操作">
 
-                <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#edit" @click="del()">删除</a>
+                <a class="btn btn-sm btn-danger" @click="del()">删除</a>
 
                 <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a>
 
@@ -522,7 +522,7 @@ var app = new Vue({
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
-        success:function(re){
+        success: function(re){
 
           _this.param = re.param
           _this.list.data = re.data
@@ -753,7 +753,7 @@ var app = new Vue({
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
-        success:function(re){
+        success: function(re){
 
           _this.list.data = re.rspBody.memberList
           delete re.rspBody.memberList

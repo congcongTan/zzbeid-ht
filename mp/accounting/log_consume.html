@@ -173,7 +173,7 @@
             <div class="tab-content">
               <div class="tab-pane" id="操作">
 
-                <!-- <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#edit" @click="del()">删除</a> -->
+                <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
 
                 <!-- <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a> -->
 
@@ -205,15 +205,6 @@
                       <select class="form-control" v-model="list.post.payType">
                         <!-- <option value="">--请选择--</option> -->
                         <option :value="`${i}`" v-for="(v, i) in 支付方式">{{v}}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">支付状态</label>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.status">
-                        <!-- <option value="">--请选择--</option> -->
-                        <option :value="`${i}`" v-for="(v, i) in 支付状态">{{v}}</option>
                       </select>
                     </div>
                   </div>
@@ -487,12 +478,6 @@ var app = new Vue({
       2: '卡券',
     },
 
-    支付状态: {
-      1: '付款成功',
-      2: '付款失败',
-      3: '正在付款',
-    },
-
   },
   methods: {
 /*    getList: function(key, val){
@@ -527,7 +512,7 @@ var app = new Vue({
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
-        success:function(re){
+        success: function(re){
 
           _this.param = re.param
           _this.list.data = re.data
@@ -758,7 +743,7 @@ var app = new Vue({
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
-        success:function(re){
+        success: function(re){
 
           _this.list.data = re.rspBody.consumptionDetailList
           delete re.rspBody.consumptionDetailList

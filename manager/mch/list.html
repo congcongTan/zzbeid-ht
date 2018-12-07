@@ -187,19 +187,16 @@
                       <div class="row">
                         <div class="col-xs-4 col-sm-3">
                           <select class="form-control" v-model="list.post.province" onchange="app.getC('search', this.value)">
-                            <option value="" selected>--请选择--</option>
                             <option :value="`${v.code}`" v-for="(v, i) in search_pca.p">{{v.name}}</option>
                           </select>
                         </div>
                         <div class="col-xs-4 col-sm-3">
                           <select class="form-control" v-model="list.post.city" onchange="app.getA('search', this.value)">
-                            <option value="" selected>--请选择--</option>
                             <option :value="`${v.code}`" v-for="(v, i) in search_pca.c">{{v.name}}</option>
                           </select>
                         </div>
-                        <div class="col-xs-4 col-sm-3" v-model="list.post.area">
-                          <select class="form-control">
-                            <option value="" selected>--请选择--</option>
+                        <div class="col-xs-4 col-sm-3">
+                          <select class="form-control" v-model="list.post.area">
                             <option :value="`${v.code}`" v-for="(v, i) in search_pca.a">{{v.name}}</option>
                           </select>
                         </div>
@@ -747,7 +744,7 @@ var app = new Vue({
       post: {
         pageNum: 1,
         pageSize: 10,
-        chooseDay: 0
+        chooseDay: 0,
       },
       info: {},
       page: {},
@@ -839,7 +836,7 @@ var app = new Vue({
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
-        success:function(re){
+        success: function(re){
 
           _this.param = re.param
           _this.list.data = re.data
@@ -1070,7 +1067,7 @@ var app = new Vue({
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
-        success:function(re){
+        success: function(re){
 
           _this.list.data = re.rspBody.mchPageList
           delete re.rspBody.mchPageList
