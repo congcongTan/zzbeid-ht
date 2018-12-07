@@ -251,7 +251,7 @@
                     <th>商户编号</th>
                     <th>商户地址</th>
                     <th>上次登录时间</th>
-                    <th>离线时长</th>
+                    <!-- <th>离线时长</th> -->
                     <th>支付积分</th>
                     <th>状态</th>
                     <th width="1%">操作</th>
@@ -266,7 +266,7 @@
                     <td>{{v.identifier}}</td>
                     <td>{{v.detailedAddress}}</td>
                     <td>{{v.lastLoginTime}}</td>
-                    <td>{{(v.offLineTime / 86400).toFixed(1)}}天</td>
+                    <!-- <td>{{(v.offLineTime / 86400).toFixed(1)}}天</td> -->
                     <td>{{v.payIntegral}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
