@@ -348,9 +348,6 @@ var app = new Vue({
               token: re.rspBody.token,
               expire: new Date().getTime() + (180 * 60 * 1000)
             }
-/*            admin.id = re.rspBody.id
-            admin.token = re.rspBody.token
-            admin.expire = new Date().getTime() + (180 * 60 * 1000)*/
             LS.admin = JSON.stringify(admin)
 
             location.href = '../mch/index.html'

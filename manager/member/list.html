@@ -34,9 +34,9 @@
     <!-- Logo -->
     <a href="../index.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>A</b>D</span>
+      <span class="logo-mini">管理后台</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>A</b>dmin</span>
+      <span class="logo-lg">管理后台</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -234,7 +234,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
+                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td>{{v.id}}</td>
                     <td><a :href="`${v.headimgUrl}`" data-fancybox="gallery"><img :src="`${v.headimgUrl}`" width="100%"></a></td>
                     <td>{{v.realName}}</td>
@@ -267,6 +267,8 @@
                     <option value="100">每页 100 条</option>
                   </select>
                 </label>
+
+                &nbsp;&nbsp;共 {{list.info.total}} 条记录
               </div>
 
               <div class="pull-right" v-if="list.info.pages > 1">
@@ -760,11 +762,11 @@ var app = new Vue({
 
 
           //id
-/*          for( var i in _this.list.data ){
+          for( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-            _this.list.checkbox.all.push(v.goodId)
-          }*/
+            _this.list.checkbox.all.push(v.id)
+          }
 
           //分页
           _this.list.page.prev = []
