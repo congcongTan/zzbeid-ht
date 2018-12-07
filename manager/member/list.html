@@ -153,8 +153,8 @@
         会员列表
       </h1>
       <ol class="breadcrumb">
-        <li><a href="../index/"><i class="fa fa-home"></i> 首页</a></li>
-        <li><a href="../会员管理/">会员管理</a></li>
+        <li><i class="fa fa-home"></i> 首页</li>
+        <li>会员管理</li>
         <li class="active">会员列表</li>
       </ol>
     </section>
@@ -248,7 +248,7 @@
                     <td>{{账号锁定[v.isLock]}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" :href="`积分明细.html?id=${v.id}`">积分明细</a><br>
-                      <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
+                      <a class="btn btn-xs btn-danger" @click="锁定(v.id)">锁定</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.data.length == 0">
@@ -863,9 +863,9 @@ var app = new Vue({
 
     },
 
-    del: function(id){
+    锁定: function(id){
 
-      if(!confirm('确认删除？')){
+      if(!confirm('确认锁定？')){
         return
       }
 
@@ -897,13 +897,13 @@ var app = new Vue({
             sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
           },
           reqBody: {
-            id: id
+            memberId: id
           }
         }
 
         $.ajax({
           type: 'POST',
-          url: manager_api + 'manager/deleteGood/interface',
+          url: manager_api + 'manager/editMemberIsLock/interface',
           data: JSON.stringify(data),
           dataType: 'json',
           beforeSend: function(request){

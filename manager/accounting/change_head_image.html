@@ -153,8 +153,8 @@
         更换头像明细
       </h1>
       <ol class="breadcrumb">
-        <li><a href="../index/"><i class="fa fa-home"></i> 首页</a></li>
-        <li><a href="../计费管理/">计费管理</a></li>
+        <li><i class="fa fa-home"></i> 首页</li>
+        <li>计费管理</li>
         <li class="active">更换头像明细</li>
       </ol>
     </section>
@@ -182,53 +182,53 @@
               </div>
               <div class="tab-pane active" id="搜索">
 
-                <div class="pull-left mt6 ml5">
-                  支付方式：
+                <div class="form-horizontal">
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">发生时间</label>
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <div class="col-xs-5 col-sm-4">
+                          <input type="text" class="form-control" v-model="list.post.startTime">
+                        </div>
+                        <div class="fl w20 tc mt5">
+                          ~
+                        </div>
+                        <div class="col-xs-5 col-sm-4">
+                          <input type="text" class="form-control" v-model="list.post.endTime">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">支付方式</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.payType">
+                        <!-- <option value="">--请选择--</option> -->
+                        <option :value="`${i}`" v-for="(v, i) in 支付方式">{{v}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">支付状态</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.status">
+                        <!-- <option value="">--请选择--</option> -->
+                        <option :value="`${i}`" v-for="(v, i) in 支付状态">{{v}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">会员名称</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.memberName">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                    </div>
+                  </div>
                 </div>
-
-                <div class="pull-left w100 ml5">
-                  <select class="form-control input-sm" v-model="list.post.payType">
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 支付方式">{{v}}</option>
-                  </select>
-                </div>
-
-                <div class="c h10"></div>
-
-                <div class="pull-left mt6 ml5">
-                  支付状态：
-                </div>
-
-                <div class="pull-left w100 ml5">
-                  <select class="form-control input-sm">
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 支付状态">{{v}}</option>
-                  </select>
-                </div>
-
-                <div class="c h10"></div>
-
-                <div class="pull-left mt6 ml5">
-                  发生时间：
-                </div>
-
-                <div class="pull-left w150 ml5"><input type="datetime" class="form-control input-sm" v-model="list.post.startTime"></div>
-
-                <div class="pull-left w20 ml5 mt5 tc">~</div>
-
-                <div class="pull-left w150 ml5"><input type="datetime" class="form-control input-sm" v-model="list.post.endTime"></div>
-
-                <div class="c h10"></div>
-
-                <div class="pull-left mt6 ml5">
-                  会员名称：
-                </div>
-
-                <div class="pull-left w150 ml5"><input type="text" class="form-control input-sm" v-model="list.post.memberName"></div>
-
-                <div class="c h10"></div>
-
-                <a class="btn btn-sm btn-primary" @click="getList">查找</a>
 
               </div>
             </div>
