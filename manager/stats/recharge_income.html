@@ -188,14 +188,14 @@
                     <label class="col-sm-2 control-label">统计日期</label>
                     <div class="col-sm-10">
                       <div class="row">
-                        <div class="col-xs-5 col-sm-3">
-                          <input type="text" class="form-control datepicker" id="startTime">
+                        <div class="col-xs-5 col-sm-4">
+                          <input type="text" class="form-control datetimepicker" id="startTime">
                         </div>
-                        <div class="fl w20 mt8 tc">
+                        <div class="fl w20 tc mt5">
                           ~
                         </div>
-                        <div class="col-xs-5 col-sm-3">
-                          <input type="text" class="form-control datepicker" id="endTime">
+                        <div class="col-xs-5 col-sm-4">
+                          <input type="text" class="form-control datetimepicker" id="endTime">
                         </div>
                       </div>
                     </div>
@@ -441,9 +441,8 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
-<link rel="stylesheet" href="../../plugins/datepicker/datepicker.css">
-<script src="../../plugins/datepicker/datepicker.js"></script>
-
+<link rel="stylesheet" href="../../plugins/datetimepicker/datetimepicker.css">
+<script src="../../plugins/datetimepicker/datetimepicker.js"></script>
 <script>
 var app = new Vue({
   el: '#app',
@@ -711,9 +710,6 @@ var app = new Vue({
 
       _this = this
 
-      // this.list.post.startTime = '2018-10-01 00:00:00'
-      // this.list.post.endTime = '2018-12-31 23:59:59'
-
       //这里用v-model会有大坑
       this.list.post.startTime = $('#startTime').val() + ' 00:00:00'
       this.list.post.endTime = $('#endTime').val() + ' 23:59:59'
@@ -833,15 +829,13 @@ var app = new Vue({
 
 
 
-    $('.datepicker').datepicker({
-      format: "yyyy-mm-dd",
-    })
-
     var date = new Date()
     var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
 
-    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01')
-    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date)
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01 00:00')
+    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date + ' 23:59')
+
+    $(".datetimepicker").datetimepicker();
 
     this.getList()
 

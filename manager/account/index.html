@@ -333,10 +333,14 @@ var app = new Vue({
         dataType: 'json',
         success: function(re){
 
+          // console.log(re)
+          // return
+
           if(re.rspHead.retCode != 1){
             alert(re.rspHead.retMsg)
           }else{
             var admin = {}
+            admin.user = re.rspBody.managerRspDTO.account
             admin.token = re.rspBody.token
             admin.expire = new Date().getTime() + (180 * 60 * 1000)
             LS.admin = JSON.stringify(admin)

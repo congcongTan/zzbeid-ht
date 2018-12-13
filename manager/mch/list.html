@@ -340,7 +340,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">上级代理商</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.superiorAgentId" @change="getLV2">
+                  <select class="form-control" v-model="view.superiorAgentId" onchange="app.getLV2()">
                     <option value="">--请选择--</option>
                     <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
                   </select>
@@ -1300,12 +1300,12 @@ var app = new Vue({
 
             if(re.rspHead.retCode != '1'){
               alert(re.rspHead.retMsg)
+            }else{
+              _this.getList()
             }
 
           }
         })
-
-        _this.getList()
 
       }
 
@@ -1325,7 +1325,7 @@ var app = new Vue({
           sign: "30C7398578F1F7C995BAF67D18F89B33"
         },
         reqBody: {
-          id: this.view.一级代理
+          agentId: this.view.superiorAgentId
         }
       }
 

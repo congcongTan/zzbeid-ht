@@ -188,13 +188,13 @@
                     <div class="col-sm-10">
                       <div class="row">
                         <div class="col-xs-5 col-sm-4">
-                          <input type="text" class="form-control" v-model="list.post.startTime">
+                          <input type="text" class="form-control datetimepicker" id="startTime">
                         </div>
                         <div class="fl w20 tc mt5">
                           ~
                         </div>
                         <div class="col-xs-5 col-sm-4">
-                          <input type="text" class="form-control" v-model="list.post.endTime">
+                          <input type="text" class="form-control datetimepicker" id="endTime">
                         </div>
                       </div>
                     </div>
@@ -212,6 +212,12 @@
                     <label class="col-sm-2 control-label">会员名称</label>
                     <div class="col-sm-3">
                       <input type="text" class="form-control" v-model="list.post.memberName">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">消费商户</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.mchName">
                     </div>
                   </div>
                   <div class="form-group">
@@ -703,6 +709,10 @@ var app = new Vue({
 
       _this = this
 
+      //这里用v-model会有大坑
+      this.list.post.startTime = $('#startTime').val()
+      this.list.post.endTime = $('#endTime').val()
+
       if(key == 'page'){
 
         if(val == '+1'){
@@ -841,8 +851,16 @@ var app = new Vue({
 
 
 
-    this.list.post.id = this.admin.id
+    var date = new Date()
+    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
 
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01 00:00')
+    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date + ' 23:59')
+
+    $(".datetimepicker").datetimepicker();
+
+
+    this.list.post.id = this.admin.id
     this.getList()
 
   }

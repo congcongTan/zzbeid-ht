@@ -188,13 +188,13 @@
                     <div class="col-sm-10">
                       <div class="row">
                         <div class="col-xs-5 col-sm-4">
-                          <input type="text" class="form-control" v-model="list.post.startTime">
+                          <input type="text" class="form-control datetimepicker" id="startTime">
                         </div>
                         <div class="fl w20 tc mt5">
                           ~
                         </div>
                         <div class="col-xs-5 col-sm-4">
-                          <input type="text" class="form-control" v-model="list.post.endTime">
+                          <input type="text" class="form-control datetimepicker" id="endTime">
                         </div>
                       </div>
                     </div>
@@ -247,7 +247,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
+                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td>{{v.memberName}}</td>
                     <td>{{v.realName}}</td>
                     <td :title="`${v.identityCard}`">{{v.identityCard.substr(0,4)}}****{{v.identityCard.substr(-4)}}</td>
@@ -453,6 +453,8 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
+<link rel="stylesheet" href="../../plugins/datetimepicker/datetimepicker.css">
+<script src="../../plugins/datetimepicker/datetimepicker.js"></script>
 <script>
 var app = new Vue({
   el: '#app',
@@ -720,6 +722,11 @@ var app = new Vue({
 
       _this = this
 
+      //这里用v-model会有大坑
+      this.list.post.startTime = $('#startTime').val()
+      this.list.post.endTime = $('#endTime').val()
+
+
       if(key == 'page'){
 
         if(val == '+1'){
@@ -768,11 +775,11 @@ var app = new Vue({
 
 
           //id
-/*          for( var i in _this.list.data ){
+          for( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-            _this.list.checkbox.all.push(v.goodId)
-          }*/
+            _this.list.checkbox.all.push(v.id)
+          }
 
           //分页
           _this.list.page.prev = []
@@ -857,6 +864,14 @@ var app = new Vue({
     // console.log(this.mca)
 
 
+
+    var date = new Date()
+    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
+
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01 00:00')
+    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date + ' 23:59')
+
+    $(".datetimepicker").datetimepicker();
 
     this.getList()
 

@@ -320,6 +320,16 @@ var app = new Vue({
 
       var _this = this
 
+      if(this.account.account == undefined || this.account.account == ''){
+        alert('请输入用户名')
+        return
+      }
+      if(this.account.password == undefined || this.account.password == ''){
+        alert('请输入密码')
+        return
+      }
+
+
       var data = {
         reqHead: {
           clientType: 6,
@@ -344,7 +354,8 @@ var app = new Vue({
             alert(re.rspHead.retMsg)
           }else{
             var admin = {
-              id: re.rspBody.adminResponseInfoDTO.id,
+              userId: re.rspBody.adminResponseInfoDTO.userId,
+              type: _this.account.type,
               token: re.rspBody.token,
               expire: new Date().getTime() + (180 * 60 * 1000)
             }
