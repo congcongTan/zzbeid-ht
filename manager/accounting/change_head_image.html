@@ -261,7 +261,7 @@
 
               <div class="pull-left mt15">
                 <label>
-                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="getList()">
+                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
                     <option value="2">每页 2 条</option>
                     <option value="10">每页 10 条</option>
                     <option value="25">每页 25 条</option>

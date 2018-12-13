@@ -235,7 +235,7 @@
 
               <div class="pull-left mt15">
                 <label>
-                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="getList()">
+                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
                     <option value="2">每页 2 条</option>
                     <option value="10">每页 10 条</option>
                     <option value="25">每页 25 条</option>
@@ -273,6 +273,75 @@
       </div>
 
     </section>
+
+    <div class="modal fade" id="view">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              新增
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <div class="alert alert-info">
+              如用户手机号无法接受信息，可添加验证记录，再把验证码发给用户验证。
+            </div>
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">发送类型</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.type">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 发送类型">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">发送手机</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.mobile">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">6位数字验证码</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.code">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+<!--               <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">发送时间</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.integral">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 默认系统当前时间
+                </div>
+              </div> -->
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="saveView">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 
@@ -756,6 +825,49 @@ var app = new Vue({
           }
 
         }
+      })
+
+    },
+
+    getView: function(id){
+
+      this.view = {}
+
+      $('#view').modal('show')
+
+    },
+
+    saveView: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.view
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/addLogMessage/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retMsg == '成功'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
       })
 
     },

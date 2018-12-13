@@ -251,7 +251,7 @@
                     <th>商户编号</th>
                     <th>商户地址</th>
                     <th>上次登录时间</th>
-                    <!-- <th>离线时长</th> -->
+                    <th>离线时长</th>
                     <th>支付积分</th>
                     <th>状态</th>
                     <th width="1%">操作</th>
@@ -266,7 +266,7 @@
                     <td>{{v.identifier}}</td>
                     <td>{{v.detailedAddress}}</td>
                     <td>{{v.lastLoginTime}}</td>
-                    <!-- <td>{{(v.offLineTime / 86400).toFixed(1)}}天</td> -->
+                    <td>{{(v.offLineTime / 86400).toFixed(1)}}天</td>
                     <td>{{v.payIntegral}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
@@ -283,7 +283,7 @@
 
               <div class="pull-left mt15">
                 <label>
-                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="getList()">
+                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
                     <option value="2">每页 2 条</option>
                     <option value="10">每页 10 条</option>
                     <option value="25">每页 25 条</option>
@@ -340,7 +340,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">上级代理商</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.superiorAgentId" onchange="app.getLV2(this.value)">
+                  <select class="form-control" v-model="view.superiorAgentId" onchange="app.getLV2(this.value, 1)">
                     <option value="">--请选择--</option>
                     <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
                   </select>
@@ -394,7 +394,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">支付积分</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" placeholder="设置用户授权需支付金额" v-model="view.payIntegral">
+                  <input type="number" class="form-control input-sm" placeholder="设置用户授权需支付金额" v-model="view.payIntegral">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   * 免费输入0
@@ -1133,6 +1133,8 @@ var app = new Vue({
 
           _this.view = re.rspBody
 
+          _this.getLV2(_this.view.superiorAgentId)
+
           _this.getC('view', _this.view.province)
           _this.getA('view', _this.view.city)
 
@@ -1154,6 +1156,13 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: this.view
+      }
+
+      if ( data.reqBody.superiorAgentId != '' && data.reqBody.agentId == '' ){
+
+        data.reqBody.agentId = data.reqBody.superiorAgentId
+        delete data.reqBody.superiorAgentId
+
       }
 
       var add_or_edit = this.view.mchId == undefined ? 'add':'edit'
@@ -1311,9 +1320,13 @@ var app = new Vue({
 
     },
 
-    getLV2: function(fid){
+    getLV2: function(fid, clean_lv2){
 
       // console.log(this.view.一级代理)
+
+      if ( clean_lv2 != undefined ){
+        this.view.agentId = ''
+      }
 
       //上级代理商
       var data = {
@@ -1339,7 +1352,7 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.上级代理商.lv2 = re.rspBody.agentRspDTOList
+          _this.上级代理商.lv2 = re.rspBody.secondAgentList
 
         }
       })
@@ -1348,7 +1361,7 @@ var app = new Vue({
 
     getP: function(){
 
-      console.log('getP')
+      // console.log('getP')
       // return
 
       var data = {
@@ -1382,7 +1395,7 @@ var app = new Vue({
 
     getC: function(who, pid){
 
-      console.log('getC', pid)
+      // console.log('getC', pid)
 
       var _this = this
 
@@ -1419,7 +1432,7 @@ var app = new Vue({
 
     getA: function(who, pid){
 
-      console.log('getA', pid)
+      // console.log('getA', pid)
       // return
 
       var _this = this
@@ -1546,7 +1559,7 @@ var app = new Vue({
       },
       success: function(re){
 
-        _this.上级代理商.lv1 = re.rspBody.agentRspDTOS
+        _this.上级代理商.lv1 = re.rspBody.firstAgentList
 
       }
     })
