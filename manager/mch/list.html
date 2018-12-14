@@ -173,7 +173,7 @@
             <div class="tab-content">
               <div class="tab-pane active" id="操作">
 
-                <a class="btn btn-sm btn-danger" @click="del()">删除</a>
+                <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
@@ -266,12 +266,12 @@
                     <td>{{v.identifier}}</td>
                     <td>{{v.detailedAddress}}</td>
                     <td>{{v.lastLoginTime}}</td>
-                    <td>{{(v.offLineTime / 86400).toFixed(1)}}天</td>
+                    <td :class="{'text-danger': v.offLineTime / 86400 > 3}">{{(v.offLineTime / 86400).toFixed(1)}}天</td>
                     <td>{{v.payIntegral}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br>
-                      <a :class="`btn btn-xs btn-${v.status == '1' ? 'success':'warning'}`" @click="setStatus(v.id)">{{v.status == '1' ? '锁定':'解锁'}}</a><br>
+                      <a :class="`btn btn-xs btn-${v.status == '1' ? 'success':'warning'}`" @click="setStatus(v.mchId)">{{v.status == '1' ? '锁定':'解锁'}}</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
                   </tr>
@@ -525,6 +525,9 @@
                 <label class="col-sm-3 control-label">商户负责人</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="view.linkman">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 
                 </div>
               </div>
 
@@ -795,10 +798,9 @@ var app = new Vue({
     },
 
     同步模式: {
-      1: '本地数据库（LockSend）',
+      1: '在线（云服务器）',
       2: 'xml文件（铃铛）',
-      3: '云服务器 - 湖南湘潭',
-      4: '云服务器 - 湖南永州',
+      3: '本地数据库（LockSend）',
     },
 
   },
@@ -1234,7 +1236,7 @@ var app = new Vue({
           sign: "401E79DEC2E7AA1F645D67924E6EE0F3"
         },
         reqBody: {
-          id: id
+          mchId: id
         }
       }
 

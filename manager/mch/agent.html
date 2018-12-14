@@ -206,24 +206,15 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">代理商行业</label>
-                    <div class="col-sm-3">
-                      <select class="form-control">
-                        <!-- <option value="">--请选择--</option> -->
-                        <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-group">
                     <label class="col-sm-2 control-label">代理商名称</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.account">
+                      <input type="text" class="form-control" v-model="list.post.title">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">代理商编号</label>
+                    <label class="col-sm-2 control-label">代理商账号</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.agentId">
+                      <input type="text" class="form-control" v-model="list.post.account">
                     </div>
                   </div>
                   <div class="form-group">
@@ -333,7 +324,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">上级代理商</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.agentId">
+                  <select class="form-control" v-model="view.parentAgentId">
                     <option value="">--请选择--</option>
                     <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
                   </select>
@@ -384,7 +375,7 @@
                   <tr>
                     <th>旗下代理商日订单总数</th>
                     <th>自身提成</th>
-                    <th>代理商提成</th>
+                    <th>商户提成</th>
                     <th>上级代理提成</th>
                     <th>操作</th>
                   </tr>
@@ -662,15 +653,6 @@ var app = new Vue({
       p: {},
       c: {},
       a: {},
-    },
-
-    行业: {
-      1: '旅馆',
-      2: '网吧',
-      3: '汽车站',
-      4: '机场',
-      5: '旅行社',
-      6: '访客',
     },
 
     状态: {
@@ -978,10 +960,13 @@ var app = new Vue({
 
     getView: function(id){
 
-      this.view = {}
+      this.getAgentList()
+
+      this.view = {
+        rules: []
+      }
 
       if(id == -1){
-        this.view['rules'] = []
         this.add_rules()
 
         $('#view').modal('show')
@@ -1101,6 +1086,10 @@ var app = new Vue({
 
     del_rules: function(i){
 
+      if(!confirm('确认删除？')){
+        return
+      }
+
       this.view['rules'].splice(i, 1)
 
     },
@@ -1130,6 +1119,37 @@ var app = new Vue({
 
       this.view['rules'].splice(i, 1)
       this.view['rules'].splice(new_i, 0, tmp)
+
+    },
+
+    getAgentList: function(){
+
+      //上级代理商
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {}
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getFirstAgentAll/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.上级代理商.lv1 = re.rspBody.firstAgentList
+
+        }
+      })
 
     },
 
@@ -1310,34 +1330,6 @@ var app = new Vue({
 
 
     this.getP()
-
-    //上级代理商
-    var data = {
-      "reqHead":
-      {
-        clientType: 1,
-        format: "json",
-        version: "1.0",
-        sign: "30C7398578F1F7C995BAF67D18F89B33"
-      },
-      reqBody: {}
-    }
-
-    $.ajax({
-      type: 'POST',
-      url: manager_api + 'manager/getFirstAgentAll/interface',
-      data: JSON.stringify(data),
-      dataType: 'json',
-      beforeSend: function(request){
-        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-      },
-      success: function(re){
-
-        _this.上级代理商.lv1 = re.rspBody.firstAgentList
-
-      }
-    })
-
 
     this.getList()
 
