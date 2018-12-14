@@ -173,7 +173,8 @@
             <div class="tab-content">
               <div class="tab-pane active" id="操作">
 
-                <a class="btn btn-sm btn-danger" @click="del()">删除</a>
+                <!-- 小明说不能删除 -->
+                <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
@@ -333,8 +334,8 @@
                 <label class="col-sm-3 control-label">上级代理商</label>
                 <div class="col-sm-4">
                   <select class="form-control" v-model="view.agentId">
-                    <option value="0">--请选择--</option>
-                    <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商">{{v.title}}</option>
+                    <option value="">--请选择--</option>
+                    <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
                   </select>
                 </div>
                 <div class="col-sm-4 text-danger mt5">
@@ -646,6 +647,11 @@ var app = new Vue({
       rules: []
     },
 
+    上级代理商:{
+      lv1: {},
+      lv2: {},
+    },
+
     search_pca: {
       p: {},
       c: {},
@@ -657,8 +663,6 @@ var app = new Vue({
       c: {},
       a: {},
     },
-
-    上级代理商: {},
 
     行业: {
       1: '旅馆',
@@ -1007,10 +1011,20 @@ var app = new Vue({
         },
         success: function(re){
 
+          //值变名
+          re.rspBody['rules'] = re.rspBody.agentProfitRuleList
+          delete re.rspBody.agentProfitRuleList
+
           //防空
           if ( re.rspBody['rules'] == undefined ){
             re.rspBody['rules'] = []
           }
+
+          //删无用值
+          for(let i in re.rspBody['rules']){
+            delete re.rspBody['rules'][i].agentId
+          }
+
 
           _this.view = re.rspBody
 
@@ -1025,6 +1039,18 @@ var app = new Vue({
     },
 
     saveView: function(){
+
+      //检查规则
+      for(let i in this.view['rules']){
+        let v = this.view['rules'][i]
+
+        if(v.beginNum == '' || v.endNum == ''){
+          alert('请输入分成规则或将不需要的删除')
+          return
+        }
+
+      }
+
 
       var data = {
         "reqHead":
@@ -1066,9 +1092,9 @@ var app = new Vue({
       this.view['rules'].push({
         beginNum: '',
         endNum: '',
-        selftRoyalty: '',
-        mchRoyalty: '',
-        superiorRoyalty: '',
+        selftRoyalty: '0',
+        mchRoyalty: '0',
+        superiorRoyalty: '0',
       })
 
     },
@@ -1307,7 +1333,7 @@ var app = new Vue({
       },
       success: function(re){
 
-        _this.上级代理商 = re.rspBody.agentRspDTOS
+        _this.上级代理商.lv1 = re.rspBody.firstAgentList
 
       }
     })

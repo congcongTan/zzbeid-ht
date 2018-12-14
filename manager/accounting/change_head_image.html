@@ -200,24 +200,6 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">支付方式</label>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.payType">
-                        <!-- <option value="">--请选择--</option> -->
-                        <option :value="`${i}`" v-for="(v, i) in 支付方式">{{v}}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">支付状态</label>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.status">
-                        <!-- <option value="">--请选择--</option> -->
-                        <option :value="`${i}`" v-for="(v, i) in 支付状态">{{v}}</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="form-group">
                     <label class="col-sm-2 control-label">会员名称</label>
                     <div class="col-sm-3">
                       <input type="text" class="form-control" v-model="list.post.memberName">
@@ -248,7 +230,7 @@
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.memberName}}**</td>
+                    <td>{{v.memberName}}</td>
                     <td>{{v.changeIntegral}}</td>
                     <td>{{v.remark}}</td>
                     <td>{{v.createTime}}</td>
