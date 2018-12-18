@@ -167,7 +167,7 @@
 
             <ul class="nav nav-tabs">
               <!-- <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
-              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">用户信息</a></li>
             </ul>
 
             <div class="tab-content">
@@ -182,7 +182,77 @@
               </div>
               <div class="tab-pane active" id="搜索">
 
+                <div class="form-horizontal row">
 
+                  <div class="col-xs-6">
+
+                    <div class="form-group">
+                      <label class="col-sm-4 control-label">真实姓名</label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" v-model="list.info.realName" readonly>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-4 control-label">性别</label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" v-model="list.info.sexTitle" readonly>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-4 control-label">身份证</label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" v-model="list.info.identityCard" readonly>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-4 control-label">有效期</label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" v-model="list.info.ValidTimeOfIdCard" readonly>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="col-xs-6">
+
+                    <div class="form-group">
+                      <label class="col-sm-4 control-label">手机号</label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" v-model="list.info.mobile" readonly>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-4 control-label">民族</label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" v-model="list.info.nation" readonly>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-4 control-label">签发机关</label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" v-model="list.info.issue" readonly>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-4 control-label">籍贯</label>
+                      <div class="col-sm-6">
+                        <input type="text" class="form-control" v-model="list.info.address" readonly>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="col-xs-12">
+
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">住址</label>
+                      <div class="col-sm-9">
+                        <input type="text" class="form-control" v-model="list.info.detailAddress" readonly>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
 
               </div>
             </div>
@@ -192,7 +262,7 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr class="text-nowrap">
-                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
+                    <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
                     <th>变动积分</th>
                     <th>变动后积分</th>
                     <th>变动类型</th>
@@ -202,12 +272,12 @@
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.id}}</td>
-                    <td>{{v.realName}}</td>
-                    <td>{{v.mobile}}</td>
-                    <td>{{v.identityCard}}</td>
-                    <td>{{v.address}}</td>
+                    <!-- <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td> -->
+                    <td>{{v.changeIntegral}}</td>
+                    <td>{{v.integral}}</td>
+                    <td>{{v.changeTypeTitle}}</td>
+                    <td>{{v.mchName}}</td>
+                    <td>{{v.createTime}}</td>
                   </tr>
                   <tr v-if="list.data.length == 0">
                     <td colspan="99">没有数据</td>
@@ -699,7 +769,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: api + 'manager/getLogIntegralList/interface',
+        url: manager_api + 'manager/memberIntegralList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -707,10 +777,12 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.memberList
-          delete re.rspBody.memberList
+          _this.list.data = re.rspBody.memberIntegralList
+          delete re.rspBody.memberIntegralList
 
-          _this.list.info = re.rspBody          
+          re.rspBody.identityCard = re.rspBody.identityCard.substr(0,4) + '****' + re.rspBody.identityCard.substr(-4)
+
+          _this.list.info = re.rspBody
 
 
           //id
@@ -735,145 +807,6 @@ var app = new Vue({
 
         }
       })
-
-    },
-
-    getView: function(id){
-
-      this.view = {}
-
-      if(id == -1){
-        $('#view').modal('show')
-        return
-      }
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          id: id
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: api + 'manager/getGood/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.view = re.rspBody
-
-          $('#view').modal('show')
-
-        }
-      })
-
-    },
-
-    saveView: function(){
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: this.view
-      }
-
-      var add_or_edit = this.view.goodId == undefined ? 'add':'edit'
-
-      $.ajax({
-        type: 'POST',
-        url: api + 'manager/' + add_or_edit + 'Good/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retMsg == '成功'){
-            _this.getList()
-            $('#view').modal('hide')
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
-      })
-
-    },
-
-    del: function(id){
-
-      if(!confirm('确认删除？')){
-        return
-      }
-
-      //单个
-      if(id != undefined){
-        var ids = [id]
-      }
-      //多个
-      else if(this.list.checkbox.checked.length == 0){
-        alert('一个都没有选中')
-        return
-      }else{
-
-        var ids = this.list.checkbox.checked
-      }
-
-      // console.log(ids)
-
-      for( var i in ids ){
-        var id = ids[i]
-
-
-        var data = {
-          "reqHead":
-          {
-            clientType: 1,
-            format: "json",
-            version: "1.0",
-            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-          },
-          reqBody: {
-            id: id
-          }
-        }
-
-        $.ajax({
-          type: 'POST',
-          url: api + 'manager/deleteGood/interface',
-          data: JSON.stringify(data),
-          dataType: 'json',
-          beforeSend: function(request){
-            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-          },
-          success: function(re){
-
-            if(re.rspHead.retMsg != '成功'){
-              alert(re.rspHead.retMsg)
-            }
-
-          }
-        })
-
-        _this.getList()
-
-      }
 
     },
 
@@ -942,6 +875,8 @@ var app = new Vue({
     // console.log(this.mca)
 
 
+
+    this.list.post.memberId = getUrl('id')
 
     this.getList()
 

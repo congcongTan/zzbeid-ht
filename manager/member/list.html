@@ -247,8 +247,9 @@
                     <td>{{认证状态[v.isAuthentication]}}</td>
                     <td>{{账号锁定[v.isLock]}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" :href="`积分明细.html?id=${v.id}`">积分明细</a><br>
-                      <a class="btn btn-xs btn-danger" @click="锁定(v.id)">锁定</a><br>
+                      <a class="btn btn-xs btn-primary" :href="`integral.html?id=${v.memberId}`">积分明细</a><br>
+                      <a :class="`btn btn-xs btn-${v.isLock == 0 ? 'success':'warning'}`" @click="lock(v.memberId, v.isLock)">{{v.isLock == 0 ? '锁定':'解锁'}}</a><br>
+                      <a class="btn btn-xs btn-danger" v-if="v.isAuthentication == 0" @click="del(v.memberId)">删除</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.data.length == 0">
@@ -863,9 +864,11 @@ var app = new Vue({
 
     },
 
-    锁定: function(id){
+    lock: function(id, isLock){
 
-      if(!confirm('确认锁定？')){
+      let how = isLock == '0' ? '锁定':'解锁'
+
+      if(!confirm('确认' + how + '？')){
         return
       }
 
@@ -903,7 +906,68 @@ var app = new Vue({
 
         $.ajax({
           type: 'POST',
-          url: manager_api + 'manager/editMemberIsLock/interface',
+          url: manager_api + 'manager/memberDisableOrEnabled/interface',
+          data: JSON.stringify(data),
+          dataType: 'json',
+          beforeSend: function(request){
+            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+          },
+          success: function(re){
+
+            if(re.rspHead.retMsg != '成功'){
+              alert(re.rspHead.retMsg)
+            }
+
+          }
+        })
+
+        _this.getList()
+
+      }
+
+    },
+
+    del: function(id){
+
+      if(!confirm('确认删除？')){
+        return
+      }
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.list.checkbox.checked.length == 0){
+        alert('一个都没有选中')
+        return
+      }else{
+
+        var ids = this.list.checkbox.checked
+      }
+
+      // console.log(ids)
+
+      for( var i in ids ){
+        var id = ids[i]
+
+
+        var data = {
+          "reqHead":
+          {
+            clientType: 1,
+            format: "json",
+            version: "1.0",
+            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          },
+          reqBody: {
+            memberId: id
+          }
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: manager_api + 'manager/deleteUnauthenticatedMembers/interface',
           data: JSON.stringify(data),
           dataType: 'json',
           beforeSend: function(request){
