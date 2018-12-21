@@ -1218,6 +1218,7 @@ var app = new Vue({
         }
       }
       this.view.title = title.join('、')
+      this.view.frequency = 0
 
       $('#加积分').modal('show')
     },
@@ -1226,6 +1227,8 @@ var app = new Vue({
 
       // console.log(this.view)
       // return
+
+      var _this = this
 
 
       for(let i in this.view.ThirdPartyMchId){
@@ -1261,13 +1264,21 @@ var app = new Vue({
               alert(re.rspHead.retMsg)
             }
 
+            //只有一个可以这样
+            _this.getList()
+            $('#加积分').modal('hide')
+
           }
         })
 
       }
 
-      this.getList()
-      $('#加积分').modal('hide')
+/*      setTimeout(function(){
+
+        _this.getList()
+        $('#加积分').modal('hide')
+
+      }, 500)*/
 
     },
 
