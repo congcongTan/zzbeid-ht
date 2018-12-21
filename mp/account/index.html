@@ -353,12 +353,12 @@ var app = new Vue({
           if(re.rspHead.retCode != 1){
             alert(re.rspHead.retMsg)
           }else{
-            var admin = {
-              userId: re.rspBody.adminResponseInfoDTO.userId,
-              type: _this.account.type,
-              token: re.rspBody.token,
-              expire: new Date().getTime() + (180 * 60 * 1000)
-            }
+            var admin = {}
+            admin.user = re.rspBody.adminResponseInfoDTO.account
+            admin.userId = re.rspBody.adminResponseInfoDTO.userId
+            admin.type = re.rspBody.adminResponseInfoDTO.type
+            admin.token = re.rspBody.token
+            admin.expire = new Date().getTime() + (180 * 60 * 1000)
             LS.admin = JSON.stringify(admin)
 
             location.href = '../mch/index.html'

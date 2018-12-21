@@ -252,6 +252,7 @@
                     <th>商户地址</th>
                     <th>上次登录时间</th>
                     <!-- <th>离线时长</th> -->
+                    <th>客户端版本号</th>
                     <th>支付积分</th>
                     <th>状态</th>
                   </tr>
@@ -266,6 +267,7 @@
                     <td>{{v.detailedAddress}}</td>
                     <td>{{v.lastLoginTime}}</td>
                     <!-- <td>{{(v.offLineTime / 86400).toFixed(1)}}天</td> -->
+                    <td>{{v.appVersion}}</td>
                     <td>{{v.payIntegral}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                   </tr>
@@ -787,8 +789,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.mchPageList
-          delete re.rspBody.mchPageList
+          _this.list.data = re.rspBody.mchListByAgentInfoList
+          delete re.rspBody.mchListByAgentInfoList
 
           _this.list.info = re.rspBody          
 
@@ -995,9 +997,9 @@ var app = new Vue({
 
 
     this.list.post.userId = this.admin.userId
-    this.list.post.type = this.admin.type
+    // this.list.post.type = this.admin.type
 
-    this.getP()
+    // this.getP()
 
     this.getList()
 
