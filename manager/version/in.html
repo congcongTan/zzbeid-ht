@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>用户登录日志</title>
+    <title>内部接口管理</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -150,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        用户登录日志
+        内部接口管理
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>客服管理</li>
-        <li class="active">用户登录日志</li>
+        <li>版本管理</li>
+        <li class="active">内部接口管理</li>
       </ol>
     </section>
 
@@ -183,31 +183,9 @@
                 <div class="form-horizontal">
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">发生时间</label>
-                    <div class="col-sm-10">
-                      <div class="row">
-                        <div class="col-xs-5 col-sm-4">
-                          <input type="text" class="form-control datetimepicker" id="startTime">
-                        </div>
-                        <div class="fl w20 tc mt5">
-                          ~
-                        </div>
-                        <div class="col-xs-5 col-sm-4">
-                          <input type="text" class="form-control datetimepicker" id="endTime">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">手机号</label>
+                    <label class="col-sm-2 control-label">接口名称</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.mobile">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">真实姓名</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.memberName">
+                      <input type="text" class="form-control" v-model="list.post.title">
                     </div>
                   </div>
                   <div class="form-group">
@@ -226,30 +204,22 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>真实姓名</th>
-                    <th>手机号</th>
-                    <th>手机型号</th>
-                    <th>版本系统</th>
-                    <th>IP地址</th>
-                    <th>版本号</th>
-                    <th>发生时间</th>
-                    <!-- <th width="1%">操作</th> -->
+                    <th>接口名称</th>
+                    <th>接口手续费</th>
+                    <th>接口状态</th>
+                    <th width="1%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.memberName}}</td>
-                    <td>{{v.mobile}}</td>
-                    <td>{{v.mobileModel}}</td>
-                    <td>{{v.osVersion}}</td>
-                    <td>{{v.ip}}</td>
-                    <td>{{v.appEdition}}</td>
-                    <td>{{v.createTimeTitle}}</td>
-<!--                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
-                      <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
-                    </td> -->
+                    <td>{{v.name}}</td>
+                    <td>{{v.poundage}}</td>
+                    <td>{{状态[v.status]}}</td>
+                    <td class="text-nowrap operation">
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
+                      <!-- <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br> -->
+                    </td>
                   </tr>
                   <tr v-if="list.data.length == 0">
                     <td colspan="99">没有数据</td>
@@ -297,6 +267,81 @@
       </div>
 
     </section>
+
+
+    <div class="modal fade" id="view">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              <span v-if="view.id == undefined">新增</span>
+              <span v-if="view.id != undefined">编辑</span>
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">接口名称</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.name">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">接口手续费</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.poundage">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">接口状态</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.status">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 状态">{{v}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">接口版本</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.version">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 接口版本">{{v}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="saveView">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </div>
 
@@ -445,8 +490,6 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
-<link rel="stylesheet" href="../../plugins/datetimepicker/datetimepicker.css">
-<script src="../../plugins/datetimepicker/datetimepicker.js"></script>
 <script>
 var app = new Vue({
   el: '#app',
@@ -465,6 +508,7 @@ var app = new Vue({
     list: {
       data: [],
       post: {
+        title: '',
         pageNum: 1,
         pageSize: 10
       },
@@ -476,12 +520,9 @@ var app = new Vue({
       },
     },
 
-    发送类型: {
-      1: '注册',
-      2: '找回密码',
-      3: '更换手机(忘记手机号)',
-      4: '非常用设备',
-      5: '忘记支付密码',
+    接口版本: {
+      1: '标准版',
+      2: '简化版',
     },
 
     状态: {
@@ -738,17 +779,17 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 6,
+          clientType: 1,
           format: "json",
           version: "1.0",
-          sign: "8D5AA5642162A6B05A08D3B6896144DD"
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: this.list.post
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/logMemberLoginList/interface',
+        url: manager_api + 'manager/getInterfaceList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -756,8 +797,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.logMemberLoginList
-          delete re.rspBody.logMemberLoginList
+          _this.list.data = re.rspBody.mchPageList
+          delete re.rspBody.mchPageList
 
           _this.list.info = re.rspBody          
 
@@ -784,6 +825,145 @@ var app = new Vue({
 
         }
       })
+
+    },
+
+    getView: function(id){
+
+      this.view = {}
+
+      if(id == -1){
+        $('#view').modal('show')
+        return
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getInterface/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view = re.rspBody
+
+          $('#view').modal('show')
+
+        }
+      })
+
+    },
+
+    saveView: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.view
+      }
+
+      var add_or_edit = this.view.goodId == undefined ? 'add':'edit'
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/' + add_or_edit + 'Good/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retMsg == '成功'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    del: function(id){
+
+      if(!confirm('确认删除？')){
+        return
+      }
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.list.checkbox.checked.length == 0){
+        alert('一个都没有选中')
+        return
+      }else{
+
+        var ids = this.list.checkbox.checked
+      }
+
+      // console.log(ids)
+
+      for( var i in ids ){
+        var id = ids[i]
+
+
+        var data = {
+          "reqHead":
+          {
+            clientType: 1,
+            format: "json",
+            version: "1.0",
+            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          },
+          reqBody: {
+            goodId: id
+          }
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: manager_api + 'manager/deleteGood/interface',
+          data: JSON.stringify(data),
+          dataType: 'json',
+          beforeSend: function(request){
+            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+          },
+          success: function(re){
+
+            if(re.rspHead.retMsg != '成功'){
+              alert(re.rspHead.retMsg)
+            }
+
+          }
+        })
+
+        _this.getList()
+
+      }
 
     },
 
@@ -852,14 +1032,6 @@ var app = new Vue({
     // console.log(this.mca)
 
 
-
-    var date = new Date()
-    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
-
-    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01 00:00')
-    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date + ' 23:59')
-
-    $(".datetimepicker").datetimepicker();
 
     this.getList()
 

@@ -211,10 +211,16 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">代理商</label>
                     <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.payType">
-                        <!-- <option value="">--请选择--</option> -->
-                        <option :value="`${i}`" v-for="(v, i) in 支付方式">{{v}}</option>
+                      <select class="form-control" v-model="list.post.agnetId">
+                        <option value="" selected>--请选择--</option>
+                        <option :value="`${v.agentId}`" v-for="(v, i) in 代理商">{{v.title}}</option>
                       </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">手机号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.mobile">
                     </div>
                   </div>
                   <div class="form-group">
@@ -278,7 +284,7 @@
                   </select>
                 </label>
 
-                &nbsp;&nbsp;共 {{list.info.total}} 条记录
+                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
               </div>
 
               <div class="pull-right" v-if="list.info.pages > 1">
@@ -476,6 +482,7 @@ var app = new Vue({
       data: [],
       post: {
         // title: '',
+        agnetId: '',
         pageNum: 1,
         pageSize: 10
       },
@@ -486,6 +493,8 @@ var app = new Vue({
         checked: [],
       },
     },
+
+    代理商: {},
 
     支付方式: {
       1: '积分',
@@ -767,7 +776,9 @@ var app = new Vue({
           _this.list.data = re.rspBody.consumptionDetailList
           delete re.rspBody.consumptionDetailList
 
-          _this.list.info = re.rspBody          
+          _this.list.info = re.rspBody
+
+          _this.list.info.text = '合计 消费积分: ' + re.rspBody.consumptionPointsSummarize
 
 
           //id
@@ -906,6 +917,34 @@ var app = new Vue({
     $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date + ' 23:59')
 
     $(".datetimepicker").datetimepicker();
+
+
+    var data = {
+      "reqHead":
+      {
+        clientType: 1,
+        format: "json",
+        version: "1.0",
+        sign: "30C7398578F1F7C995BAF67D18F89B33"
+      },
+      reqBody: {}
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: manager_api + 'manager/getFirstAgentAll/interface',
+      data: JSON.stringify(data),
+      dataType: 'json',
+      beforeSend: function(request){
+        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+      },
+      success: function(re){
+
+        _this.代理商 = re.rspBody.firstAgentList
+
+      }
+    })
+
 
     this.getList()
 

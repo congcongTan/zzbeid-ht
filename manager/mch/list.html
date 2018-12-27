@@ -224,6 +224,12 @@
                     </div>
                   </div>
                   <div class="form-group">
+                    <label class="col-sm-2 control-label">版本号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.appVersion">
+                    </div>
+                  </div>
+                  <div class="form-group">
                     <label class="col-sm-2 control-label">商户名称</label>
                     <div class="col-sm-3">
                       <input type="text" class="form-control" v-model="list.post.title">
@@ -294,7 +300,7 @@
                   </select>
                 </label>
 
-                &nbsp;&nbsp;共 {{list.info.total}} 条记录
+                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
               </div>
 
               <div class="pull-right" v-if="list.info.pages > 1">

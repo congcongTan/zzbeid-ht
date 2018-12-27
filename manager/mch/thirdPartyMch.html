@@ -273,7 +273,7 @@
                   </select>
                 </label>
 
-                &nbsp;&nbsp;共 {{list.info.total}} 条记录
+                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
               </div>
 
               <div class="pull-right" v-if="list.info.pages > 1">
@@ -1120,7 +1120,7 @@ var app = new Vue({
           clientType: 1,
           format: "json",
           version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          sign: "4600D5BC2AACE2929E9CEBB44121B8CF"
         },
         reqBody: {
           thirdPartyMchId: id
@@ -1129,7 +1129,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getThirdPartyMchInfo/interface',
+        url: manager_api + 'manager/deleteThirdPartyMch/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1137,41 +1137,13 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.view = re.rspBody
-
-          _this.view.delFlag = 1
-
-          var data = {
-            "reqHead":
-            {
-              clientType: 6,
-              format: "json",
-              version: "1.0",
-              sign: "401E79DEC2E7AA1F645D67924E6EE0F3"
-            },
-            reqBody: _this.view
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+          }else{
+            alert(re.rspHead.retMsg)
           }
 
-          $.ajax({
-            type: 'POST',
-            url: manager_api + 'manager/editThirdPartyMch/interface',
-            data: JSON.stringify(data),
-            dataType: 'json',
-            beforeSend: function(request){
-              request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-            },
-            success: function(re){
-
-              if(re.rspHead.retCode == '1'){
-                _this.getList()
-              }else{
-                alert(re.rspHead.retMsg)
-              }
-
-            },
-          })
-
-        }
+        },
       })
 
     },
