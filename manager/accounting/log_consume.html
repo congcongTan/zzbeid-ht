@@ -246,6 +246,7 @@
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
                     <th>会员名称</th>
+                    <th>手机号</th>
                     <th>消费商户</th>
                     <th>消费积分</th>
                     <th>支付方式</th>
@@ -258,6 +259,7 @@
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td>{{v.memberName}}</td>
+                    <td>{{v.mobile}}</td>
                     <td>{{v.mchName}}</td>
                     <td>{{v.changeIntegral}}</td>
                     <td>{{支付方式[v.payType]}}</td>

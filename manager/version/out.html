@@ -210,7 +210,7 @@
                     <th>接口版本</th>
                     <th>优先级</th>
                     <th>接口状态</th>
-                    <th width="1%">操作</th>
+                    <!-- <th width="1%">操作</th> -->
                   </tr>
                 </thead>
                 <tbody>
@@ -222,47 +222,15 @@
                     <td></td>
                     <td>{{v.priority}}</td>
                     <td>{{状态[v.status]}}</td>
-                    <td class="text-nowrap operation">
+<!--                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
-                      <!-- <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br> -->
-                    </td>
+                    </td> -->
                   </tr>
                   <tr v-if="list.data.length == 0">
                     <td colspan="99">没有数据</td>
                   </tr>
                 </tbody>
               </table>
-
-              <div class="pull-left mt15">
-                <label>
-                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
-                    <option value="2">每页 2 条</option>
-                    <option value="10">每页 10 条</option>
-                    <option value="25">每页 25 条</option>
-                    <option value="50">每页 50 条</option>
-                    <option value="100">每页 100 条</option>
-                  </select>
-                </label>
-
-                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
-              </div>
-
-              <div class="pull-right" v-if="list.info.pages > 1">
-                <ul class="pagination pagination-sm">
-
-                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
-
-                  <li class="paginate_button" v-for="i in list.page.prev"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
-
-                  <li class="paginate_button active"><a href="#">{{list.post.pageNum}}</a></li>
-
-                  <li class="paginate_button" v-for="i in list.page.next"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
-
-                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
-                  </li>
-
-                </ul>
-              </div>
 
             </div>
 
@@ -302,14 +270,25 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">接口手续费</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.poundage">
+                  <div class="input-group">
+                    <input type="text" class="form-control input-sm" v-model="view.poundage">
+                    <span class="input-group-addon">元/次</span>
+                  </div>
+                </div>
+                <div class="col-sm-5 mt5 text-danger">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">优先级</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.name">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
                 </div>
               </div>
-
-              <hr>
 
               <div class="form-group">
                 <label class="col-sm-3 control-label">接口状态</label>
@@ -327,9 +306,22 @@
               <hr>
 
               <div class="form-group">
+                <label class="col-sm-3 control-label">接口类型</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.version" disabled>
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 接口版本">{{v}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
                 <label class="col-sm-3 control-label">接口版本</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.version">
+                  <select class="form-control" v-model="view.version" disabled>
                     <option value="">--请选择--</option>
                     <option :value="`${i}`" v-for="(v, i) in 接口版本">{{v}}</option>
                   </select>
