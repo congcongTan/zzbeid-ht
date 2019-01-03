@@ -304,6 +304,13 @@
                 </div>
               </div>
 
+              <div class="form-group">
+                <label class="col-sm-3 control-label">角色权限</label>
+                <div class="col-sm-9">
+                  <ul id="zTree_role" class="ztree"></ul>
+                </div>
+              </div>
+
             </form>
 
           </div>
@@ -830,6 +837,74 @@ var app = new Vue({
 
           _this.view = re.rspBody
 
+          var setting = {
+            check: {
+              enable: true,//可以勾选
+              chkboxType: { "Y" : "ps", "N" : "ps" },//选时，父选子选
+            },
+            data: {
+              simpleData: {
+                enable: true
+              }
+            },
+                callback: {
+                    onCheck: _this.getNode
+                }
+          }
+
+
+          var menu = []
+          var menu_checked = []
+          for(var i in re.rspBody.menuList){
+            menu_checked.push(re.rspBody.menuList[i].id)
+          }
+          // var id = 0
+
+          // LV1
+          for(var i in re.rspBody.menuAllList){
+            var v = re.rspBody.menuAllList[i]
+            // id++
+
+            var data = {}
+            data.id = v.id
+            data.pId = 0
+            data.name = v.title
+            data.open = true
+
+            // 选中
+            if(menu_checked.indexOf(v.id) !== -1){
+              data.checked = true
+            }
+
+            menu.push(data)
+
+            //LV2
+            pId2 = v.id
+            for(var i2 in v.childMenuList){
+              var v2 = v.childMenuList[i2]
+              // id++
+
+              var data = {}
+              data.id = v2.id
+              data.pId = pId2
+              data.name = v2.title
+              data.open = true
+
+              // 选中
+              if(menu_checked.indexOf(v2.id) != -1){
+                data.checked = true
+              }
+
+              menu.push(data)
+
+            }
+
+          }
+
+
+          $.fn.zTree.init($("#zTree_role"), setting, menu);
+
+
           $('#view').modal('show')
 
         }
@@ -851,7 +926,7 @@ var app = new Vue({
           id: this.view.id,
           title: this.view.title,
           status: this.view.status,
-          menus: []
+          menus: this.view.menus,
         }
       }
 
@@ -877,6 +952,20 @@ var app = new Vue({
         },
       })
 
+    },
+
+    getNode: function(){
+
+      var nodes = $.fn.zTree.getZTreeObj("zTree_role").getCheckedNodes(true)
+
+      var menus = []
+      for(var i = 0; i < nodes.length; i++){
+        menus.push(nodes[i].id)
+      }
+      this.view.menus = menus
+      // console.log(menus)
+
+      // $('input[name="cando"]').val(menus.join(','))
     },
 
     del: function(id){
@@ -1004,6 +1093,7 @@ var app = new Vue({
 
     // console.log(this.mca)
 
+    $('[data-toggle="tooltip"]').tooltip()
 
 
     this.getList()

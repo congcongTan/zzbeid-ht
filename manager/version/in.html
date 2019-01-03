@@ -797,8 +797,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.mchPageList
-          delete re.rspBody.mchPageList
+          _this.list.data = re.rspBody.interfaceList
+          delete re.rspBody.interfaceList
 
           _this.list.info = re.rspBody          
 
@@ -882,11 +882,11 @@ var app = new Vue({
         reqBody: this.view
       }
 
-      var add_or_edit = this.view.goodId == undefined ? 'add':'edit'
+      var add_or_edit = this.view.id == undefined ? 'add':'edit'
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/' + add_or_edit + 'Good/interface',
+        url: manager_api + 'manager/' + add_or_edit + 'Interface/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1031,6 +1031,7 @@ var app = new Vue({
 
     // console.log(this.mca)
 
+    $('[data-toggle="tooltip"]').tooltip()
 
 
     this.getList()
