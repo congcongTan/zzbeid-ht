@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>更换头像明细</title>
+    <title>接口认证明细</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -150,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        更换头像明细
+        接口认证明细
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
         <li>计费管理</li>
-        <li class="active">更换头像明细</li>
+        <li class="active">接口认证明细</li>
       </ol>
     </section>
 
@@ -200,9 +200,21 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">会员名称</label>
+                    <label class="col-sm-2 control-label">身份证号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.identityCard">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">发起人</label>
                     <div class="col-sm-3">
                       <input type="text" class="form-control" v-model="list.post.memberName">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">姓名</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.realName">
                     </div>
                   </div>
                   <div class="form-group">
@@ -221,18 +233,30 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>会员名称</th>
-                    <th>消费积分</th>
-                    <th>更换结果</th>
+                    <th>发起人</th>
+                    <th>姓名</th>
+                    <th>身份证号</th>
+                    <th>内部接口</th>
+                    <th>接口手续费</th>
+                    <th>外部接口</th>
+                    <th>接口手续费</th>
+                    <th>认证结果</th>
+                    <th>接口返回信息</th>
                     <th>发生时间</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
+                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td>{{v.memberName}}</td>
-                    <td>{{v.changeIntegral}}</td>
-                    <td>{{v.remark}}</td>
+                    <td>{{v.realName}}</td>
+                    <td :title="`${v.identityCard}`">{{v.identityCard.substr(0,4)}}****{{v.identityCard.substr(-4)}}</td>
+                    <td>{{v.interfaceName}}</td>
+                    <td>{{v.interfacePoundage}}</td>
+                    <td>{{v.interfaceInfoName}}</td>
+                    <td>{{v.interfaceInfoPoundage}}</td>
+                    <td>{{v.statusTitle}}</td>
+                    <td>{{v.msg}}</td>
                     <td>{{v.createTime}}</td>
                   </tr>
                   <tr v-if="list.data.length == 0">
@@ -736,7 +760,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/changeHeadPortraitList/interface',
+        url: manager_api + 'manager/externalInterfaceCallList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -744,19 +768,18 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.changeHeadPortraitList
-          delete re.rspBody.changeHeadPortraitList
+          _this.list.data = re.rspBody.list
+          delete re.rspBody.list
 
           _this.list.info = re.rspBody          
 
-          _this.list.info.text = '合计 消费积分: ' + re.rspBody.TotalMoney
 
           //id
-/*          for( var i in _this.list.data ){
+          for( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-            _this.list.checkbox.all.push(v.goodId)
-          }*/
+            _this.list.checkbox.all.push(v.id)
+          }
 
           //分页
           _this.list.page.prev = []

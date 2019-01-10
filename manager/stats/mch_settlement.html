@@ -790,8 +790,12 @@ var app = new Vue({
             total.settlementIntegral += v.settlementIntegral
           }
 
-          _this.list.data.push(total)
+          //取整
+          for ( var i in total ){
+            total[i] = total[i].tofixed(2)
+          }
 
+          _this.list.data.push(total)
 
         }
       })

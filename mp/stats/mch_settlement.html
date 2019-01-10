@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>更换头像明细</title>
+    <title>商户分成</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -34,9 +34,9 @@
     <!-- Logo -->
     <a href="../index.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini">管理后台</span>
+      <span class="logo-mini">商户后台</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg">管理后台</span>
+      <span class="logo-lg">商户后台</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -150,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        更换头像明细
+        商户分成
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>计费管理</li>
-        <li class="active">更换头像明细</li>
+        <li>日志管理</li>
+        <li class="active">商户分成</li>
       </ol>
     </section>
 
@@ -166,45 +166,51 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <!-- <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
+              <!-- <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
               <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
               <div class="tab-pane" id="操作">
 
-                <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
+                <a class="btn btn-sm btn-danger" @click="del()">删除</a>
 
-                <!-- <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a> -->
+                <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a>
 
-                <!-- <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a> -->
+                <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
               </div>
               <div class="tab-pane active" id="搜索">
 
                 <div class="form-horizontal">
+
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">发生时间</label>
+                    <label class="col-sm-2 control-label">统计日期</label>
                     <div class="col-sm-10">
                       <div class="row">
-                        <div class="col-xs-5 col-sm-4">
-                          <input type="text" class="form-control datetimepicker" id="startTime">
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control datepicker" id="startTime">
                         </div>
-                        <div class="fl w20 tc mt5">
+                        <div class="fl w20 mt8 tc">
                           ~
                         </div>
-                        <div class="col-xs-5 col-sm-4">
-                          <input type="text" class="form-control datetimepicker" id="endTime">
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control datepicker" id="endTime">
+                        </div>
+                        <div class="fl mt8">
+                          <i class="fa fa-question" data-toggle="tooltip" data-placement="top" title="当日订单，需第二日才能查看分成收入"></i>
                         </div>
                       </div>
                     </div>
                   </div>
+
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">会员名称</label>
+                    <label class="col-sm-2 control-label">商户</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.memberName">
+                      <input type="text" class="form-control" v-model="list.info.mchTitleName" disabled>
                     </div>
                   </div>
+
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
@@ -219,58 +225,41 @@
 
               <table class="table table-bordered table-hover">
                 <thead>
+                  <tr>
+                    <th rowspan="2">日期</th>
+                    <th rowspan="2">商户</th>
+                    <th colspan="2">消费订单</th>
+                    <th colspan="2">退款订单</th>
+                    <th colspan="2" rowspan="2">商户分成金额</th>
+                  </tr>
                   <tr class="text-nowrap">
-                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>会员名称</th>
-                    <th>消费积分</th>
-                    <th>更换结果</th>
-                    <th>发生时间</th>
+                    <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
+                    <th>订单总数</th>
+                    <th>订单总积分</th>
+                    <th>订单总数</th>
+                    <th>订单总积分</th>
+                    <!-- <th width="1%">操作</th> -->
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.memberName}}</td>
-                    <td>{{v.changeIntegral}}</td>
-                    <td>{{v.remark}}</td>
-                    <td>{{v.createTime}}</td>
+                    <td>{{v.settlementDateTitle}}</td>
+                    <td>{{v.mchName}}</td>
+                    <td>{{v.consumeNum}}</td>
+                    <td>{{v.consumeIntegral}}</td>
+                    <td>{{v.refundNum}}</td>
+                    <td>{{v.refundIntegral}}</td>
+                    <td>{{v.mchDivide}}</td>
+<!--                     <td class="text-nowrap operation">
+                      <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
+                      <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
+                    </td> -->
                   </tr>
                   <tr v-if="list.data.length == 0">
                     <td colspan="99">没有数据</td>
                   </tr>
                 </tbody>
               </table>
-
-              <div class="pull-left mt15">
-                <label>
-                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
-                    <option value="2">每页 2 条</option>
-                    <option value="10">每页 10 条</option>
-                    <option value="25">每页 25 条</option>
-                    <option value="50">每页 50 条</option>
-                    <option value="100">每页 100 条</option>
-                  </select>
-                </label>
-
-                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
-              </div>
-
-              <div class="pull-right" v-if="list.info.pages > 1">
-                <ul class="pagination pagination-sm">
-
-                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
-
-                  <li class="paginate_button" v-for="i in list.page.prev"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
-
-                  <li class="paginate_button active"><a href="#">{{list.post.pageNum}}</a></li>
-
-                  <li class="paginate_button" v-for="i in list.page.next"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
-
-                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
-                  </li>
-
-                </ul>
-              </div>
 
             </div>
 
@@ -286,9 +275,9 @@
 
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Version</b> 2.0
+      <b>Version</b> 2.4.0
     </div>
-    <b>中证宝</b> 管理后台
+    <b>中证宝</b> 商户后台
   </footer>
 
   <!-- Control Sidebar -->
@@ -429,8 +418,9 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
-<link rel="stylesheet" href="../../plugins/datetimepicker/datetimepicker.css">
-<script src="../../plugins/datetimepicker/datetimepicker.js"></script>
+<link rel="stylesheet" href="../../plugins/datepicker/datepicker.css">
+<script src="../../plugins/datepicker/datepicker.js"></script>
+
 <script>
 var app = new Vue({
   el: '#app',
@@ -449,7 +439,6 @@ var app = new Vue({
     list: {
       data: [],
       post: {
-        // title: '',
         pageNum: 1,
         pageSize: 10
       },
@@ -461,15 +450,16 @@ var app = new Vue({
       },
     },
 
-    支付方式: {
-      1: '积分',
-      2: '卡券',
+    发送类型: {
+      1: '注册',
+      2: '找回密码',
+      3: '更换手机',
+      4: '等',
     },
 
-    支付状态: {
-      1: '付款成功',
-      2: '付款失败',
-      3: '正在付款',
+    状态: {
+      1: '可用',
+      2: '不可用',
     },
 
   },
@@ -726,17 +716,17 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 1,
+          clientType: 6,
           format: "json",
           version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          sign: "8D5AA5642162A6B05A08D3B6896144DD"
         },
         reqBody: this.list.post
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/changeHeadPortraitList/interface',
+        url: mp_api + 'mp/getMchSettlementList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -744,32 +734,40 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.changeHeadPortraitList
-          delete re.rspBody.changeHeadPortraitList
+          _this.list.data = re.rspBody.MchSettlementList
+          delete re.rspBody.MchSettlementList
 
-          _this.list.info = re.rspBody          
+          _this.list.info = re.rspBody
 
-          _this.list.info.text = '合计 消费积分: ' + re.rspBody.TotalMoney
+          var total = {
+            settlementDateTitle: '合计',
+            mchName: '-',
+            mchDivide: 0,
+            consumeIntegral: 0,
+            consumeNum: 0,
+            refundIntegral: 0,
+            refundNum: 0,
+            settlementIntegral: 0
+          }
 
-          //id
-/*          for( var i in _this.list.data ){
+          for ( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-            _this.list.checkbox.all.push(v.goodId)
-          }*/
-
-          //分页
-          _this.list.page.prev = []
-          for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
-            if(i <= 0)continue;
-            _this.list.page.prev.push(i)
+            // console.log(v)
+            total.mchDivide += v.mchDivide
+            total.consumeIntegral += v.consumeIntegral
+            total.consumeNum += v.consumeNum
+            total.refundIntegral += v.refundIntegral
+            total.refundNum += v.refundNum
+            total.settlementIntegral += v.settlementIntegral
           }
 
-          _this.list.page.next = []
-          for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
-            if(i > _this.list.info.pages)break;
-            _this.list.page.next.push(i)
+          //取整
+          for ( var i in total ){
+            total[i] = total[i].tofixed(2)
           }
+
+          _this.list.data.push(total)
 
         }
       })
@@ -806,7 +804,7 @@ var app = new Vue({
     // 侧栏菜单
     $.ajax({
       type: 'GET',
-      url: '../../db/menu-manager.json',
+      url: '../../db/menu-mp.json',
       //url: 'http://192.168.199.196:8692/token/generate',
       dataType: 'json',
       beforeSend: function(request){
@@ -843,13 +841,16 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
+    $('.datepicker').datepicker({
+      format: "yyyy-mm-dd",
+    })
+
     var date = new Date()
     var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
 
-    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01 00:00')
-    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date + ' 23:59')
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01')
+    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date)
 
-    $(".datetimepicker").datetimepicker();
 
     this.getList()
 

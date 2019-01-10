@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>更换头像明细</title>
+    <title>网吧使用记录</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -150,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        更换头像明细
+        网吧使用记录
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>计费管理</li>
-        <li class="active">更换头像明细</li>
+        <li>业务记录</li>
+        <li class="active">网吧使用记录</li>
       </ol>
     </section>
 
@@ -184,25 +184,27 @@
 
                 <div class="form-horizontal">
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">发生时间</label>
-                    <div class="col-sm-10">
-                      <div class="row">
-                        <div class="col-xs-5 col-sm-4">
-                          <input type="text" class="form-control datetimepicker" id="startTime">
-                        </div>
-                        <div class="fl w20 tc mt5">
-                          ~
-                        </div>
-                        <div class="col-xs-5 col-sm-4">
-                          <input type="text" class="form-control datetimepicker" id="endTime">
-                        </div>
-                      </div>
+                    <label class="col-sm-2 control-label">商户</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.title">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">会员名称</label>
+                    <label class="col-sm-2 control-label">身份证号</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.memberName">
+                      <input type="text" class="form-control" v-model="list.post.identityCard">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">手机号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.mobile">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">真实姓名</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.realName">
                     </div>
                   </div>
                   <div class="form-group">
@@ -221,19 +223,29 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>会员名称</th>
-                    <th>消费积分</th>
-                    <th>更换结果</th>
-                    <th>发生时间</th>
+                    <th>验证头像</th>
+                    <th>真实姓名</th>
+                    <th>手机号</th>
+                    <th>身份证号</th>
+                    <th>性别</th>
+                    <th>民族</th>
+                    <th>网吧</th>
+                    <th>上机时间</th>
+                    <th>更新时间</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.memberName}}</td>
-                    <td>{{v.changeIntegral}}</td>
-                    <td>{{v.remark}}</td>
+                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
+                    <td><a :href="`${v.useImg}`" data-fancybox="gallery"><img :src="`${v.useImg}`" width="64" height="64"></a></td>
+                    <td>{{v.realname}}</td>
+                    <td>{{v.mobile}}</td>
+                    <td>{{v.identityCard}}</td>
+                    <td>{{性别[v.gender]}}</td>
+                    <td>{{v.ethnic}}</td>
+                    <td>{{v.mchName}}</td>
                     <td>{{v.createTime}}</td>
+                    <td>{{v.updateTime}}</td>
                   </tr>
                   <tr v-if="list.data.length == 0">
                     <td colspan="99">没有数据</td>
@@ -429,8 +441,9 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
-<link rel="stylesheet" href="../../plugins/datetimepicker/datetimepicker.css">
-<script src="../../plugins/datetimepicker/datetimepicker.js"></script>
+<link rel="stylesheet" href="../../plugins/fancybox/fancybox.css">
+<script src="../../plugins/fancybox/fancybox.js"></script>
+
 <script>
 var app = new Vue({
   el: '#app',
@@ -461,15 +474,16 @@ var app = new Vue({
       },
     },
 
-    支付方式: {
-      1: '积分',
-      2: '卡券',
+    性别: {
+      1: '男',
+      2: '女',
     },
 
-    支付状态: {
-      1: '付款成功',
-      2: '付款失败',
-      3: '正在付款',
+    房间状态: {
+      1: '订房',
+      2: '退房',
+      3: '续房',
+      4: '换房',
     },
 
   },
@@ -736,7 +750,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/changeHeadPortraitList/interface',
+        url: manager_api + 'manager/internetbarCheckList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -744,19 +758,18 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.changeHeadPortraitList
-          delete re.rspBody.changeHeadPortraitList
+          _this.list.data = re.rspBody.logNetplayList
+          delete re.rspBody.logNetplayList
 
           _this.list.info = re.rspBody          
 
-          _this.list.info.text = '合计 消费积分: ' + re.rspBody.TotalMoney
 
           //id
-/*          for( var i in _this.list.data ){
+          for( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-            _this.list.checkbox.all.push(v.goodId)
-          }*/
+            _this.list.checkbox.all.push(v.id)
+          }
 
           //分页
           _this.list.page.prev = []
@@ -848,8 +861,6 @@ var app = new Vue({
 
     $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01 00:00')
     $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date + ' 23:59')
-
-    $(".datetimepicker").datetimepicker();
 
     this.getList()
 
