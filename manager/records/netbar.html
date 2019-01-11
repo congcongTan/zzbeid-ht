@@ -238,7 +238,7 @@
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td><a :href="`${v.useImg}`" data-fancybox="gallery"><img :src="`${v.useImg}`" width="64" height="64"></a></td>
-                    <td>{{v.realname}}</td>
+                    <td>{{v.memberName}}</td>
                     <td>{{v.mobile}}</td>
                     <td>{{v.identityCard}}</td>
                     <td>{{性别[v.gender]}}</td>
