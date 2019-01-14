@@ -249,53 +249,27 @@
 
               <table class="table table-bordered table-hover">
                 <thead>
-                  <tr class="text-nowrap">
-                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>ID</th>
-                    <th>行业</th>
-                    <th>商户名称</th>
-                    <th>商户编号</th>
-                    <th>商户地址</th>
-                    <th>上次登录时间</th>
-                    <th>离线时长</th>
-                    <th>支付金额</th>
-                    <th>账号锁定</th>
-                    <th width="1%">操作</th>
+                  <tr class="noenter">
+                    <th>菜单名称</th>
+                    <th>排序</th>
+                    <th>类型</th>
+                    <th>菜单地址</th>
+                    <th>权限标识</th>
+                    <th>状态</th>
+                    <th width="1%" class="noenter">操作</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td><input type="checkbox"></td>
-                    <td>10002</td>
-                    <td>旅馆</td>
-                    <td>佳乐酒店</td>
-                    <td>61040410015</td>
-                    <td>广东省广州市天河区人民西路29号</td>
-                    <td>2018-08-15 13:31:00</td>
-                    <td>1天20小时</td>
-                    <td>0</td>
-                    <td>否</td>
-                    <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
-                      <a class="btn btn-xs btn-success" @click="getView(v.id)">锁定</a><br>
-                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
-                    </td>
-                  </tr>
-                  <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.id}`" v-model="ids"></td>
-                    <td>10002</td>
-                    <td>旅馆</td>
-                    <td>佳乐酒店</td>
-                    <td>61040410015</td>
-                    <td>广东省广州市天河区人民西路29号</td>
-                    <td>2018-08-15 13:31:00</td>
-                    <td>1天20小时</td>
-                    <td>0</td>
-                    <td>否</td>
-                    <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
-                      <a class="btn btn-xs btn-success" @click="getView(v.id)">锁定</a><br>
-                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
+                  <tr :class="`${v.css}`" v-for="(v, i) in list">
+                    <td><i class="treegrid-expander icon-chevron-down"></i>{{v.title}}</td>
+                    <td>{{v.sort}}</td>
+                    <td>{{v.menuType}}</td>
+                    <td>{{v.href}}</td>
+                    <td>{{v.perms}}</td>
+                    <td>{{status[v.menuStatus]}}</td>
+                    <td class="text-nowrap">
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a>
+                      <!-- <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a> -->
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -558,7 +532,7 @@
 
           </div>
           <div class="modal-footer">
-            <a class="btn btn-primary" @click="save">确定</a>
+            <a class="btn btn-primary" @click="saveView">确定</a>
           </div>
         </div>
       </div>
@@ -971,6 +945,185 @@ var app = new Vue({
 
         }
       })
+
+    },
+
+    getList: function(key, val){
+
+      _this = this
+
+      if(key == 'page'){
+
+        if(val == '+1'){
+          if( this.list.post.pageNum < this.list.info.pages ){
+            this.list.post.pageNum++
+          }else{
+            return
+          }
+        }
+
+        if(val == '-1'){
+          if( this.list.post.pageNum > 1 ){
+            this.list.post.pageNum--
+          }else{
+            return
+          }
+        }
+
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/roleList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.list.data = re.rspBody.roleList
+          delete re.rspBody.roleList
+
+          _this.list.info = re.rspBody          
+
+
+          //id
+          for( var i in _this.list.data ){
+            var v = _this.list.data[i]
+
+            _this.list.checkbox.all.push(v.id)
+          }
+
+          //分页
+          _this.list.page.prev = []
+          for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
+            if(i <= 0)continue;
+            _this.list.page.prev.push(i)
+          }
+
+          _this.list.page.next = []
+          for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
+            if(i > _this.list.info.pages)break;
+            _this.list.page.next.push(i)
+          }
+
+        }
+      })
+
+    },
+
+    saveView: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: this.view.id,
+          title: this.view.title,
+          status: this.view.status,
+          menus: this.view.menus,
+        }
+      }
+
+      var add_or_edit = this.view.id == undefined ? 'add':'edit'
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/' + add_or_edit + 'Role/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retMsg == '成功'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    del: function(id){
+
+      if(!confirm('确认删除？')){
+        return
+      }
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.list.checkbox.checked.length == 0){
+        alert('一个都没有选中')
+        return
+      }else{
+
+        var ids = this.list.checkbox.checked
+      }
+
+      // console.log(ids)
+
+      for( var i in ids ){
+        var id = ids[i]
+
+
+        var data = {
+          "reqHead":
+          {
+            clientType: 1,
+            format: "json",
+            version: "1.0",
+            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          },
+          reqBody: {
+            goodId: id
+          }
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: manager_api + 'manager/deleteGood/interface',
+          data: JSON.stringify(data),
+          dataType: 'json',
+          beforeSend: function(request){
+            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+          },
+          success: function(re){
+
+            if(re.rspHead.retMsg != '成功'){
+              alert(re.rspHead.retMsg)
+            }
+
+          }
+        })
+
+        _this.getList()
+
+      }
 
     },
 
