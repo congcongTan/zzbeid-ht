@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>管理员列表</title>
+    <title>云服务器同步管理</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -150,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        管理员列表
+        云服务器同步管理
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>系统设置</li>
-        <li class="active">管理员列表</li>
+        <li>版本管理</li>
+        <li class="active">云服务器同步管理</li>
       </ol>
     </section>
 
@@ -167,7 +167,7 @@
 
             <ul class="nav nav-tabs">
               <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
-              <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <!-- <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li> -->
             </ul>
 
             <div class="tab-content">
@@ -183,21 +183,9 @@
                 <div class="form-horizontal">
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">登录账号</label>
+                    <label class="col-sm-2 control-label">商品名称</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.account">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">姓名</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.realname">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">手机号</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.mobile">
+                      <input type="text" class="form-control" v-model="list.post.title">
                     </div>
                   </div>
                   <div class="form-group">
@@ -215,26 +203,24 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr class="text-nowrap">
-                    <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
-                    <th>登录账号</th>
-                    <th>姓名</th>
-                    <th>手机号</th>
-                    <th>角色</th>
-                    <th>状态</th>
+                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
+                    <th>数据库IP</th>
+                    <th>数据库端口</th>
+                    <th>同步商户行业</th>
+                    <th>同步商户所在区域</th>
                     <th width="1%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <!-- <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td> -->
-                    <td>{{v.account}}</td>
-                    <td>{{v.realname}}</td>
-                    <td>{{v.mobile}}</td>
-                    <td>{{v.roleTitle}}</td>
-                    <td>{{状态[v.status]}}</td>
+                    <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
+                    <td>{{v.identifier}}</td>
+                    <td>{{v.typeTitle}}</td>
+                    <td>{{v.title}}</td>
+                    <td>￥{{v.price}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
-                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">编辑</a><br>
+                      <a class="btn btn-xs btn-danger" @click="del(v.goodId)">删除</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.data.length == 0">
@@ -300,9 +286,9 @@
             <form class="form-horizontal">
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">姓名</label>
+                <label class="col-sm-3 control-label">数据库IP</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.realname">
+                  <input type="text" class="form-control input-sm" v-model="view.identifier">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -310,9 +296,29 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">手机号</label>
+                <label class="col-sm-3 control-label">数据库端口</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.mobile">
+                  <input type="text" class="form-control input-sm" v-model="view.title">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">数据库账号</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.price">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">数据库密码</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.integral">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -322,26 +328,6 @@
               <hr>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">登录帐号</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.account">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">登录密码</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.password">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
                 <label class="col-sm-3 control-label">状态</label>
                 <div class="col-sm-4">
                   <select class="form-control" v-model="view.status">
@@ -349,15 +335,20 @@
                     <option :value="`${i}`" v-for="(v, i) in 状态">{{v}}</option>
                   </select>
                 </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
               </div>
 
-              <div class="form-group">
-                <label class="col-sm-3 control-label">角色</label>
-                <div class="col-sm-9">
+              <hr>
 
+              <div class="form-group">
+                <label class="col-sm-3 control-label">使用行业限制</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.industryId">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 行业类型">{{v}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 仅限月卡
                 </div>
               </div>
 
@@ -548,6 +539,19 @@ var app = new Vue({
       },
     },
 
+    商品类型: {
+      1: '积分',
+      2: '卡券',
+    },
+
+    行业类型: {
+      1: '旅馆',
+      2: '网吧',
+      3: '汽车站',
+      4: '机场',
+      5: '旅行社',
+    },
+
     状态: {
       1: '可用',
       2: '不可用',
@@ -692,7 +696,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/managerList/interface',
+        url: manager_api + 'manager/goodList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -700,18 +704,18 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.managerList
-          delete re.rspBody.managerList
+          _this.list.data = re.rspBody.goodList
+          delete re.rspBody.goodList
 
           _this.list.info = re.rspBody          
 
 
           //id
-/*          for( var i in _this.list.data ){
+          for( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-            _this.list.checkbox.all.push(v.id)
-          }*/
+            _this.list.checkbox.all.push(v.goodId)
+          }
 
           //分页
           _this.list.page.prev = []
@@ -749,13 +753,13 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          id: id
+          goodId: id
         }
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getManager/interface',
+        url: manager_api + 'manager/getGood/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -764,7 +768,6 @@ var app = new Vue({
         success: function(re){
 
           _this.view = re.rspBody
-
 
           $('#view').modal('show')
 
@@ -783,19 +786,14 @@ var app = new Vue({
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
-        reqBody: {
-          id: this.view.id,
-          title: this.view.title,
-          status: this.view.status,
-          menus: this.view.menus,
-        }
+        reqBody: this.view
       }
 
-      var add_or_edit = this.view.id == undefined ? 'add':'edit'
+      var add_or_edit = this.view.goodId == undefined ? 'add':'edit'
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/' + add_or_edit + 'Role/interface',
+        url: manager_api + 'manager/' + add_or_edit + 'Good/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -813,20 +811,6 @@ var app = new Vue({
         },
       })
 
-    },
-
-    getNode: function(){
-
-      var nodes = $.fn.zTree.getZTreeObj("zTree_role").getCheckedNodes(true)
-
-      var menus = []
-      for(var i = 0; i < nodes.length; i++){
-        menus.push(nodes[i].id)
-      }
-      this.view.menus = menus
-      // console.log(menus)
-
-      // $('input[name="cando"]').val(menus.join(','))
     },
 
     del: function(id){

@@ -496,68 +496,6 @@ var app = new Vue({
 
   },
   methods: {
-/*    getList: function(key, val){
-
-      _this = this
-
-      if(key == 'page'){
-
-        if(val == '+1'){
-          if( this.param.page < this.param.page_total ){
-            this.param.page++
-          }else{
-            return;
-          }
-        }
-
-        if(val == '-1'){
-          if( this.param.page > 1 ){
-            this.param.page--
-          }else{
-            return;
-          }
-        }
-
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + this.param.dir,
-        // data: this.param,
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.param = re.param
-          _this.list.data = re.data
-
-          //所有id
-          for( var i in re.data ){
-            var v = re.data[i]
-
-            _this.ids_all.push(v.id)
-          }
-
-          //分页
-          _this.list.prev = []
-          for(var i = _this.param.page - 4; i < _this.param.page; i++){
-            if(i <= 0)continue;
-            _this.list.prev.push(i)
-          }
-
-          _this.list.next = []
-          for(var i = _this.param.page + 1; i < _this.param.page + 5; i++){
-            if(i > re.param.page_total)break;
-            _this.list.next.push(i)
-          }
-
-        }
-      })
-
-    },*/
-
     checkAll: function(){
 
       if( $('#checkAll').prop('checked') ){
@@ -567,64 +505,6 @@ var app = new Vue({
       }
 
     },
-
-/*    getView: function(id){
-
-      _this.view = {}
-
-      if(id == -1){
-        this.view = {}
-        $('#view').modal('show')
-        return;
-      }
-
-      $.ajax({
-        type: 'GET',
-        url: manager_api + 'adm/view',
-        data: {
-          table: this.param.table,
-          id: id,
-        },
-        dataType: 'json',
-        beforeSend: function(request){
-          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.view = re
-
-          $('#view').modal('show')
-
-        }
-      })
-
-    },*/
-
-
-/*    save: function(){
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'adm/save?table=' + this.param.table,
-        data: this.view,
-        dataType: 'text',
-        beforeSend: function(request){
-          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re == '1'){
-            _this.getList()
-            $('#view').modal('hide')
-          }else{
-            alert(re)
-          }
-
-        },
-      })
-
-    },*/
-
 
     onoff: function(field, value, id){
 
