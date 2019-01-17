@@ -850,10 +850,10 @@ var app = new Vue({
 
 
     var date = new Date()
-    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
+    var now_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 
-    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01 00:00')
-    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date + ' 23:59')
+    $('#startTime').val(now_date + ' 00:00')
+    $('#endTime').val(now_date + ' 23:59')
 
     $(".datetimepicker").datetimepicker();
 
