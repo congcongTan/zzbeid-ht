@@ -281,6 +281,72 @@
           </div>
         </div>
 
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">区域消费排行</h3>
+
+              <div class="box-tools">
+                <div class="fl ml10">
+                  <input type="date" class="form-control input-sm">
+                </div>
+                <div class="fl mt5 ml10">
+                  ~
+                </div>
+                <div class="fl ml10">
+                  <input type="date" class="form-control input-sm">
+                </div>
+                <div class="fl ml10">
+                  <select class="form-control input-sm">
+                    <option>全国</option>
+                  </select>
+                </div>
+                <div class="fl ml10">
+                  <select class="form-control input-sm">
+                    <option>全部代理</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+                <tbody>
+                  <tr>
+                    <th>排名</th>
+                    <th>所在区域</th>
+                    <th>消费商户</th>
+                    <th>消费笔数(含退款)</th>
+                    <th>消费金额(含退款)</th>
+                    <th>旅业</th>
+                    <th>网吧</th>
+                    <th>汽车站</th>
+                    <th>机场</th>
+                    <th>旅行社</th>
+                    <th>访客</th>
+                  </tr>
+                  <tr v-for="(v, i) in area">
+                    <td>{{i+1}}</td>
+                    <td>{{v.areaTitle}}</td>
+                    <td>{{v.tourismMchTotal}}</td>
+                    <td>{{v.consumeNum}}</td>
+                    <td>{{v.consumeIntegral}}</td>
+                    <td>{{v.hotelConsume}}</td>
+                    <td>{{v.internetbarConsume}}</td>
+                    <td>{{v.stationConsume}}</td>
+                    <td>{{v.airportConsume}}</td>
+                    <td>{{v.travelConsume}}</td>
+                    <td>{{v.travelConsume}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+
+
       </div>
 
 
@@ -449,6 +515,7 @@ var app = new Vue({
 
 	view: {},
 
+    area: {},
 
   },
   methods: {
@@ -552,6 +619,37 @@ var app = new Vue({
 
     },
 
+    getArea: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/homePage/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view = re.rspBody
+
+        }
+      })
+
+    },
 
   },
   mounted() {
@@ -635,7 +733,7 @@ var app = new Vue({
 
     $.ajax({
       type: 'POST',
-      url: manager_api + 'manager/homePage/interface',
+      url: manager_api + 'manager/areaConsumptionStatistics/interface',
       data: JSON.stringify(data),
       dataType: 'json',
       beforeSend: function(request){
@@ -643,10 +741,13 @@ var app = new Vue({
       },
       success: function(re){
 
-        _this.view = re.rspBody
+        _this.area = re.rspBody.agentOrdersStatisticsList
 
       }
     })
+
+
+    this.getArea()
 
   }
 });
