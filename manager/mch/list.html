@@ -415,7 +415,18 @@
                 </div>
               </div>
 
-              <hr>
+              <div class="form-group">
+                <label class="col-sm-3 control-label">APP类型</label>
+                <div class="col-sm-4">
+                  <select class="form-control input-sm" v-model="view.clientType">
+                    <option value="1">中证宝APP</option>
+                    <option value="2">旺宝APP</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 影响商户码的下载地址
+                </div>
+              </div>
 
               <div class="form-group">
                 <label class="col-sm-3 control-label">所属行业</label>
