@@ -221,7 +221,10 @@
                   </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
+                        查找
+                        <i class="fa fa-spinner fa-pulse" v-if="list.loading == 1"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -480,6 +483,7 @@ var app = new Vue({
         all: [],
         checked: [],
       },
+      loading: 0
     },
 
     支付方式: {
@@ -600,6 +604,17 @@ var app = new Vue({
 
       _this = this
 
+      if(this.list.loading == 1){
+        return
+      }
+
+      //清空列表
+      this.list.data = []
+
+      //loading
+      this.list.loading = 1
+
+
       //这里用v-model会有大坑
       this.list.post.startTime = $('#startTime').val()
       this.list.post.endTime = $('#endTime').val()
@@ -645,6 +660,8 @@ var app = new Vue({
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
         success: function(re){
+
+          _this.list.loading = 0
 
           _this.list.data = re.rspBody.rechargeList
           delete re.rspBody.rechargeList

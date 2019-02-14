@@ -176,6 +176,7 @@
                 <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
+                <a class="btn btn-sm btn-primary" @click="exportExcel()">导出</a>
 
               </div>
               <div class="tab-pane" id="搜索">
@@ -244,6 +245,9 @@
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+
+                      <a class="btn btn-primary" @click="exportExcel()">导出</a>
+
                     </div>
                   </div>
                 </div>
@@ -260,6 +264,7 @@
                     <th>ID</th>
                     <th>行业</th>
                     <th>商户名称</th>
+                    <th>负责人手机</th>
                     <th>商户编号</th>
                     <th>商户地址</th>
                     <th>上次登录时间</th>
@@ -276,6 +281,7 @@
                     <td>{{v.id}}</td>
                     <td>{{行业[v.industryId]}}</td>
                     <td>{{v.title}}</td>
+                    <td>{{v.mobile}}</td>
                     <td>{{v.identifier}}</td>
                     <td>{{v.address}}</td>
                     <td>{{v.lastLoginTime}}</td>
@@ -1387,6 +1393,40 @@ var app = new Vue({
       })
 
       // console.log(who, parent)
+
+    },
+
+    exportExcel: function(){
+
+      var _this = this
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/exportMchList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == 1){
+            // location.href = re.rspBody.file
+          }
+
+        }
+      })
 
     },
 
