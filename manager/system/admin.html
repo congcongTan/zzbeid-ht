@@ -96,7 +96,7 @@
         </div>
       </div>
 
-      <form action="#" method="get" class="sidebar-form">
+<!--       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
           <input type="text" name="q" class="form-control" placeholder="Search...">
           <span class="input-group-btn">
@@ -104,31 +104,31 @@
             </button>
           </span>
         </div>
-      </form>
+      </form> -->
 
       <ul class="sidebar-menu" data-widget="tree">
 
-        <li :class="{'treeview': v.children.length != 0, 'active': v.title_en == mca.c}" v-for="(v, i) in sidemenu">
+        <li :class="{'treeview': v.menuList != null, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
 
-          <a :href="`../${v.url == '#' ? v.url : v.url + '.html'}`">
+          <a :href="`../${v.href == '#' ? v.href : v.href + '.html'}`">
             <i :class="`fa fa-${v.icon}`"></i> <span>{{v.title}}</span>
-            <span class="pull-right-container" v-if="v.children.length != 0">
+            <span class="pull-right-container" v-if="v.menuList.length != 0">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
-          <ul class="treeview-menu" v-if="v.children.length != 0">
+          <ul class="treeview-menu" v-if="v.menuList.length != 0">
 
-            <li :class="{'treeview': v2.children.length != 0, 'active': v2.title_en == mca.a}" v-for="(v2, i2) in v.children">
+            <li :class="{'treeview': v2.menuList != null, 'active': v2.perms == mca.a}" v-for="(v2, i2) in v.menuList">
 
-              <a :href="`../${v2.url == '#' ? v2.url : v2.url + '.html'}`">
+              <a :href="`../${v2.href == '#' ? v2.href : v2.href + '.html'}`">
                 <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
-                <span class="pull-right-container" v-if="v2.children.length != 0">
+                <span class="pull-right-container" v-if="v2.menuList != null">
                   <i class="fa fa-angle-left pull-right"></i>
                 </span>
               </a>
-              <ul class="treeview-menu" v-if="v2.children.length != 0">
+              <ul class="treeview-menu" v-if="v2.menuList != null">
 
-                <li v-for="(v3, i3) in v2.children">
+                <li v-for="(v3, i3) in v2.menuList">
                   <a :href="`../${v3.url == '#' ? v3.url : v3.url + '.html'}`">
                     <i :class="`fa fa-${v3.icon}`"></i> {{v3.title}}
                   </a>
@@ -231,7 +231,7 @@
                     <td>{{v.realname}}</td>
                     <td>{{v.mobile}}</td>
                     <td>{{v.roleTitle}}</td>
-                    <td>{{状态[v.status]}}</td>
+                    <td>{{状态[v.managerStatus]}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
@@ -305,7 +305,7 @@
                   <input type="text" class="form-control input-sm" v-model="view.realname">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
-                  *
+                  * 必填
                 </div>
               </div>
 
@@ -315,7 +315,7 @@
                   <input type="text" class="form-control input-sm" v-model="view.mobile">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
-                  *
+                  * 必填
                 </div>
               </div>
 
@@ -327,7 +327,7 @@
                   <input type="text" class="form-control input-sm" v-model="view.account">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
-                  *
+                  * 必填
                 </div>
               </div>
 
@@ -337,27 +337,31 @@
                   <input type="text" class="form-control input-sm" v-model="view.password">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
-                  *
+                  * 必填
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-3 control-label">状态</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.status">
+                  <select class="form-control" v-model="view.managerStatus">
                     <option value="">--请选择--</option>
                     <option :value="`${i}`" v-for="(v, i) in 状态">{{v}}</option>
                   </select>
                 </div>
                 <div class="col-sm-5 text-danger mt5">
-                  *
+                  * 必填
                 </div>
               </div>
+
+              <hr>
 
               <div class="form-group">
                 <label class="col-sm-3 control-label">角色</label>
                 <div class="col-sm-9">
-
+                  <label class="radio-inline" v-for="(v, i) in 角色">
+                    <input type="radio" name="role" v-model="view.role" :value="`${v.id}`"> {{v.title}}
+                  </label>　
                 </div>
               </div>
 
@@ -548,6 +552,8 @@ var app = new Vue({
       },
     },
 
+    角色: {},
+
     状态: {
       1: '可用',
       2: '不可用',
@@ -649,6 +655,38 @@ var app = new Vue({
           }else{
             alert(re)
           }
+
+        }
+      })
+
+    },
+
+    getRole: function(){
+
+      _this = this
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/roleList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.角色 = re.rspBody.roleList
 
         }
       })
@@ -765,6 +803,8 @@ var app = new Vue({
 
           _this.view = re.rspBody
 
+          _this.view.role = _this.view.roleList[0].id
+
 
           $('#view').modal('show')
 
@@ -775,6 +815,9 @@ var app = new Vue({
 
     saveView: function(){
 
+      this.view.roleIdList = [this.view.role]
+      // console.log(this.view.roleList)
+
       var data = {
         "reqHead":
         {
@@ -783,19 +826,14 @@ var app = new Vue({
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
-        reqBody: {
-          id: this.view.id,
-          title: this.view.title,
-          status: this.view.status,
-          menus: this.view.menus,
-        }
+        reqBody: this.view
       }
 
       var add_or_edit = this.view.id == undefined ? 'add':'edit'
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/' + add_or_edit + 'Role/interface',
+        url: manager_api + 'manager/' + add_or_edit + 'Manager/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -918,26 +956,19 @@ var app = new Vue({
 
 
     // 侧栏菜单
-    $.ajax({
+/*    $.ajax({
       type: 'GET',
       url: '../../db/menu-manager.json',
-      //url: 'http://192.168.199.196:8692/token/generate',
       dataType: 'json',
-      beforeSend: function(request){
-        //request.setRequestHeader("token", _this.admin.token)
-      },
       success: function(re){
 
-        // $.cookie('token', re.data.token);
-
-        // re.data.info.token = re.data.token
-        // LS.admin = JSON.stringify(re.data.info)
-
         _this.sidemenu = re
-        //console.log(_this.sidemenu)
 
       }
-    })
+    })*/
+
+    this.sidemenu = JSON.parse(LS.menu)
+    // console.log(this.sidemenu)
 
 
     // 显示主体
@@ -958,6 +989,8 @@ var app = new Vue({
 
 
     this.getList()
+
+    this.getRole()
 
   }
 })

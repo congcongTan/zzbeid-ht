@@ -96,7 +96,7 @@
         </div>
       </div>
 
-      <form action="#" method="get" class="sidebar-form">
+<!--       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
           <input type="text" name="q" class="form-control" placeholder="Search...">
           <span class="input-group-btn">
@@ -104,31 +104,31 @@
             </button>
           </span>
         </div>
-      </form>
+      </form> -->
 
       <ul class="sidebar-menu" data-widget="tree">
 
-        <li :class="{'treeview': v.children.length != 0, 'active': v.title_en == mca.c}" v-for="(v, i) in sidemenu">
+        <li :class="{'treeview': v.menuList != null, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
 
-          <a :href="`../${v.url == '#' ? v.url : v.url + '.html'}`">
+          <a :href="`../${v.href == '#' ? v.href : v.href + '.html'}`">
             <i :class="`fa fa-${v.icon}`"></i> <span>{{v.title}}</span>
-            <span class="pull-right-container" v-if="v.children.length != 0">
+            <span class="pull-right-container" v-if="v.menuList.length != 0">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
-          <ul class="treeview-menu" v-if="v.children.length != 0">
+          <ul class="treeview-menu" v-if="v.menuList.length != 0">
 
-            <li :class="{'treeview': v2.children.length != 0, 'active': v2.title_en == mca.a}" v-for="(v2, i2) in v.children">
+            <li :class="{'treeview': v2.menuList != null, 'active': v2.perms == mca.a}" v-for="(v2, i2) in v.menuList">
 
-              <a :href="`../${v2.url == '#' ? v2.url : v2.url + '.html'}`">
+              <a :href="`../${v2.href == '#' ? v2.href : v2.href + '.html'}`">
                 <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
-                <span class="pull-right-container" v-if="v2.children.length != 0">
+                <span class="pull-right-container" v-if="v2.menuList != null">
                   <i class="fa fa-angle-left pull-right"></i>
                 </span>
               </a>
-              <ul class="treeview-menu" v-if="v2.children.length != 0">
+              <ul class="treeview-menu" v-if="v2.menuList != null">
 
-                <li v-for="(v3, i3) in v2.children">
+                <li v-for="(v3, i3) in v2.menuList">
                   <a :href="`../${v3.url == '#' ? v3.url : v3.url + '.html'}`">
                     <i :class="`fa fa-${v3.icon}`"></i> {{v3.title}}
                   </a>
@@ -1272,26 +1272,19 @@ var app = new Vue({
 
 
     // 侧栏菜单
-    $.ajax({
+/*    $.ajax({
       type: 'GET',
       url: '../../db/menu-manager.json',
-      //url: 'http://192.168.199.196:8692/token/generate',
       dataType: 'json',
-      beforeSend: function(request){
-        //request.setRequestHeader("token", _this.admin.token)
-      },
       success: function(re){
 
-        // $.cookie('token', re.data.token);
-
-        // re.data.info.token = re.data.token
-        // LS.admin = JSON.stringify(re.data.info)
-
         _this.sidemenu = re
-        //console.log(_this.sidemenu)
 
       }
-    })
+    })*/
+
+    this.sidemenu = JSON.parse(LS.menu)
+    // console.log(this.sidemenu)
 
 
     // 显示主体

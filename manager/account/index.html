@@ -220,10 +220,41 @@ var app = new Vue({
             alert(re.rspHead.retMsg)
           }else{
             var admin = {}
+            // admin.id = re.rspBody.managerRspDTO.id
             admin.user = re.rspBody.managerRspDTO.account
             admin.token = re.rspBody.token
             admin.expire = new Date().getTime() + (180 * 60 * 1000)
             LS.admin = JSON.stringify(admin)
+
+            //侧栏菜单
+            var data = {
+              "reqHead":
+              {
+                clientType: 6,
+                format: "json",
+                version: "1.0",
+                sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+              },
+              reqBody: {
+                id: re.rspBody.managerRspDTO.id
+              }
+            }
+            // console.log(data)
+
+            $.ajax({
+              type: 'POST',
+              url: manager_api + 'manager/getManagerAuthority/interface',
+              data: JSON.stringify(data),
+              dataType: 'json',
+              beforeSend: function(request){
+                request.setRequestHeader('Authorization', 'Bearer ' + re.rspBody.token )
+              },
+              success: function(re){
+
+                LS.menu = JSON.stringify(re.rspBody.menuList)
+
+              }
+            })
 
             location.href = '../mch/list.html'
           }

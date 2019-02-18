@@ -96,7 +96,7 @@
         </div>
       </div>
 
-      <form action="#" method="get" class="sidebar-form">
+<!--       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
           <input type="text" name="q" class="form-control" placeholder="Search...">
           <span class="input-group-btn">
@@ -104,31 +104,31 @@
             </button>
           </span>
         </div>
-      </form>
+      </form> -->
 
       <ul class="sidebar-menu" data-widget="tree">
 
-        <li :class="{'treeview': v.children.length != 0, 'active': v.title_en == mca.c}" v-for="(v, i) in sidemenu">
+        <li :class="{'treeview': v.menuList != null, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
 
-          <a :href="`../${v.url == '#' ? v.url : v.url + '.html'}`">
+          <a :href="`../${v.href == '#' ? v.href : v.href + '.html'}`">
             <i :class="`fa fa-${v.icon}`"></i> <span>{{v.title}}</span>
-            <span class="pull-right-container" v-if="v.children.length != 0">
+            <span class="pull-right-container" v-if="v.menuList.length != 0">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
-          <ul class="treeview-menu" v-if="v.children.length != 0">
+          <ul class="treeview-menu" v-if="v.menuList.length != 0">
 
-            <li :class="{'treeview': v2.children.length != 0, 'active': v2.title_en == mca.a}" v-for="(v2, i2) in v.children">
+            <li :class="{'treeview': v2.menuList != null, 'active': v2.perms == mca.a}" v-for="(v2, i2) in v.menuList">
 
-              <a :href="`../${v2.url == '#' ? v2.url : v2.url + '.html'}`">
+              <a :href="`../${v2.href == '#' ? v2.href : v2.href + '.html'}`">
                 <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
-                <span class="pull-right-container" v-if="v2.children.length != 0">
+                <span class="pull-right-container" v-if="v2.menuList != null">
                   <i class="fa fa-angle-left pull-right"></i>
                 </span>
               </a>
-              <ul class="treeview-menu" v-if="v2.children.length != 0">
+              <ul class="treeview-menu" v-if="v2.menuList != null">
 
-                <li v-for="(v3, i3) in v2.children">
+                <li v-for="(v3, i3) in v2.menuList">
                   <a :href="`../${v3.url == '#' ? v3.url : v3.url + '.html'}`">
                     <i :class="`fa fa-${v3.icon}`"></i> {{v3.title}}
                   </a>
@@ -167,78 +167,16 @@
 
             <ul class="nav nav-tabs">
               <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
-              <li class=""><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <!-- <li class=""><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li> -->
             </ul>
 
             <div class="tab-content">
               <div class="tab-pane active" id="操作">
 
-                <a class="btn btn-sm btn-danger" @click="del()">删除</a>
-
-                <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a>
-
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
               </div>
               <div class="tab-pane" id="搜索">
-                
-                <div class="pull-left mt6 ml5">
-                  商户行业：
-                </div>
-
-                <div class="pull-left w100 ml5">
-                  <select class="form-control input-sm">
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
-                  </select>
-                </div>
-
-                <div class="c h10"></div>
-
-                <div class="pull-left mt6 ml5">
-                  商户地址：
-                </div>
-
-                <div class="pull-left w100 ml5">
-                  <select class="form-control input-sm">
-                    <option value="">中国</option>
-                  </select>
-                </div>
-                <div class="pull-left w100 ml5">
-                  <select class="form-control input-sm">
-                    <option value="">广东</option>
-                  </select>
-                </div>
-                <div class="pull-left w100 ml5">
-                  <select class="form-control input-sm">
-                    <option value="">广州</option>
-                  </select>
-                </div>
-
-                <div class="c h10"></div>
-
-                <div class="pull-left mt6 ml5">
-                  登录时间：
-                </div>
-
-                <div class="pull-left w150 ml5">
-                  <select class="form-control input-sm">
-                    <option value="">--请选择--</option>
-                    <option value="1">最近1天没有登录</option>
-                    <option value="3">最近3天没有登录</option>
-                    <option value="7">最近7天没有登录</option>
-                  </select>
-                </div>
-
-                <div class="c h10"></div>
-
-                <div class="pull-left mt6 ml5">
-                  商户名称：
-                </div>
-
-                <div class="pull-left w150 ml5"><input type="text" class="form-control input-sm"></div>
-
-                <div class="c h10"></div>
 
                 <a class="btn btn-sm btn-primary" @click="getList">查找</a>
 
@@ -250,7 +188,7 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr class="noenter">
-                    <th>菜单名称</th>
+                    <th width="30%">菜单名称</th>
                     <th>排序</th>
                     <th>类型</th>
                     <th>菜单地址</th>
@@ -260,52 +198,46 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr :class="`${v.css}`" v-for="(v, i) in list">
-                    <td><i class="treegrid-expander icon-chevron-down"></i>{{v.title}}</td>
-                    <td>{{v.sort}}</td>
-                    <td>{{v.menuType}}</td>
-                    <td>{{v.href}}</td>
-                    <td>{{v.perms}}</td>
-                    <td>{{status[v.menuStatus]}}</td>
-                    <td class="text-nowrap">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a>
-                      <!-- <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a> -->
-                    </td>
-                  </tr>
-                  <tr v-if="list.length == 0">
+                  <template v-for="(v, i) in list.data">
+                    <tr>
+                      <td>
+                        <div class="fl w20">
+                          <a href="javascript:;" @click="open(v.id)">
+                            <i v-if="v.childMenuList == null" :class="`fa fa-square-o`"></i>
+                            <i v-if="v.childMenuList != null" :class="`fa fa-${v.open == 1 ? 'minus':'plus'}-square-o`"></i>
+                          </a>
+                        </div>{{v.title}}
+                      </td>
+                      <td>{{v.sort}}</td>
+                      <td>{{类型[v.menuType]}}</td>
+                      <td>{{v.href}}</td>
+                      <td>{{v.perms}}</td>
+                      <td>{{状态[v.status]}}</td>
+                      <td class="text-nowrap">
+                        <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a>
+                        <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a>
+                      </td>
+                    </tr>
+                    <template v-if="v.open === 1" v-for="(v2, i2) in v.childMenuList">
+                      <tr>
+                        <td><div class="fl ml20 w20"><i :class="`fa fa-square-o`"></i></div>{{v2.title}}</td>
+                        <td>{{v2.sort}}</td>
+                        <td>{{类型[v2.menuType]}}</td>
+                        <td>{{v2.href}}</td>
+                        <td>{{v2.perms}}</td>
+                        <td>{{状态[v2. status]}}</td>
+                        <td class="text-nowrap">
+                          <a class="btn btn-xs btn-primary" @click="getView(v2.id)">编辑</a>
+                          <a class="btn btn-xs btn-danger" @click="del(v2.id)">删除</a>
+                        </td>
+                      </tr>
+                    </template>
+                  </template>
+                  <tr v-if="list.data.length == 0">
                     <td colspan="99">没有数据</td>
                   </tr>
                 </tbody>
               </table>
-
-              <div class="pull-left mt15">
-                <label>
-                  <select class="form-control input-sm" v-model="param.limit" @change="getList()">
-                    <option value="2">每页 2 条</option>
-                    <option value="10">每页 10 条</option>
-                    <option value="25">每页 25 条</option>
-                    <option value="50">每页 50 条</option>
-                    <option value="100">每页 100 条</option>
-                  </select>
-                </label>
-              </div>
-
-              <div class="pull-right" v-if="param.page_total > 1">
-                <ul class="pagination pagination-sm">
-
-                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
-
-                  <li class="paginate_button" v-for="i in list.prev"><a href="javascript:;" @click="param.page = i; getList()">{{i}}</a></li>
-
-                  <li class="paginate_button active"><a href="#">{{param.page}}</a></li>
-
-                  <li class="paginate_button" v-for="i in list.next"><a href="javascript:;" @click="param.page = i; getList()">{{i}}</a></li>
-
-                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
-                  </li>
-
-                </ul>
-              </div>
 
             </div>
 
@@ -333,31 +265,9 @@
             <form class="form-horizontal">
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">上级代理商</label>
+                <label class="col-sm-3 control-label">菜单名称</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.一级代理">
-                    <option value="">一级代理</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
-                  </select>
-                </div>
-                <div class="col-sm-4">
-                  <select class="form-control" v-model="view.二级代理">
-                    <option value="">二级代理</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="col-sm-offset-3 col-sm-9 mb20 pl10 text-danger mt5">
-                不设置代理商，代理分成将无效
-              </div>
-
-              <hr>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">商户名称</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.商户名称">
+                  <input type="text" class="form-control input-sm" v-model="view.title">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -365,166 +275,62 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">商户编号</label>
+                <label class="col-sm-3 control-label">上级菜单</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.商户编号">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 首次设置后，不可修改
+                  <select class="form-control" v-model="view.parentId">
+                    <option value="0">--请选择--</option>
+                    <option :value="`${v.id}`" v-for="(v, i) in 上级菜单">{{v.title}}</option>
+                  </select>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">商户密码</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.商户密码">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">支付金额</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" placeholder="设置用户授权需支付金额" v-model="view.支付金额">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 免费输入0
+                <label class="col-sm-3 control-label">菜单类型</label>
+                <div class="col-sm-9">
+                  <label class="radio-inline">
+                    <input type="radio" name="menuType" v-model="view.menuType" value="1"> 目录
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" name="menuType" v-model="view.menuType" value="2"> 菜单
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" name="menuType" v-model="view.menuType" value="3"> 功能
+                  </label>
                 </div>
               </div>
 
               <hr>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">所属行业</label>
+                <label class="col-sm-3 control-label">菜单地址</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.所属行业">
+                  <input type="text" class="form-control input-sm" v-model="view.href">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">权限CODE</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.perms">
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">状态</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.status">
                     <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
-                  </select>
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">网吧行业软件</label>
-                <div class="col-sm-4">
-                  <select class="form-control" v-model="view.网吧行业软件">
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 网吧行业软件">{{v}}</option>
-                  </select>
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  非网吧行业请忽略
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">酒店行业同步模式</label>
-                <div class="col-sm-4">
-                  <select class="form-control" v-model="view.同步模式">
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 同步模式">{{v}}</option>
-                  </select>
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  非酒店行业请忽略
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">同步IP或计算机名称</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.同步IP或计算机名称">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">数据库端口</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.数据库端口">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">数据库账号</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.数据库账号">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">数据库密码</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.数据库密码">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">酒店注册码</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.酒店注册码">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">外部接口编号</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.外部接口编号">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">商户负责人</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.商户负责人">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">负责人手机</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.负责人手机">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">商户地址</label>
-                <div class="col-sm-3">
-                  <select class="form-control">
-                    <option>中国</option>
-                  </select>
-                </div>
-                <div class="col-sm-3">
-                  <select class="form-control">
-                    <option>----</option>
-                  </select>
-                </div>
-                <div class="col-sm-3">
-                  <select class="form-control">
-                    <option>----</option>
+                    <option :value="`${i}`" v-for="(v, i) in 状态">{{v}}</option>
                   </select>
                 </div>
               </div>
 
               <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-9">
-                  <input type="text" class="form-control input-sm" v-model="view.address">
+                <label class="col-sm-3 control-label">排序</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.sort">
                 </div>
               </div>
 
@@ -700,31 +506,33 @@ var app = new Vue({
 
 	view: {},
 
-    param: {
-      table: 'administrative_team',
-      page: 1,
-      limit: 2,
-      count: 0,
+    list: {
+      data: [],
+      post: {
+        title: '',
+        pageNum: 1,
+        pageSize: 10
+      },
+      info: {},
+      page: {},
+      checkbox: {
+        all: [],
+        checked: [],
+      },
     },
 
-    行业: {
-      1: '旅馆',
-      2: '酒店',
-      3: '汽车站',
-      4: '机场',
-      5: '旅行社',
+    类型: {
+      1: '目录',
+      2: '菜单',
+      3: '功能',
     },
 
-    网吧行业软件: {
-      0: '佳星',
-      1: '万象',
+    状态: {
+      1: '可用',
+      2: '不可用',
     },
 
-    同步模式: {
-      0: '在线（云服务器）',
-      1: 'xml文件',
-      2: '本地数据库',
-    },
+    上级菜单: [],
 
   },
   methods: {
@@ -865,7 +673,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/roleList/interface',
+        url: manager_api + 'manager/getMenuList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -873,8 +681,13 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.roleList
-          delete re.rspBody.roleList
+          //初始化开关状态，必需
+          for(var i in re.rspBody.menuList){
+            re.rspBody.menuList[i]['open'] = 0
+          }
+
+          _this.list.data = re.rspBody.menuList
+          delete re.rspBody.menuList
 
           _this.list.info = re.rspBody          
 
@@ -904,7 +717,48 @@ var app = new Vue({
 
     },
 
-    saveView: function(){
+    open: function(id){
+
+      for(var i in this.list.data){
+        var v = this.list.data[i]
+
+        if(v['id'] == id){
+          if(v['open'] == 1){
+            this.list.data[i]['open'] = 0
+          }else{
+            this.list.data[i]['open'] = 1
+          }
+
+          // console.log(this.list.data[i])
+
+          break
+        }
+
+      }
+
+    },
+
+    getView: function(id){
+
+      this.view = {}
+
+      //上级菜单
+      this.上级菜单 = []//清空
+      for(var i in this.list.data){
+        var v = this.list.data[i]
+
+        //lv1
+        this.上级菜单.push({
+          'id': v.id,
+          'title': v.title
+        })
+
+      }
+
+      if(id == -1){
+        $('#view').modal('show')
+        return
+      }
 
       var data = {
         "reqHead":
@@ -915,18 +769,13 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          id: this.view.id,
-          title: this.view.title,
-          status: this.view.status,
-          menus: this.view.menus,
+          id: id
         }
       }
 
-      var add_or_edit = this.view.id == undefined ? 'add':'edit'
-
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/' + add_or_edit + 'Role/interface',
+        url: manager_api + 'manager/getMenuInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -934,7 +783,41 @@ var app = new Vue({
         },
         success: function(re){
 
-          if(re.rspHead.retMsg == '成功'){
+          _this.view = re.rspBody
+
+          $('#view').modal('show')
+
+        }
+      })
+
+    },
+
+    saveView: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.view
+      }
+
+      var add_or_edit = this.view.id == undefined ? 'add':'edit'
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/' + add_or_edit + 'Menu/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
             _this.getList()
             $('#view').modal('hide')
           }else{
@@ -980,13 +863,13 @@ var app = new Vue({
             sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
           },
           reqBody: {
-            goodId: id
+            id: id
           }
         }
 
         $.ajax({
           type: 'POST',
-          url: manager_api + 'manager/deleteGood/interface',
+          url: manager_api + 'manager/deleteMenu/interface',
           data: JSON.stringify(data),
           dataType: 'json',
           beforeSend: function(request){
@@ -1035,26 +918,19 @@ var app = new Vue({
 
 
     // 侧栏菜单
-    $.ajax({
+/*    $.ajax({
       type: 'GET',
       url: '../../db/menu-manager.json',
-      //url: 'http://192.168.199.196:8692/token/generate',
       dataType: 'json',
-      beforeSend: function(request){
-        //request.setRequestHeader("token", _this.admin.token)
-      },
       success: function(re){
 
-        // $.cookie('token', re.data.token);
-
-        // re.data.info.token = re.data.token
-        // LS.admin = JSON.stringify(re.data.info)
-
         _this.sidemenu = re
-        //console.log(_this.sidemenu)
 
       }
-    })
+    })*/
+
+    this.sidemenu = JSON.parse(LS.menu)
+    // console.log(this.sidemenu)
 
 
     // 显示主体
