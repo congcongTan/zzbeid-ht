@@ -251,12 +251,16 @@ var app = new Vue({
               },
               success: function(re){
 
+                // console.log(re)
+                // return
+
                 LS.menu = JSON.stringify(re.rspBody.menuList)
+
+                location.href = '../mch/list.html'
 
               }
             })
 
-            location.href = '../mch/list.html'
           }
 
         }
