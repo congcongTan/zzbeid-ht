@@ -556,7 +556,7 @@ var app = new Vue({
 
     状态: {
       1: '可用',
-      2: '不可用',
+      0: '不可用',
     },
 
   },
@@ -803,8 +803,10 @@ var app = new Vue({
 
           _this.view = re.rspBody
 
-          _this.view.role = _this.view.roleList[0].id
-
+          //取出角色，允许没有
+          if(_this.view.roleList.length != 0){
+            _this.view.role = _this.view.roleList[0].id
+          }
 
           $('#view').modal('show')
 
