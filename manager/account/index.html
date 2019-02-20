@@ -220,7 +220,7 @@ var app = new Vue({
             alert(re.rspHead.retMsg)
           }else{
             var admin = {}
-            // admin.id = re.rspBody.managerRspDTO.id
+            admin.id = re.rspBody.managerRspDTO.id
             admin.user = re.rspBody.managerRspDTO.account
             admin.token = re.rspBody.token
             admin.expire = new Date().getTime() + (180 * 60 * 1000)

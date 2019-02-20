@@ -819,6 +819,7 @@ var app = new Vue({
 
           if(re.rspHead.retCode == '1'){
             _this.getList()
+            _this.reloadMenu()
             $('#view').modal('hide')
           }else{
             alert(re.rspHead.retMsg)
@@ -880,7 +881,10 @@ var app = new Vue({
             if(re.rspHead.retMsg != '成功'){
               alert(re.rspHead.retMsg)
             }else{
+
               _this.getList()
+              _this.reloadMenu()
+
             }
 
           }
@@ -891,6 +895,49 @@ var app = new Vue({
       }
 
     },
+
+    reloadMenu: function(){
+
+      var _this = this
+
+      //侧栏菜单
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: this.admin.id
+        }
+      }
+      // console.log(data)
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getManagerAuthority/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          // console.log(re)
+          // return
+
+          //更新ls
+          LS.menu = JSON.stringify(re.rspBody.menuList)
+
+          //更新当前
+          _this.sidemenu = re.rspBody.menuList
+
+        }
+      })
+
+    }
 
   },
   mounted() {
