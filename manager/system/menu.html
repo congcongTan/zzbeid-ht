@@ -740,8 +740,6 @@ var app = new Vue({
 
     getView: function(id){
 
-      this.view = {}
-
       //上级菜单
       this.上级菜单 = []//清空
       for(var i in this.list.data){
@@ -756,6 +754,12 @@ var app = new Vue({
       }
 
       if(id == -1){
+
+        this.view = {
+          status: 1,
+          parentId: 0,
+        }
+
         $('#view').modal('show')
         return
       }
