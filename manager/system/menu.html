@@ -879,12 +879,14 @@ var app = new Vue({
 
             if(re.rspHead.retMsg != '成功'){
               alert(re.rspHead.retMsg)
+            }else{
+              _this.getList()
             }
 
           }
         })
 
-        _this.getList()
+        
 
       }
 

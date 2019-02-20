@@ -901,13 +901,13 @@ var app = new Vue({
             sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
           },
           reqBody: {
-            goodId: id
+            id: id
           }
         }
 
         $.ajax({
           type: 'POST',
-          url: manager_api + 'manager/deleteGood/interface',
+          url: manager_api + 'manager/deleteManager/interface',
           data: JSON.stringify(data),
           dataType: 'json',
           beforeSend: function(request){
@@ -917,12 +917,12 @@ var app = new Vue({
 
             if(re.rspHead.retMsg != '成功'){
               alert(re.rspHead.retMsg)
+            }else{
+              _this.getList()
             }
 
           }
         })
-
-        _this.getList()
 
       }
 
