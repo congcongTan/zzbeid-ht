@@ -108,7 +108,7 @@
 
       <ul class="sidebar-menu" data-widget="tree">
 
-        <li :class="{'treeview': v.menuList != null, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
+        <li :class="{'treeview': v.menuType == 1, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
 
           <a :href="`../${v.href == '#' ? v.href : v.href + '.html'}`">
             <i :class="`fa fa-${v.icon}`"></i> <span>{{v.title}}</span>
@@ -243,26 +243,26 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">消费次数</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.beginRefundNum">
+                      <input type="text" class="form-control" v-model="list.post.beginConsumeNum">
                     </div>
                     <div class="fl w20 mt8 tc">
                       ~
                     </div>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.endRefundNum">
+                      <input type="text" class="form-control" v-model="list.post.endConsumeNum">
                     </div>
                   </div>
 
                   <div class="form-group">
                     <label class="col-sm-2 control-label">消费金额</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control">
+                      <input type="text" class="form-control" v-model="list.post.consumeIntegralStart">
                     </div>
                     <div class="fl w20 mt8 tc">
                       ~
                     </div>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control">
+                      <input type="text" class="form-control" v-model="list.post.consumeIntegralEnd">
                     </div>
                   </div>
 
@@ -333,37 +333,6 @@
                   </tr>
                 </tbody>
               </table>
-
-              <div class="pull-left mt15">
-                <label>
-                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
-                    <option value="2">每页 2 条</option>
-                    <option value="10">每页 10 条</option>
-                    <option value="25">每页 25 条</option>
-                    <option value="50">每页 50 条</option>
-                    <option value="100">每页 100 条</option>
-                  </select>
-                </label>
-
-                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
-              </div>
-
-              <div class="pull-right" v-if="list.info.pages > 1">
-                <ul class="pagination pagination-sm">
-
-                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
-
-                  <li class="paginate_button" v-for="i in list.page.prev"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
-
-                  <li class="paginate_button active"><a href="#">{{list.post.pageNum}}</a></li>
-
-                  <li class="paginate_button" v-for="i in list.page.next"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
-
-                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
-                  </li>
-
-                </ul>
-              </div>
 
             </div>
 

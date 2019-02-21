@@ -256,7 +256,44 @@ var app = new Vue({
 
                 LS.menu = JSON.stringify(re.rspBody.menuList)
 
-                location.href = '../mch/list.html'
+                var list = re.rspBody.menuList
+                var first_can_jump = ''
+                for(var i in list){
+                  var v = list[i]
+
+                  //记录下第一个能进的菜单
+                  //一级菜单就能进入？
+                  if(v.menuType == '2' && first_can_jump == ''){
+                    first_can_jump = '../' + v.href + '.html'
+                  }
+
+                  for(var i2 in v.menuList){
+                    var v2 = v.menuList[i2]
+
+                    //如果有权，默认去 mch/list
+                    if(v.perms == 'mch' && v2.perms == 'list'){
+
+                      location.href = '../mch/list.html'
+                      return
+                    }
+
+                    //记录下第一个能进的菜单
+                    //二级菜单能进入？
+                    if(v2.menuType == '2' && first_can_jump == ''){
+                      first_can_jump = '../' + v2.href + '.html'
+                    }
+
+                  }
+
+                }
+
+                if(first_can_jump == ''){
+                  alert('您一个能进的菜单也没有，请设置菜单')
+                }else{
+                  location.href = first_can_jump
+                }
+
+                // location.href = '../mch/list.html'
 
               }
             })

@@ -108,7 +108,7 @@
 
       <ul class="sidebar-menu" data-widget="tree">
 
-        <li :class="{'treeview': v.menuList != null, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
+        <li :class="{'treeview': v.menuType == 1, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
 
           <a :href="`../${v.href == '#' ? v.href : v.href + '.html'}`">
             <i :class="`fa fa-${v.icon}`"></i> <span>{{v.title}}</span>

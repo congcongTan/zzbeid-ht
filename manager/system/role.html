@@ -108,7 +108,7 @@
 
       <ul class="sidebar-menu" data-widget="tree">
 
-        <li :class="{'treeview': v.menuList != null, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
+        <li :class="{'treeview': v.menuType == 1, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
 
           <a :href="`../${v.href == '#' ? v.href : v.href + '.html'}`">
             <i :class="`fa fa-${v.icon}`"></i> <span>{{v.title}}</span>
@@ -719,9 +719,74 @@ var app = new Vue({
 
     getView: function(id){
 
+      var _this = this
+
       this.view = {}
 
       if(id == -1){
+
+        var setting = {
+          check: {
+            enable: true,//可以勾选
+            chkboxType: { "Y" : "ps", "N" : "ps" },//选时，父选子选
+          },
+          data: {
+            simpleData: {
+              enable: true
+            }
+          },
+              callback: {
+                  onCheck: _this.getNode
+              }
+        }
+
+        var menu = []
+        var menu_checked = []
+
+        // LV1
+        for(var i in _this.菜单){
+          var v = _this.菜单[i]
+          // id++
+
+          var data = {}
+          data.id = v.id
+          data.pId = 0
+          data.name = v.title
+          data.open = true
+
+          // 选中
+          if(menu_checked.indexOf(v.id) !== -1){
+            data.checked = true
+          }
+
+          menu.push(data)
+
+          //LV2
+          pId2 = v.id
+          for(var i2 in v.childMenuList){
+            var v2 = v.childMenuList[i2]
+            // id++
+
+            var data = {}
+            data.id = v2.id
+            data.pId = pId2
+            data.name = v2.title
+            data.open = true
+
+            // 选中
+            if(menu_checked.indexOf(v2.id) != -1){
+              data.checked = true
+            }
+
+            menu.push(data)
+
+          }
+
+        }
+
+
+        $.fn.zTree.init($("#zTree_role"), setting, menu);
+
         $('#view').modal('show')
         return
       }
