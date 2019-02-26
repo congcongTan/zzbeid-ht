@@ -285,12 +285,13 @@
                     <td>{{v.identifier}}</td>
                     <td>{{v.address}}</td>
                     <td>{{v.lastLoginTime}}</td>
-                    <td :class="{'text-danger': v.offLineTime / 86400 > 3}">{{(v.offLineTime / 86400).toFixed(1)}}天</td>
+                    <td :class="{'text-danger': v.offLineTime / 86400 > 3}">{{(v.offLineTime}}天</td>
                     <td>{{v.appVersion}}</td>
                     <td>{{v.payIntegral}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getSale(v.mchId, v.title)">促销政策</a><br>
                       <a :class="`btn btn-xs btn-${v.status == '1' ? 'success':'warning'}`" @click="setStatus(v.mchId)">{{v.status == '1' ? '锁定':'解锁'}}</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
@@ -488,6 +489,13 @@
                   </div>
                 </div>
 
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">机器数量</label>
+                  <div class="col-sm-4">
+                    <input type="number" class="form-control input-sm">
+                  </div>
+                </div>
+
               </span>
 
               <span v-if="view.industryId == 1">
@@ -616,6 +624,90 @@
           </div>
           <div class="modal-footer">
             <a class="btn btn-primary" @click="saveView">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="sale">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              商户分成
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">适用商户</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.title" disabled>
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">分成基数</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.radix">
+                    <option :value="`${i}`" v-for="(v, i) in 分成基数">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">分成模式</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.mode">
+                    <option :value="`${i}`" v-for="(v, i) in 分成模式">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">结算手续费</label>
+                <div class="col-sm-2">
+                  <input type="text" class="form-control input-sm" v-model="view.poundage">
+                </div>
+                <div class="col-sm-2 mt5">
+                  %
+                </div>
+              </div>
+
+              <div class="mb10"><a class="btn btn-sm btn-primary" href="javascript:;" @click="add_rules()">增加一条</a></div>
+
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>分成基数</th>
+                    <th>商户分成</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(v, i) in view['rules']">
+                    <td><input type="text" class="w40" v-model="v.beginAmount"> 至 <input type="text" class="w40" v-model="v.endAmount"></td>
+                    <td><input type="text" class="w40" v-model="v.selftRoyalty"> %</td>
+                    <td>
+                      <a class="btn btn-xs btn-default" @click="order_rules(i, '-')"><i class="fa fa-arrow-up"></i></a>
+                      <a class="btn btn-xs btn-default" @click="order_rules(i, '+')"><i class="fa fa-arrow-down"></i></a>
+                      <a class="btn btn-xs btn-danger" @click="del_rules(i)"><i class="fa fa-remove"></i></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="saveSale">确定</a>
           </div>
         </div>
       </div>
@@ -821,12 +913,12 @@ var app = new Vue({
       3: '汽车站',
       4: '机场',
       5: '旅行社',
-      6: '访客',
+      6: '访客'
     },
 
     状态: {
       0: '不可用',
-      1: '可用',
+      1: '可用'
     },
 
     网吧行业软件: {
@@ -834,18 +926,27 @@ var app = new Vue({
       2: '万象',
       3: '湖南万象(斯雨)',
       4: '云辰',
-      5: '龙管家',
+      5: '龙管家'
     },
 
     是否加密: {
       0: '否',
-      1: '是',
+      1: '是'
     },
 
     同步模式: {
       1: '在线（云服务器）',
       2: 'xml文件（铃铛）',
-      3: '本地数据库（LockSend）',
+      3: '本地数据库（LockSend）'
+    },
+
+    分成基数: {
+      1: '月消费总积分（对冲退款）',
+      2: '日均消费总积分（对冲退款）'
+    },
+
+    分成模式: {
+      1: '阶梯式累计分成'
     },
 
   },
@@ -1113,6 +1214,164 @@ var app = new Vue({
 
         },
       })
+
+    },
+
+    getSale: function(id, title){
+
+      this.view = {
+        title: title, 
+        rules: []
+      }
+
+      if(id == -1){
+        this.add_rules()
+        $('#sale').modal('show')
+        return
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getMchProfitRule/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          //换变量名
+          re.rspBody.rules = re.rspBody.ruleList
+          delete re.rspBody.ruleList
+
+          //防空
+          if ( re.rspBody['rules'] == undefined ){
+            re.rspBody['rules'] = []
+          }
+
+          //提取
+          if(re.rspBody['rules'][0] != undefined){
+            re.rspBody.radix = re.rspBody['rules'][0].radix
+            re.rspBody.mode = re.rspBody['rules'][0].mode
+            re.rspBody.poundage = re.rspBody['rules'][0].poundage
+          }
+
+          //清除
+          for(var i in re.rspBody['rules']){
+            delete re.rspBody['rules'][i]['mchId']
+            delete re.rspBody['rules'][i]['radix']
+            delete re.rspBody['rules'][i]['mode']
+            delete re.rspBody['rules'][i]['poundage']
+          }
+
+          _this.view = re.rspBody
+          _this.view.mchId = id
+          _this.view.title = title
+
+
+          $('#sale').modal('show')
+
+        }
+      })
+
+    },
+
+    saveSale: function(){
+
+      // this.view.
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.view
+      }
+
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/updateMchProfitRule/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+            $('#sale').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    add_rules: function(){
+
+      this.view['rules'].push({
+        beginAmount: '',
+        endAmount: '',
+        selftRoyalty: '',
+      })
+
+    },
+
+    del_rules: function(i){
+
+      if(!confirm('确认删除？')){
+        return
+      }
+
+      this.view['rules'].splice(i, 1)
+
+    },
+
+    order_rules: function(i, way){
+
+      var tmp = this.view['rules'][i]
+
+      if(way == '-'){
+
+        if(i == 0){
+          console.log('不能上移')
+          return
+        }
+
+        var new_i = i - 1
+
+      }else{
+
+        if( i == this.view['rules'].length - 1 ){
+          console.log('不能下移')
+          return
+        }
+
+        var new_i = i + 1
+      }
+
+      this.view['rules'].splice(i, 1)
+      this.view['rules'].splice(new_i, 0, tmp)
 
     },
 

@@ -249,7 +249,7 @@
                     <th>支付方式</th>
                     <th>变更类型</th>
                     <th>发生时间</th>
-                    <th width="1%">操作</th>
+                    <th width="1%" v-if="admin.type == 2">操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -262,7 +262,7 @@
                     <td>{{v.payTypeTitle}}</td>
                     <td>{{v.changeTitle}}</td>
                     <td>{{v.createTime}}</td>
-                    <td class="text-nowrap operation">
+                    <td class="text-nowrap operation" v-if="admin.type == 2">
                       <a class="btn btn-xs btn-danger" v-if="v.payStatus == 1" @click="退积分(v.id, v.memberId)">退积分</a><br>
                     </td>
                   </tr>
