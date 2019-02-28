@@ -284,8 +284,7 @@
                     <td>{{v.mobile}}</td>
                     <td>{{v.identifier}}</td>
                     <td>{{v.address}}</td>
-                    <td>{{v.lastLoginTime}}</td>
-                    <td :class="{'text-danger': v.offLineTime / 86400 > 3}">{{(v.offLineTime}}天</td>
+                    <td :class="{'text-danger': v.offLineTimeRed == 1}">{{v.offLineTime}}</td>
                     <td>{{v.appVersion}}</td>
                     <td>{{v.payIntegral}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
