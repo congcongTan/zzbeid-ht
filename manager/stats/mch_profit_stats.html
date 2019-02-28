@@ -185,40 +185,11 @@
                 <div class="form-horizontal">
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">区域</label>
-                    <div class="col-sm-10">
-                      <div class="row">
-                        <div class="col-xs-4 col-sm-3">
-                          <select class="form-control" v-model="list.post.province" onchange="app.getC('search', this.value)">
-                            <option :value="`${v.code}`" v-for="(v, i) in search_pca.p">{{v.name}}</option>
-                          </select>
-                        </div>
-                        <div class="col-xs-4 col-sm-3">
-                          <select class="form-control" v-model="list.post.city" onchange="app.getA('search', this.value)">
-                            <option :value="`${v.code}`" v-for="(v, i) in search_pca.c">{{v.name}}</option>
-                          </select>
-                        </div>
-                        <div class="col-xs-4 col-sm-3">
-                          <select class="form-control" v-model="list.post.area">
-                            <option :value="`${v.code}`" v-for="(v, i) in search_pca.a">{{v.name}}</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">统计日期</label>
+                    <label class="col-sm-2 control-label">统计月份</label>
                     <div class="col-sm-10">
                       <div class="row">
                         <div class="col-xs-5 col-sm-3">
-                          <input type="text" class="form-control datepicker2" id="startTime">
-                        </div>
-                        <div class="fl w20 mt8 tc">
-                          ~
-                        </div>
-                        <div class="col-xs-5 col-sm-3">
-                          <input type="text" class="form-control datepicker2" id="endTime">
+                          <input type="text" class="form-control" id="startTime">
                         </div>
                       </div>
                     </div>
@@ -241,42 +212,6 @@
                   </div>
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">消费次数</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.beginConsumeNum">
-                    </div>
-                    <div class="fl w20 mt8 tc">
-                      ~
-                    </div>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.endConsumeNum">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">消费金额</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.consumeIntegralStart">
-                    </div>
-                    <div class="fl w20 mt8 tc">
-                      ~
-                    </div>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.consumeIntegralEnd">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">商户行业</label>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.industryId">
-                        <!-- <option value="">--请选择--</option> -->
-                        <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
                     <label class="col-sm-2 control-label">商户名称</label>
                     <div class="col-sm-3">
                       <input type="text" class="form-control" v-model="list.post.mchName">
@@ -286,7 +221,8 @@
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
-                      <button class="btn btn-default" @click="export_excel()">导出</button>                    </div>
+                      <a href="javascript:;" class="btn btn-link">注意：当月分成会在次月才能查询</a>
+                    </div>
                   </div>
                 </div>
 
@@ -300,14 +236,13 @@
                   <tr class="text-nowrap">
                     <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
                     <th>商户名称</th>
-                    <th>消费次数</th>
-                    <th>消费金额</th>
-                    <th>退款次数</th>
-                    <th>退款金额</th>
-                    <th>省</th>
-                    <th>市</th>
-                    <th>区</th>
-                    <th>行业</th>
+                    <th>二级代理</th>
+                    <th>一级代理</th>
+                    <th>总订单</th>
+                    <th>总积分</th>
+                    <th>分成基数</th>
+                    <th>结算手续费</th>
+                    <th>分成</th>
                     <!-- <th width="1%">操作</th> -->
                   </tr>
                 </thead>
@@ -315,14 +250,13 @@
                   <tr v-for="(v, i) in list.data">
                     <!-- <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td> -->
                     <td>{{v.mchName}}</td>
+                    <td>{{v.agent2Name}}</td>
+                    <td>{{v.agent1Name}}</td>
                     <td>{{v.consumeNum}}</td>
                     <td>{{v.consumeIntegral}}</td>
-                    <td>{{v.refundNum}}</td>
-                    <td>{{v.refundIntegral}}</td>
-                    <td>{{v.provinceName}}</td>
-                    <td>{{v.cityName}}</td>
-                    <td>{{v.areaName}}</td>
-                    <td>{{行业[v.industryId]}}{{v.industryId == '-' ? v.industryId:''}}</td>
+                    <td>{{v.radixTitle}}</td>
+                    <td>{{v.poundage}}</td>
+                    <td>{{v.divideIntegral}}</td>
 <!--                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
@@ -523,36 +457,11 @@ var app = new Vue({
       },
     },
 
-    search_pca: {
-      p: {},
-      c: {},
-      a: {},
-    },
-
-    view_pca:{
-      p: {},
-      c: {},
-      a: {},
-    },
-
     上级代理商:{
       lv1: {},
       lv2: {},
     },
 
-    行业: {
-      1: '旅馆',
-      2: '网吧',
-      3: '汽车站',
-      4: '机场',
-      5: '旅行社',
-      6: '访客',
-    },
-
-    状态: {
-      1: '可用',
-      2: '不可用',
-    },
 
   },
   methods: {
@@ -661,8 +570,7 @@ var app = new Vue({
       _this = this
 
       //这里用v-model会有大坑
-      this.list.post.settlementDateStartTime = $('#startTime').val()
-      this.list.post.settlementDateEndTime = $('#endTime').val()
+      this.list.post.settlementDate = $('#startTime').val()
 
 
       if(key == 'page'){
@@ -698,7 +606,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getMerchantReceiptList/interface',
+        url: manager_api + 'manager/getMchProfitStats/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -706,7 +614,7 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.rspDTOList
+          _this.list.data = re.rspBody.MchtProfitStatsInfoDTOList
 
           var total = {
             mchName: '总计',
@@ -732,36 +640,6 @@ var app = new Vue({
 
           _this.list.data.push(total)
 
-
-        }
-      })
-
-    },
-
-    export_excel: function(){
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: this.list.post
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/exporMerchantReceiptList/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          location.href = re.rspBody.file
 
         }
       })
@@ -804,116 +682,6 @@ var app = new Vue({
 
         }
       })
-
-    },
-
-    getP: function(){
-
-      // console.log('getP')
-      // return
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: {}
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/allProvince/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.search_pca.p = re.rspBody.areaRspDTOList
-          _this.view_pca.p = re.rspBody.areaRspDTOList
-
-        }
-      })
-
-    },
-
-    getC: function(who, pid){
-
-      // console.log('getC', pid)
-
-      var _this = this
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: {
-          parentId: pid
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/allCity/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this[who + '_pca'].c = re.rspBody.allCityResponseDTOList
-          _this[who + '_pca'].a = {}
-
-        }
-      })
-
-    },
-
-    getA: function(who, pid){
-
-      // console.log('getA', pid)
-      // return
-
-      var _this = this
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: {
-          parentId: pid
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/allRegion/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this[who + '_pca'].a = re.rspBody.allCityResponseDTOList
-
-        }
-      })
-
-      // console.log(who, parent)
 
     },
 
@@ -977,15 +745,9 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    $('.datepicker2').datepicker({
-      format: "yyyy-mm-dd",
-    })
-
     var date = new Date()
-    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
 
-    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01')
-    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date)
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1))
 
 
     //上级代理商
@@ -1014,8 +776,6 @@ var app = new Vue({
 
       }
     })
-
-    this.getP()
 
     this.getList()
 
