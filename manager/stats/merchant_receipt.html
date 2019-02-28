@@ -286,7 +286,7 @@
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
-                    </div>
+                      <button class="btn btn-default" @click="export_excel()">导出</button>                    </div>
                   </div>
                 </div>
 
@@ -732,6 +732,36 @@ var app = new Vue({
 
           _this.list.data.push(total)
 
+
+        }
+      })
+
+    },
+
+    export_excel: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/exporMerchantReceiptList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          location.href = re.rspBody.file
 
         }
       })
