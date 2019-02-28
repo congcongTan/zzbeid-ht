@@ -176,7 +176,7 @@
                 <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
-                <a class="btn btn-sm btn-primary" @click="exportExcel()">导出</a>
+                <a class="btn btn-sm btn-default" @click="exportExcel()">导出</a>
 
               </div>
               <div class="tab-pane" id="搜索">
@@ -246,7 +246,7 @@
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
 
-                      <a class="btn btn-primary" @click="exportExcel()">导出</a>
+                      <a class="btn btn-default" @click="exportExcel()">导出</a>
 
                     </div>
                   </div>

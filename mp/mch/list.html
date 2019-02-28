@@ -256,7 +256,7 @@
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
 
-                      <a class="btn btn-primary" @click="exportExcel()">导出</a>
+                      <a class="btn btn-default" @click="exportExcel()">导出</a>
                     </div>
                   </div>
                 </div>
@@ -300,7 +300,7 @@
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
                       <!-- <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br> -->
-                      <a class="btn btn-xs btn-primary" @click="getSale(v.mchId, v.title)" v-if="">促销政策</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getSale(v.mchId, v.title)" v-if="admin.type == 2">促销政策</a><br>
 <!--                       <a :class="`btn btn-xs btn-${v.status == '1' ? 'success':'warning'}`" @click="setStatus(v.mchId)">{{v.status == '1' ? '锁定':'解锁'}}</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br> -->
                     </td>
