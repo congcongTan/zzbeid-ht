@@ -223,12 +223,12 @@
                   <tr class="text-nowrap">
                     <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
                     <th>商户名称</th>
-                    <th>二级代理</th>
-                    <th>一级代理</th>
-                    <th>总订单</th>
-                    <th>总积分</th>
+                    <th>代理等级</th>
+                    <th>直属商户总订单</th>
+                    <th>直属商户总积分</th>
                     <th>分成基数</th>
                     <th>结算手续费</th>
+                    <th>分润</th>
                     <th>分成</th>
                     <!-- <th width="1%">操作</th> -->
                   </tr>
@@ -236,13 +236,13 @@
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <!-- <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td> -->
-                    <td>{{v.mchName}}</td>
-                    <td>{{v.agent2Name}}</td>
-                    <td>{{v.agent1Name}}</td>
+                    <td>{{v.agentName}}</td>
+                    <td>{{v.grade}}</td>
                     <td>{{v.consumeNum}}</td>
                     <td>{{v.consumeIntegral}}</td>
                     <td>{{v.radixTitle}}</td>
                     <td>{{v.poundage}}</td>
+                    <td>{{v.profitIntegral}}</td>
                     <td>{{v.divideIntegral}}</td>
 <!--                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
@@ -601,7 +601,7 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.MchtProfitStatsInfoDTOList
+          _this.list.data = re.rspBody.agentProfitStatsInfoDTOList
 
           var total = {
             mchName: '总计',
@@ -732,7 +732,8 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    var date = new Date()
+    var date = new Date(new Date().getTime() - 2592000000)
+    // console.log(date)
 
     $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1))
 
