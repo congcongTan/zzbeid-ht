@@ -222,7 +222,7 @@
                 <thead>
                   <tr class="text-nowrap">
                     <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
-                    <th>商户名称</th>
+                    <th>代理商名称</th>
                     <th>代理等级</th>
                     <th>直属商户总订单</th>
                     <th>直属商户总积分</th>
@@ -636,6 +636,7 @@ var app = new Vue({
     getLV2: function(fid, clean_lv2){
 
       // console.log(this.view.一级代理)
+      var _this = this
 
       if ( clean_lv2 != undefined ){
         this.view.secondAgentId = ''

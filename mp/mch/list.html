@@ -1619,6 +1619,14 @@ var app = new Vue({
         },
         success: function(re){
 
+          if(re.rspBody.secondAgentList.length == 0){
+            re.rspBody.secondAgentList.push({
+              agentId: _this.admin.id,
+              title: _this.admin.user
+            })
+            _this.view.agentId = _this.admin.id
+          }
+
           _this.上级代理商.lv2 = re.rspBody.secondAgentList
 
         }
