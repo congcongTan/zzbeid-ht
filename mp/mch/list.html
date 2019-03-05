@@ -166,21 +166,21 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <!-- <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
-              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
+              <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane" id="操作">
+              <div class="tab-pane active" id="操作">
 
-                <a class="btn btn-sm btn-danger"  @click="del()">删除</a>
+                <!-- <a class="btn btn-sm btn-danger"  @click="del()">删除</a> -->
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
                 <a class="btn btn-sm btn-default" @click="exportExcel()">导出</a>
 
               </div>
-              <div class="tab-pane active" id="搜索">
+              <div class="tab-pane" id="搜索">
 
                 <div class="form-horizontal">
 <!--                   <div class="form-group">
@@ -299,10 +299,10 @@
                     <td>{{v.payIntegral}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
-                      <!-- <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br> -->
+                      <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br>
                       <a class="btn btn-xs btn-primary" @click="getSale(v.mchId, v.title)" v-if="admin.type == 2">促销政策</a><br>
-<!--                       <a :class="`btn btn-xs btn-${v.status == '1' ? 'success':'warning'}`" @click="setStatus(v.mchId)">{{v.status == '1' ? '锁定':'解锁'}}</a><br>
-                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br> -->
+                      <a :class="`btn btn-xs btn-${v.status == '1' ? 'success':'warning'}`" @click="setStatus(v.mchId)">{{v.status == '1' ? '锁定':'解锁'}}</a><br>
+                      <!-- <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br> -->
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -351,6 +351,291 @@
       </div>
 
     </section>
+
+
+    <div class="modal fade" id="view">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              <span v-if="view.agentId == undefined">新增</span>
+              <span v-if="view.agentId != undefined">编辑</span>
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">上级代理商</label>
+                <div class="col-sm-4">
+                  <select class="form-control" disabled>
+                    <option selected>一级代理</option>
+                  </select>
+                </div>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.agentId">
+                    <option value="">--请选择--</option>
+                    <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-sm-offset-3 col-sm-9 mb20 pl10 text-danger mt5">
+                不设置代理商，代理分成将无效
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户名称</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.title">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户编号</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.identifier">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 首次设置后，不可修改
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户密码</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.password">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">支付积分</label>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control input-sm" placeholder="设置用户授权需支付金额" v-model="view.payIntegral">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 免费输入0
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">APP类型</label>
+                <div class="col-sm-4">
+                  <select class="form-control input-sm" v-model="view.clientType">
+                    <option value="1">中证宝APP</option>
+                    <option value="2">旺宝APP</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 影响商户码的下载地址
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">所属行业</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.industryId">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+<!--               <div class="form-group">
+                <label class="col-sm-3 control-label">B端二次验证</label>
+                <div class="col-sm-4">
+                  <select class="form-control">
+                    <option value="">--请选择--</option>
+                    <option value="1">启用</option>
+                    <option value="0">不启用</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div> -->
+
+              <span v-if="view.industryId == 2">
+
+                <hr>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">网吧行业软件</label>
+                  <div class="col-sm-4">
+                    <select class="form-control" v-model="view.softwareVersion">
+                      <option value="">--请选择--</option>
+                      <option :value="`${i}`" v-for="(v, i) in 网吧行业软件">{{v}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">是否加密</label>
+                  <div class="col-sm-4">
+                    <select class="form-control" v-model="view.isEncrypt">
+                      <option value="">--请选择--</option>
+                      <option :value="`${i}`" v-for="(v, i) in 是否加密">{{v}}</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-5 text-danger mt5">
+                    万象云辰必须加密，佳星按版本选择
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">机器数量</label>
+                  <div class="col-sm-4">
+                    <input type="number" class="form-control input-sm">
+                  </div>
+                </div>
+
+              </span>
+
+              <span v-if="view.industryId == 1">
+
+                <hr>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">酒店行业同步模式</label>
+                  <div class="col-sm-4">
+                    <select class="form-control" v-model="view.syncType">
+                      <option value="">--请选择--</option>
+                      <option :value="`${i}`" v-for="(v, i) in 同步模式">{{v}}</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-5 text-danger mt5">
+                    非酒店行业请忽略
+                  </div>
+                </div>
+
+                <span v-if="view.syncType == 3">
+
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">酒店注册码</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control input-sm" v-model="view.registerCode">
+                    </div>
+                    <div class="col-sm-5 text-danger mt5">
+                      非酒店行业请忽略
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">外部接口编号</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control input-sm" v-model="view.interfaceCode">
+                    </div>
+                    <div class="col-sm-5 text-danger mt5">
+                      * 
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">同步IP或计算机名称</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control input-sm" v-model="view.databaseIp">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">数据库端口</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control input-sm" v-model="view.databasePort">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">数据库账号</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control input-sm" v-model="view.databaseAccount">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-3 control-label">数据库密码</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control input-sm" v-model="view.databasePassword">
+                    </div>
+                  </div>
+
+                </span>
+
+              </span>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户负责人</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.linkman">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">负责人手机</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.mobile">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户地址</label>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="view.province" onchange="app.getC('view', this.value)">
+                    <option value="" selected>--请选择--</option>
+                    <option :value="`${v.code}`" v-for="(v, i) in view_pca.p">{{v.name}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="view.city" onchange="app.getA('view', this.value)">
+                    <option value="" selected>--请选择--</option>
+                    <option :value="`${v.code}`" v-for="(v, i) in view_pca.c">{{v.name}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="view.area">
+                    <option value="" selected>--请选择--</option>
+                    <option :value="`${v.code}`" v-for="(v, i) in view_pca.a">{{v.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                  <input type="text" class="form-control input-sm" v-model="view.detailedAddress">
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="saveView">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
     <div class="modal fade" id="sale">
@@ -628,6 +913,11 @@ var app = new Vue({
       a: {},
     },
 
+    上级代理商:{
+      lv1: {},
+      lv2: {},
+    },
+
     行业: {
       1: '旅馆',
       2: '网吧',
@@ -640,6 +930,25 @@ var app = new Vue({
     状态: {
       0: '不可用',
       1: '可用',
+    },
+
+    网吧行业软件: {
+      1: '佳星',
+      2: '万象',
+      3: '湖南万象(斯雨)',
+      4: '云辰',
+      5: '龙管家'
+    },
+
+    是否加密: {
+      0: '否',
+      1: '是'
+    },
+
+    同步模式: {
+      1: '在线（云服务器）',
+      2: 'xml文件（铃铛）',
+      3: '本地数据库（LockSend）'
     },
 
     分成基数: {
@@ -993,6 +1302,97 @@ var app = new Vue({
 
     },
 
+    getView: function(id){
+
+      this.view = {}
+
+      if(id == -1){
+        this.getLV2(this.admin.id)
+        $('#view').modal('show')
+        return
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getMchInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view = re.rspBody
+
+          _this.getLV2(_this.admin.id)
+
+          _this.getC('view', _this.view.province)
+          _this.getA('view', _this.view.city)
+
+          $('#view').modal('show')
+
+        }
+      })
+
+    },
+
+    saveView: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.view
+      }
+
+      if ( data.reqBody.superiorAgentId != '' && data.reqBody.agentId == '' ){
+
+        data.reqBody.agentId = data.reqBody.superiorAgentId
+        delete data.reqBody.superiorAgentId
+
+      }
+
+      var add_or_edit = this.view.mchId == undefined ? 'add':'edit'
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/' + add_or_edit + 'Mch/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
     getSale: function(id, title){
 
       this.view = {
@@ -1151,9 +1551,84 @@ var app = new Vue({
 
     },
 
+    setStatus: function(id){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "401E79DEC2E7AA1F645D67924E6EE0F3"
+        },
+        reqBody: {
+          mchId: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/editMchStatus/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    getLV2: function(fid, clean_lv2){
+
+      // console.log(this.view.一级代理)
+
+      if ( clean_lv2 != undefined ){
+        this.view.agentId = ''
+      }
+
+      //上级代理商
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {
+          agentId: fid
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getSecondAgent/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.上级代理商.lv2 = re.rspBody.secondAgentList
+
+        }
+      })
+
+    },
+
     getP: function(){
 
-      console.log('getP')
+      // console.log('getP')
       // return
 
       var data = {
@@ -1169,7 +1644,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/allProvince/interface',
+        url: mp_api + 'mp/allProvince/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1187,7 +1662,7 @@ var app = new Vue({
 
     getC: function(who, pid){
 
-      console.log('getC', pid)
+      // console.log('getC', pid)
 
       var _this = this
 
@@ -1206,7 +1681,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/allCity/interface',
+        url: mp_api + 'mp/allCity/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1224,7 +1699,7 @@ var app = new Vue({
 
     getA: function(who, pid){
 
-      console.log('getA', pid)
+      // console.log('getA', pid)
       // return
 
       var _this = this
@@ -1244,7 +1719,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/allRegion/interface',
+        url: mp_api + 'mp/allRegion/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1331,7 +1806,7 @@ var app = new Vue({
     this.list.post.userId = this.admin.userId
     // this.list.post.type = this.admin.type
 
-    // this.getP()
+    this.getP()
 
     //我的代理
     var data = {
