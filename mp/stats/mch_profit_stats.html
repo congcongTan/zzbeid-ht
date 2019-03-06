@@ -195,12 +195,11 @@
                     </div>
                   </div>
 
-                  <div class="form-group">
+                  <div class="form-group" v-if="admin.type == 2">
                     <label class="col-sm-2 control-label">代理商</label>
                     <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.agent1Id" onchange="app.getLV2(this.value, 1)">
-                        <option value="">--请选择--</option>
-                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
+                      <select class="form-control" disabled>
+                        <option selected>一级代理</option>
                       </select>
                     </div>
                     <div class="col-sm-3">
@@ -211,7 +210,7 @@
                     </div>
                   </div>
 
-                  <div class="form-group">
+                  <div class="form-group" v-if="admin.type == 2">
                     <label class="col-sm-2 control-label">商户名称</label>
                     <div class="col-sm-3">
                       <input type="text" class="form-control" v-model="list.post.mchName">
@@ -832,10 +831,17 @@ var app = new Vue({
     }
 
 
+    if(this.admin.type == 2){
+      var url = '../../db/menu-mp-agent.json'
+    }else{
+      var url = '../../db/menu-mp.json'
+    }
+
+
     // 侧栏菜单
     $.ajax({
       type: 'GET',
-      url: '../../db/menu-mp.json',
+      url: url,
       //url: 'http://192.168.199.196:8692/token/generate',
       dataType: 'json',
       beforeSend: function(request){
@@ -872,37 +878,12 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    var date = new Date()
+    var date = new Date(new Date().getTime() - 2592000000)
 
     $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1))
 
 
-    //上级代理商
-    var data = {
-      "reqHead":
-      {
-        clientType: 1,
-        format: "json",
-        version: "1.0",
-        sign: "30C7398578F1F7C995BAF67D18F89B33"
-      },
-      reqBody: {}
-    }
-
-    $.ajax({
-      type: 'POST',
-      url: mp_api + 'mp/getFirstAgentAll/interface',
-      data: JSON.stringify(data),
-      dataType: 'json',
-      beforeSend: function(request){
-        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-      },
-      success: function(re){
-
-        _this.上级代理商.lv1 = re.rspBody.firstAgentList
-
-      }
-    })
+    this.getLV2(this.admin.id)
 
     this.getList()
 

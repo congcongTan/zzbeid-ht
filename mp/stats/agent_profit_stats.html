@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>验证码查询</title>
+    <title>商户分成统计</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -150,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        验证码查询
+        代理商分成统计
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>日志管理</li>
-        <li class="active">验证码查询</li>
+        <li>数据分析</li>
+        <li class="active">代理商分成统计</li>
       </ol>
     </section>
 
@@ -175,6 +175,8 @@
 
                 <a class="btn btn-sm btn-danger" @click="del()">删除</a>
 
+                <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a>
+
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
               </div>
@@ -183,14 +185,30 @@
                 <div class="form-horizontal">
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">发送手机</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.mobile">
+                    <label class="col-sm-2 control-label">统计月份</label>
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control" id="startTime">
+                        </div>
+                      </div>
                     </div>
                   </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">代理商</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.agent1Id" onchange="app.getLV2(this.value, 1)">
+                        <option value="">--请选择--</option>
+                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                      <a href="javascript:;" class="btn btn-link">注意：当月分成会在次月才能查询</a>
                     </div>
                   </div>
                 </div>
@@ -203,23 +221,29 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr class="text-nowrap">
-                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>发送类型</th>
-                    <th>发送手机</th>
-                    <th>发送内容</th>
-                    <th>发送时间</th>
-                    <th>发送状态</th>
+                    <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
+                    <th>代理商名称</th>
+                    <th>代理等级</th>
+                    <th>直属商户总订单</th>
+                    <th>直属商户总积分</th>
+                    <th>分成基数</th>
+                    <th>结算手续费</th>
+                    <th>分润</th>
+                    <th>分成</th>
                     <!-- <th width="1%">操作</th> -->
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.typeTitle}}</td>
-                    <td>{{v.mobile}}</td>
-                    <td>{{v.codeTitle}}</td>
-                    <td>{{v.createTime}}</td>
-                    <td>{{v.sendStatusTitle}}</td>
+                    <!-- <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td> -->
+                    <td>{{v.agentName}}</td>
+                    <td>{{v.grade}}</td>
+                    <td>{{v.consumeNum}}</td>
+                    <td>{{v.consumeIntegral}}</td>
+                    <td>{{v.radixTitle}}</td>
+                    <td>{{v.poundage}}%</td>
+                    <td>{{v.profitIntegral}}</td>
+                    <td>{{v.divideIntegral}}</td>
 <!--                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
@@ -230,37 +254,6 @@
                   </tr>
                 </tbody>
               </table>
-
-              <div class="pull-left mt15">
-                <label>
-                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
-                    <option value="2">每页 2 条</option>
-                    <option value="10">每页 10 条</option>
-                    <option value="25">每页 25 条</option>
-                    <option value="50">每页 50 条</option>
-                    <option value="100">每页 100 条</option>
-                  </select>
-                </label>
-
-                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
-              </div>
-
-              <div class="pull-right" v-if="list.info.pages > 1">
-                <ul class="pagination pagination-sm">
-
-                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
-
-                  <li class="paginate_button" v-for="i in list.page.prev"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
-
-                  <li class="paginate_button active"><a href="#">{{list.post.pageNum}}</a></li>
-
-                  <li class="paginate_button" v-for="i in list.page.next"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
-
-                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
-                  </li>
-
-                </ul>
-              </div>
 
             </div>
 
@@ -419,6 +412,9 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
+<link rel="stylesheet" href="../../plugins/datepicker/datepicker.css">
+<script src="../../plugins/datepicker/datepicker.js"></script>
+
 <script>
 var app = new Vue({
   el: '#app',
@@ -448,17 +444,11 @@ var app = new Vue({
       },
     },
 
-    发送类型: {
-      1: '注册',
-      2: '找回密码',
-      3: '更换手机',
-      4: '等',
+    上级代理商:{
+      lv1: {},
+      lv2: {},
     },
 
-    状态: {
-      1: '可用',
-      2: '不可用',
-    },
 
   },
   methods: {
@@ -686,6 +676,10 @@ var app = new Vue({
 
       _this = this
 
+      //这里用v-model会有大坑
+      this.list.post.settlementDate = $('#startTime').val()
+
+
       if(key == 'page'){
 
         if(val == '+1'){
@@ -719,7 +713,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/logMessageList/interface',
+        url: mp_api + 'mp/getAgentProfitStats/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -727,36 +721,72 @@ var app = new Vue({
         },
         success: function(re){
 
-          if ( re.rspHead.retCode != 1 ){
-            alert( re.rspHead.retMsg )
-            return
+          _this.list.data = re.rspBody.agentProfitStatsInfoDTOList
+
+          var total = {
+            mchName: '总计',
+            consumeNum: 0,
+            consumeIntegral: 0,
+            refundNum: 0,
+            refundIntegral: 0,
+            provinceName: '-',
+            cityName: '-',
+            areaName: '-',
+            industryId: '-',
           }
 
-          _this.list.data = re.rspBody.logMessageList
-          delete re.rspBody.logMessageList
-
-          _this.list.info = re.rspBody          
-
-
-          //id
-          for( var i in _this.list.data ){
+          for ( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-            _this.list.checkbox.all.push(v.id)
+            // console.log(v)
+            total.consumeNum += v.consumeNum
+            total.consumeIntegral += v.consumeIntegral
+            total.refundNum += v.refundNum
+            total.refundIntegral += v.refundIntegral
           }
 
-          //分页
-          _this.list.page.prev = []
-          for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
-            if(i <= 0)continue;
-            _this.list.page.prev.push(i)
-          }
+          _this.list.data.push(total)
 
-          _this.list.page.next = []
-          for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
-            if(i > _this.list.info.pages)break;
-            _this.list.page.next.push(i)
-          }
+
+        }
+      })
+
+    },
+
+    getLV2: function(fid, clean_lv2){
+
+      // console.log(this.view.一级代理)
+      var _this = this
+
+      if ( clean_lv2 != undefined ){
+        this.view.secondAgentId = ''
+      }
+
+      //上级代理商
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {
+          agentId: fid
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getSecondAgent/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.上级代理商.lv2 = re.rspBody.secondAgentList
 
         }
       })
@@ -837,7 +867,40 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    // this.getList()
+    var date = new Date(new Date().getTime() - 2592000000)
+    // console.log(date)
+
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1))
+
+
+    //上级代理商
+    var data = {
+      "reqHead":
+      {
+        clientType: 1,
+        format: "json",
+        version: "1.0",
+        sign: "30C7398578F1F7C995BAF67D18F89B33"
+      },
+      reqBody: {}
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: mp_api + 'mp/getFirstAgentAll/interface',
+      data: JSON.stringify(data),
+      dataType: 'json',
+      beforeSend: function(request){
+        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+      },
+      success: function(re){
+
+        _this.上级代理商.lv1 = re.rspBody.firstAgentList
+
+      }
+    })
+
+    this.getList()
 
   }
 })

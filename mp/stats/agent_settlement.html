@@ -884,10 +884,17 @@ var app = new Vue({
     }
 
 
+    if(this.admin.type == 2){
+      var url = '../../db/menu-mp-agent.json'
+    }else{
+      var url = '../../db/menu-mp.json'
+    }
+
+
     // 侧栏菜单
     $.ajax({
       type: 'GET',
-      url: '../../db/menu-mp.json',
+      url: url,
       //url: 'http://192.168.199.196:8692/token/generate',
       dataType: 'json',
       beforeSend: function(request){
