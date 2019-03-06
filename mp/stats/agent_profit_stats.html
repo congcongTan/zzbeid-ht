@@ -198,9 +198,9 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">代理商</label>
                     <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.agent1Id" onchange="app.getLV2(this.value, 1)">
+                      <select class="form-control" v-model="list.post.agent2Id">
                         <option value="">--请选择--</option>
-                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
+                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
                       </select>
                     </div>
                   </div>
@@ -892,37 +892,11 @@ var app = new Vue({
 
 
     var date = new Date(new Date().getTime() - 2592000000)
-    // console.log(date)
 
     $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1))
 
 
-    //上级代理商
-    var data = {
-      "reqHead":
-      {
-        clientType: 1,
-        format: "json",
-        version: "1.0",
-        sign: "30C7398578F1F7C995BAF67D18F89B33"
-      },
-      reqBody: {}
-    }
-
-    $.ajax({
-      type: 'POST',
-      url: mp_api + 'mp/getFirstAgentAll/interface',
-      data: JSON.stringify(data),
-      dataType: 'json',
-      beforeSend: function(request){
-        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-      },
-      success: function(re){
-
-        _this.上级代理商.lv1 = re.rspBody.firstAgentList
-
-      }
-    })
+    this.getLV2(this.admin.id)
 
     this.getList()
 
