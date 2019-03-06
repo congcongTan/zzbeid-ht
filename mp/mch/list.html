@@ -411,7 +411,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">商户密码</label>
                 <div class="col-sm-4">
-                  <input type="password" class="form-control input-sm">
+                  <input type="password" class="form-control input-sm" id="password">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -1350,6 +1350,15 @@ var app = new Vue({
     },
 
     saveView: function(){
+
+      if($('#password').val() != ''){
+        this.view.password = $('#password').val()
+      }else{
+        delete this.view.password
+      }
+
+      this.view.agent2Id = this.view.agentId
+      delete this.view.agentId
 
       var data = {
         "reqHead":
