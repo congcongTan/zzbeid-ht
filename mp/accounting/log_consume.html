@@ -220,7 +220,7 @@
                       <input type="text" class="form-control" v-model="list.post.memberName">
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group" v-if="admin.type==2">
                     <label class="col-sm-2 control-label">消费商户</label>
                     <div class="col-sm-3">
                       <input type="text" class="form-control" v-model="list.post.mchName">

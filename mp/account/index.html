@@ -361,7 +361,13 @@ var app = new Vue({
             admin.expire = new Date().getTime() + (180 * 60 * 1000)
             LS.admin = JSON.stringify(admin)
 
-            location.href = '../index/index.html'
+            if(admin.type == 1){
+              location.href = '../index/index.html'
+            }
+            if(admin.type == 2){
+              location.href = '../index/agent.html'
+            }
+            
           }
 
         }
