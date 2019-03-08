@@ -227,7 +227,7 @@
                     <th>直属商户总订单</th>
                     <th>直属商户总积分</th>
                     <th>分成基数</th>
-                    <th>结算手续费</th>
+                    <th>结算手续费（%）</th>
                     <th>分润</th>
                     <th>分成</th>
                     <!-- <th width="1%">操作</th> -->
@@ -241,7 +241,7 @@
                     <td>{{v.consumeNum}}</td>
                     <td>{{v.consumeIntegral}}</td>
                     <td>{{v.radixTitle}}</td>
-                    <td>{{v.poundage}}%</td>
+                    <td>{{v.poundage}}</td>
                     <td>{{v.profitIntegral}}</td>
                     <td>{{v.divideIntegral}}</td>
 <!--                     <td class="text-nowrap operation">
@@ -729,7 +729,7 @@ var app = new Vue({
             consumeNum: 0,
             consumeIntegral: 0,
             radixTitle: '-',
-            poundage: 0,
+            poundage: '-',
             profitIntegral: 0,
             divideIntegral: 0
           }
@@ -744,10 +744,6 @@ var app = new Vue({
 
             if(v.consumeIntegral != undefined){
               total.consumeIntegral += v.consumeIntegral
-            }
-
-            if(v.poundage != undefined){
-              total.poundage += v.poundage
             }
 
             if(v.profitIntegral != undefined){

@@ -742,8 +742,8 @@ var app = new Vue({
             consumeNum: 0,
             consumeIntegral: 0,
             radixTitle: '-',
-            poundage: 0,
-            divideIntegral: 0
+            poundage: '-',
+            divideIntegral: '-'
           }
 
           for ( var i in _this.list.data ){
@@ -758,16 +758,8 @@ var app = new Vue({
               total.consumeIntegral += v.consumeIntegral
             }
 
-            if(v.poundage != undefined){
-              total.poundage += v.poundage
-            }
-
             if(v.profitIntegral != undefined){
               total.profitIntegral += v.profitIntegral
-            }
-
-            if(v.divideIntegral != undefined){
-              total.divideIntegral += v.divideIntegral
             }
 
             total.refundNum += v.refundNum
