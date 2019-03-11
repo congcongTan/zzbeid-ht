@@ -685,36 +685,41 @@ var app = new Vue({
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
+        complete: function(){
+          _this.list.loading = 0
+        },
         success: function(re){
 
-          _this.list.loading = 0
+          if(re.rspHead.retCode == 1){
 
-          _this.list.data = re.rspBody.consumptionDetailList
-          delete re.rspBody.consumptionDetailList
+            _this.list.data = re.rspBody.consumptionDetailList
+            delete re.rspBody.consumptionDetailList
 
-          _this.list.info = re.rspBody
+            _this.list.info = re.rspBody
 
-          _this.list.info.text = '合计 消费积分: ' + re.rspBody.consumptionPointsSummarize
+            _this.list.info.text = '合计 消费积分: ' + re.rspBody.consumptionPointsSummarize
 
 
-          //id
-          for( var i in _this.list.data ){
-            var v = _this.list.data[i]
+            //id
+            for( var i in _this.list.data ){
+              var v = _this.list.data[i]
 
-            _this.list.checkbox.all.push(v.id)
-          }
+              _this.list.checkbox.all.push(v.id)
+            }
 
-          //分页
-          _this.list.page.prev = []
-          for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
-            if(i <= 0)continue;
-            _this.list.page.prev.push(i)
-          }
+            //分页
+            _this.list.page.prev = []
+            for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
+              if(i <= 0)continue;
+              _this.list.page.prev.push(i)
+            }
 
-          _this.list.page.next = []
-          for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
-            if(i > _this.list.info.pages)break;
-            _this.list.page.next.push(i)
+            _this.list.page.next = []
+            for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
+              if(i > _this.list.info.pages)break;
+              _this.list.page.next.push(i)
+            }
+
           }
 
         }
