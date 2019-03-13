@@ -258,6 +258,8 @@
                 </tbody>
               </table>
 
+
+
               <div class="pull-left mt15">
                 <label>
                   <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
@@ -269,7 +271,7 @@
                   </select>
                 </label>
 
-                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
+                &nbsp;&nbsp;共 {{list.info.findMemberMostId}} 用户，已认证会员 {{list.info.authenticatedUserCount}} 
               </div>
 
               <div class="pull-right" v-if="list.info.pages > 1">

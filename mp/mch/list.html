@@ -370,8 +370,8 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">上级代理商</label>
                 <div class="col-sm-4">
-                  <select class="form-control" disabled>
-                    <option selected>一级代理</option>
+                  <select class="form-control" disabled v-if="view.superiorAgentId != ''">
+                    <option selected>{{admin.user}}</option>
                   </select>
                 </div>
                 <div class="col-sm-4">
