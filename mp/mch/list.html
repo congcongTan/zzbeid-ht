@@ -176,7 +176,7 @@
                 <!-- <a class="btn btn-sm btn-danger"  @click="del()">删除</a> -->
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
-                <!-- <a class="btn btn-sm btn-default" @click="exportExcel()">导出</a> -->
+                <!-- <a class="btn btn-sm btn-default" @click="导出excel()">导出</a> -->
                 <a class="btn btn-sm btn-default" @click="开启二次验证()">开启二次验证</a>
 
               </div>
@@ -256,7 +256,9 @@
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
 
-                      <a class="btn btn-default" @click="exportExcel()">导出</a>
+                      <a class="btn btn-default" @click="导出excel()">导出</a>
+
+                      <a class="btn btn-default" @click="批量下载商户二维码()">批量下载商户二维码</a>
                     </div>
                   </div>
                 </div>
@@ -303,6 +305,7 @@
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br>
                       <a class="btn btn-xs btn-primary" @click="getSale(v.mchId, v.title)" v-if="admin.type == 2">促销政策</a><br>
+                      <a class="btn btn-xs btn-primary" @click="商户二维码(v.mchId)">商户二维码</a><br>
                       <a :class="`btn btn-xs btn-${v.status == '1' ? 'success':'warning'}`" @click="setStatus(v.mchId)">{{v.status == '1' ? '锁定':'解锁'}}</a><br>
                       <!-- <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br> -->
                     </td>
@@ -1274,7 +1277,7 @@ var app = new Vue({
 
     },
 
-    exportExcel: function(){
+    导出excel: function(){
 
       var data = {
         "reqHead":
@@ -1819,6 +1822,68 @@ var app = new Vue({
 
         }
       })
+    },
+
+    商户二维码: function(mchId){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        reqBody: {
+          mchId: mchId
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/downloadMchQrcode/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          // location.href = re.rspBody.file
+        }
+      })
+
+    },
+
+    批量下载商户二维码: function(){
+
+      this.list.post.queryAgentId = this.admin.id
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/downloadMchQrcodeZip/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          // location.href = re.rspBody.file
+        }
+      })
+
     },
 
   },
