@@ -1834,7 +1834,12 @@ var app = new Vue({
         },
         success: function(re){
 
-          location.href = re.rspBody.file
+          if(re.rspHead.retCode != 1){
+            alert(re.rspHead.retMsg)
+          }else{
+            location.href = re.rspBody.file
+          }
+
         }
       })
 
