@@ -176,7 +176,8 @@
                 <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
-                <a class="btn btn-sm btn-default" @click="exportExcel()">导出</a>
+                <!-- <a class="btn btn-sm btn-default" @click="exportExcel()">导出</a> -->
+                <a class="btn btn-sm btn-default" @click="开启二次验证()">开启二次验证</a>
 
               </div>
               <div class="tab-pane" id="搜索">
@@ -247,6 +248,7 @@
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
 
                       <a class="btn btn-default" @click="exportExcel()">导出</a>
+                      <a class="btn btn-default" @click="批量下载商户二维码()">批量下载商户二维码</a>
 
                     </div>
                   </div>
@@ -270,6 +272,7 @@
                     <th>上次登录时间</th>
                     <th>离线时长</th>
                     <th>客户端版本号</th>
+                    <th>二次验证</th>
                     <th>支付积分</th>
                     <th>状态</th>
                     <th width="1%">操作</th>
@@ -287,6 +290,7 @@
                     <td>{{v.lastLoginTime}}</td>
                     <td :class="{'text-danger': v.offLineTimeRed == 1}">{{v.offLineTime}}</td>
                     <td>{{v.appVersion}}</td>
+                    <td>{{['关闭','开启'][v.appSecondVerify]}}</td>
                     <td>{{v.payIntegral}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
@@ -419,6 +423,19 @@
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   * 免费输入0
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">APP二次验证</label>
+                <div class="col-sm-4">
+                  <select class="form-control input-sm" v-model="view.appSecondVerify">
+                    <option value="1">开启</option>
+                    <option value="0">关闭</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
                 </div>
               </div>
 
@@ -1451,6 +1468,73 @@ var app = new Vue({
 
     },
 
+    开启二次验证: function(id){
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.list.checkbox.checked.length == 0){
+        alert('一个都没有选中')
+        return
+      }else{
+
+        var ids = this.list.checkbox.checked
+      }
+
+      var mchIds = []
+
+      // 换翻mchId
+      for( var i in ids ){
+        var v = ids[i]
+
+        for(var i2 in this.list.data){
+          var v2 = this.list.data[i2]
+
+          if(v2.id == v){
+            mchIds.push(v2.mchId)
+          }
+        }
+
+      }
+      // console.log(mchIds)
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchIdList: mchIds
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/secondVerifyManager/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+            alert(re.rspHead.retMsg)
+          }else{
+            alert('设置完成')
+            _this.getList()
+          }
+
+        }
+      })
+
+
+    },
     del: function(id){
 
       if(!confirm('确认删除？')){
@@ -1689,6 +1773,38 @@ var app = new Vue({
           if(re.rspHead.retCode == 1){
             location.href = re.rspBody.file
           }
+
+        }
+      })
+
+    },
+
+    批量下载商户二维码: function(){
+
+      // console.log('批量下载商户二维码')
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/downloadMchQrcodeZip/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          console.log(re)
 
         }
       })
