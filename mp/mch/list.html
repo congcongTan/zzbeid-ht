@@ -209,7 +209,7 @@
                     <label class="col-sm-2 control-label">商户行业</label>
                     <div class="col-sm-3">
                       <select class="form-control" v-model="list.post.industryId">
-                        <!-- <option value="">--请选择--</option> -->
+                        <option value="0">--请选择--</option>
                         <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
                       </select>
                     </div>
@@ -218,7 +218,7 @@
                     <label class="col-sm-2 control-label">代理商</label>
                     <div class="col-sm-3">
                       <select class="form-control" v-model="list.post.queryAgentId">
-                        <option value="0">--请选择--</option>
+                        <option value="">--请选择--</option>
                         <option :value="`${v.agentId}`" v-for="(v, i) in 我的代理">{{v.title}}</option>
                       </select>
                     </div>
@@ -893,7 +893,9 @@ var app = new Vue({
       post: {
         pageNum: 1,
         pageSize: 10,
-        chooseDay: 0
+        chooseDay: 0,
+        industryId: 0,
+        queryAgentId: ''
       },
       info: {},
       page: {},
@@ -1857,6 +1859,7 @@ var app = new Vue({
 
     批量下载商户二维码: function(){
 
+      // if()
       this.list.post.queryAgentId = this.admin.id
 
       var data = {
