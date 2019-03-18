@@ -1115,11 +1115,11 @@ var app = new Vue({
       format: "yyyy-mm-dd",
     })
 
-    var date = new Date()
-    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
 
-    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01')
-    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date)
+    var date = new Date(new Date().getTime() - 86400000)
+
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate())
+    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate())
 
 
     //上级代理商

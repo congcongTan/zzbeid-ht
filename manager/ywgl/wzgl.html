@@ -793,11 +793,9 @@ var app = new Vue({
         reqBody: this.view
       }*/
 
-      var add_or_edit = this.view.id == undefined ? 'add':'edit'
-
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/' + add_or_edit + 'Article',
+        url: manager_api + 'manager/editArticle',
         data: this.view,
         dataType: 'json',
         beforeSend: function(request){
