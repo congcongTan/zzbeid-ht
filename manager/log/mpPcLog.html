@@ -201,7 +201,7 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">商户名称</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.memberName">
+                      <input type="text" class="form-control" v-model="list.post.mchName">
                     </div>
                   </div>
                   <div class="form-group">
@@ -220,12 +220,15 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>真实姓名</th>
-                    <th>手机号</th>
-                    <th>手机型号</th>
-                    <th>版本系统</th>
-                    <th>IP地址</th>
-                    <th>版本号</th>
+                    <th>商户名称</th>
+                    <th>行业</th>
+                    <th>所在区域</th>
+                    <th>客户端版本</th>
+                    <th>外网IP</th>
+                    <th>内网IP</th>
+                    <th>操作系统</th>
+                    <th>主机名</th>
+                    <th>物理内存</th>
                     <th>发生时间</th>
                     <!-- <th width="1%">操作</th> -->
                   </tr>
@@ -233,13 +236,16 @@
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.memberName}}</td>
-                    <td>{{v.mobile}}</td>
-                    <td>{{v.mobileModel}}</td>
-                    <td>{{v.osVersion}}</td>
-                    <td>{{v.ip}}</td>
+                    <td>{{v.mchName}}</td>
+                    <td>{{行业[v.industryId]}}</td>
+                    <td>{{v.locationList}}</td>
                     <td>{{v.appEdition}}</td>
-                    <td>{{v.createTimeTitle}}</td>
+                    <td>{{v.outsideIp}}</td>
+                    <td>{{v.insideIp}}</td>
+                    <td>{{v.osVersion}}</td>
+                    <td>{{v.hostsName}}</td>
+                    <td>{{v.physicalMemory}}</td>
+                    <td>{{v.updateTime}}</td>
 <!--                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
@@ -470,17 +476,12 @@ var app = new Vue({
       },
     },
 
-    发送类型: {
-      1: '注册',
-      2: '找回密码',
-      3: '更换手机(忘记手机号)',
-      4: '非常用设备',
-      5: '忘记支付密码',
-    },
-
-    状态: {
-      1: '可用',
-      2: '不可用',
+    行业: {
+      1: '旅馆',
+      2: '网吧',
+      3: '汽车站',
+      4: '机场',
+      5: '旅行社'
     },
 
   },
@@ -626,7 +627,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/logMemberLoginList/interface',
+        url: manager_api + 'manager/getLogMchLoginList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -634,8 +635,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.logMemberLoginList
-          delete re.rspBody.logMemberLoginList
+          _this.list.data = re.rspBody.mchPageList
+          delete re.rspBody.mchPageList
 
           _this.list.info = re.rspBody          
 
@@ -731,7 +732,18 @@ var app = new Vue({
     $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01 00:00')
     $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date + ' 23:59')
 
-    $(".datetimepicker").datetimepicker();
+
+
+    $(".datetimepicker").datetimepicker({
+      format: "Y-m-d H:i:s",
+    });
+
+    var date = new Date(new Date().getTime() - 86400000)
+
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' 00:00:00')
+    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' 23:59:59')
+
+
 
     this.getList()
 
