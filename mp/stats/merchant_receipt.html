@@ -18,14 +18,8 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>平台首页</title>
+    <title>商户消费统计</title>
 
-<style>
-.bigNum{
-  font-size: 20px;
-  color: #DD4B39;
-}
-</style>
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
 
@@ -40,9 +34,9 @@
     <!-- Logo -->
     <a href="../index.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini">管理后台</span>
+      <span class="logo-mini">商户后台</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg">管理后台</span>
+      <span class="logo-lg">商户后台</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -102,7 +96,7 @@
         </div>
       </div>
 
-<!--       <form action="#" method="get" class="sidebar-form">
+      <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
           <input type="text" name="q" class="form-control" placeholder="Search...">
           <span class="input-group-btn">
@@ -110,31 +104,31 @@
             </button>
           </span>
         </div>
-      </form> -->
+      </form>
 
       <ul class="sidebar-menu" data-widget="tree">
 
-        <li :class="{'treeview': v.menuType == 1, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
+        <li :class="{'treeview': v.children.length != 0, 'active': v.title_en == mca.c}" v-for="(v, i) in sidemenu">
 
-          <a :href="`../${v.href == '#' ? v.href : v.href + '.html'}`">
+          <a :href="`../${v.url == '#' ? v.url : v.url + '.html'}`">
             <i :class="`fa fa-${v.icon}`"></i> <span>{{v.title}}</span>
-            <span class="pull-right-container" v-if="v.menuList.length != 0">
+            <span class="pull-right-container" v-if="v.children.length != 0">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
-          <ul class="treeview-menu" v-if="v.menuList.length != 0">
+          <ul class="treeview-menu" v-if="v.children.length != 0">
 
-            <li :class="{'treeview': v2.menuList != null, 'active': v2.perms == mca.a}" v-for="(v2, i2) in v.menuList">
+            <li :class="{'treeview': v2.children.length != 0, 'active': v2.title_en == mca.a}" v-for="(v2, i2) in v.children">
 
-              <a :href="`../${v2.href == '#' ? v2.href : v2.href + '.html'}`">
+              <a :href="`../${v2.url == '#' ? v2.url : v2.url + '.html'}`">
                 <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
-                <span class="pull-right-container" v-if="v2.menuList != null">
+                <span class="pull-right-container" v-if="v2.children.length != 0">
                   <i class="fa fa-angle-left pull-right"></i>
                 </span>
               </a>
-              <ul class="treeview-menu" v-if="v2.menuList != null">
+              <ul class="treeview-menu" v-if="v2.children.length != 0">
 
-                <li v-for="(v3, i3) in v2.menuList">
+                <li v-for="(v3, i3) in v2.children">
                   <a :href="`../${v3.url == '#' ? v3.url : v3.url + '.html'}`">
                     <i :class="`fa fa-${v3.icon}`"></i> {{v3.title}}
                   </a>
@@ -156,238 +150,207 @@
 
     <section class="content-header">
       <h1>
-        概况
-        <small>统计</small>
+        商户消费统计
       </h1>
       <ol class="breadcrumb">
-        <li><a href="{:url('/')}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li class="active">概况</li>
+        <li><i class="fa fa-home"></i> 首页</li>
+        <li>数据分析</li>
+        <li class="active">商户消费统计</li>
       </ol>
     </section>
 
-    <!-- Main content -->
     <section class="content">
-      <!-- Small boxes (Stat box) -->
       <div class="row">
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-aqua">
-            <div class="inner">
-              <h3>{{view.todayConsumeNum}}</h3>
-              <p>今日消费笔数</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-bag"></i>
-            </div>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-green">
-            <div class="inner">
-              <h3>￥{{view.todayConsumeIntegral}}</h3>
-              <p>今日消费总积分</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-stats-bars"></i>
-            </div>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-yellow">
-            <div class="inner">
-              <h3>{{view.todayTopUpNum}}</h3>
-              <p>今日充值笔数</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-person-add"></i>
-            </div>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-red">
-            <div class="inner">
-              <h3>￥{{view.todayTopUpMoney}}</h3>
-              <p>今日充值总额</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-pie-graph"></i>
-            </div>
-          </div>
-        </div>
-        <!-- ./col -->
-      </div>
-      <!-- /.row -->
-
-
-      <div class="row">
-
-        <div class="col-sm-6">
-          <div class="box box-primary">
-            <div class="box-header ui-sortable-handle" style="cursor: move;">
-              <h3 class="box-title">商户/代理商总览</h3>
-            </div>
-
-            <div class="row p10 tc">
-              <div class="col-xs-6 col-sm-3 mb10">
-                <div class="bigNum">{{view.todayNewAddMch}}</div>
-                今日新增商户
-              </div>
-              <div class="col-xs-6 col-sm-3 mb10">
-                <div class="bigNum">{{view.todayNewAddAgent}}</div>
-                今日新增代理
-              </div>
-              <div class="col-xs-6 col-sm-3 mb10">
-                <div class="bigNum">{{view.mchTotal}}</div>
-                商户总数
-              </div>
-              <div class="col-xs-6 col-sm-3 mb10">
-                <div class="bigNum">{{view.agentTotal}}</div>
-                代理总数
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="box box-primary">
-            <div class="box-header ui-sortable-handle" style="cursor: move;">
-              <h3 class="box-title">用户总览</h3>
-            </div>
-
-            <div class="row p10 tc">
-              <div class="col-xs-6 col-sm-3 mb10">
-                <div class="bigNum">{{view.todayNewAddMember}}</div>
-                今日新增
-              </div>
-              <div class="col-xs-6 col-sm-3 mb10">
-                <div class="bigNum">{{view.yesterdayNewAddMember}}</div>
-                昨日新增
-              </div>
-              <div class="col-xs-6 col-sm-3 mb10">
-                <div class="bigNum">{{view.currentMonthNewAddMember}}</div>
-                本月新增
-              </div>
-              <div class="col-xs-6 col-sm-3 mb10">
-                <div class="bigNum">{{view.memberes}}</div>
-                总用户数
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div class="col-xs-12">
-          <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">区域消费排行</h3>
 
-              <div class="box-tools">
-                <div class="fl ml10">
-                  <input type="date" class="form-control input-sm datepicker2" id="list1StartTime">
-                </div>
-                <div class="fl mt5 ml10">
-                  ~
-                </div>
-                <div class="fl ml10">
-                  <input type="date" class="form-control input-sm datepicker2" id="list1EndTime">
-                </div>
-                <div class="fl ml10" style="width: 200px;">
-                  <div class="row" style="margin: 0 -5px;">
-                    <div class="col-xs-6 pl5 pr5">
-                      <select class="form-control input-sm" v-model="list1.post.provinceId" onchange="app.getC('search', this.value)">
-                        <option value="">全国</option>
-                        <option :value="`${v.code}`" v-for="(v, i) in search_pca.p">{{v.name}}</option>
-                      </select>
-                    </div>
-                    <div class="col-xs-6 pl5 pr5">
-                      <select class="form-control input-sm" v-model="list1.post.cityId">
-                        <option value="">市</option>
-                        <option :value="`${v.code}`" v-for="(v, i) in search_pca.c">{{v.name}}</option>
-                      </select>
+          <div class="nav-tabs-custom">
+
+            <ul class="nav nav-tabs">
+              <!-- <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
+              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+            </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane" id="操作">
+
+                <a class="btn btn-sm btn-danger" @click="del()">删除</a>
+
+                <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a>
+
+                <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
+
+              </div>
+              <div class="tab-pane active" id="搜索">
+
+                <div class="form-horizontal">
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">区域</label>
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <div class="col-xs-4 col-sm-3">
+                          <select class="form-control" v-model="list.post.province" onchange="app.getC('search', this.value)">
+                            <option :value="`${v.code}`" v-for="(v, i) in search_pca.p">{{v.name}}</option>
+                          </select>
+                        </div>
+                        <div class="col-xs-4 col-sm-3">
+                          <select class="form-control" v-model="list.post.city" onchange="app.getA('search', this.value)">
+                            <option :value="`${v.code}`" v-for="(v, i) in search_pca.c">{{v.name}}</option>
+                          </select>
+                        </div>
+                        <div class="col-xs-4 col-sm-3">
+                          <select class="form-control" v-model="list.post.area">
+                            <option :value="`${v.code}`" v-for="(v, i) in search_pca.a">{{v.name}}</option>
+                          </select>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="fl ml10" style="width: 200px;">
-                  <div class="row" style="margin: 0 -5px;">
-                    <div class="col-xs-6 pl5 pr5">
-                      <select class="form-control input-sm" v-model="list1.post.agent1Id" onchange="app.getLV2(this.value, 1)">
-                        <option value="">全部代理</option>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">统计日期</label>
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control datepicker2" id="startTime">
+                        </div>
+                        <div class="fl w20 mt8 tc">
+                          ~
+                        </div>
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control datepicker2" id="endTime">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+<!--                   <div class="form-group">
+                    <label class="col-sm-2 control-label">代理商</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.agent1Id" onchange="app.getLV2(this.value, 1)">
+                        <option value="">--请选择--</option>
                         <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
                       </select>
                     </div>
-                    <div class="col-xs-6 pl5 pr5">
-                      <select class="form-control input-sm" v-model="list1.post.agent2Id">
-                        <option value="">二级代理</option>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.agent2Id">
+                        <option value="">--请选择--</option>
                         <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
                       </select>
                     </div>
+                  </div> -->
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">消费次数</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.beginConsumeNum">
+                    </div>
+                    <div class="fl w20 mt8 tc">
+                      ~
+                    </div>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.endConsumeNum">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">消费金额</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.consumeIntegralStart">
+                    </div>
+                    <div class="fl w20 mt8 tc">
+                      ~
+                    </div>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.consumeIntegralEnd">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">商户行业</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.industryId">
+                        <!-- <option value="">--请选择--</option> -->
+                        <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">商户名称</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.mchName">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                      <button class="btn btn-default" @click="export_excel()">导出</button>                    </div>
                   </div>
                 </div>
-                <div class="fl ml10">
-                  <button class="btn btn-sm" @click="getList1">查询</button>
-                </div>
-                <div class="fl ml10">
-                  <button class="btn btn-sm" @click="区域消费排行导出()">导出</button>
-                </div>
+
               </div>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body table-responsive no-padding">
-              <table class="table table-hover">
-                <tbody>
-                  <tr>
-                    <th>排名</th>
-                    <th>所在区域</th>
-                    <th>消费商户</th>
-                    <th>消费笔数(含退款)</th>
-                    <th>消费金额(含退款)</th>
-                    <th>旅业</th>
-                    <th>网吧</th>
-                    <th>汽车站</th>
-                    <th>机场</th>
-                    <th>旅行社</th>
-                    <th>访客</th>
+
+            <div class="clearfix p10 pt0">
+
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr class="text-nowrap">
+                    <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
+                    <th>商户名称</th>
+                    <th>消费次数</th>
+                    <th>消费金额</th>
+                    <th>退款次数</th>
+                    <th>退款金额</th>
+                    <th>省</th>
+                    <th>市</th>
+                    <th>区</th>
+                    <th>行业</th>
+                    <!-- <th width="1%">操作</th> -->
                   </tr>
-                  <tr v-for="(v, i) in area">
-                    <td>{{i+1}}</td>
-                    <td>{{v.areaTitle}}</td>
-                    <td>{{v.tourismMchTotal}}</td>
+                </thead>
+                <tbody>
+                  <tr v-for="(v, i) in list.data">
+                    <!-- <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td> -->
+                    <td>{{v.mchName}}</td>
                     <td>{{v.consumeNum}}</td>
                     <td>{{v.consumeIntegral}}</td>
-                    <td>{{v.hotelConsume}}</td>
-                    <td>{{v.internetbarConsume}}</td>
-                    <td>{{v.stationConsume}}</td>
-                    <td>{{v.airportConsume}}</td>
-                    <td>{{v.travelConsume}}</td>
-                    <td>{{v.travelConsume}}</td>
+                    <td>{{v.refundNum}}</td>
+                    <td>{{v.refundIntegral}}</td>
+                    <td>{{v.provinceName}}</td>
+                    <td>{{v.cityName}}</td>
+                    <td>{{v.areaName}}</td>
+                    <td>{{行业[v.industryId]}}{{v.industryId == '-' ? v.industryId:''}}</td>
+<!--                     <td class="text-nowrap operation">
+                      <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
+                      <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
+                    </td> -->
+                  </tr>
+                  <tr v-if="list.data.length == 0">
+                    <td colspan="99">没有数据</td>
                   </tr>
                 </tbody>
               </table>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-        </div>
 
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
 
-
     </section>
-    <!-- /.content -->
+
   </div>
-  <!-- /.content-wrapper -->
 
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Version</b> 2.0
+      <b>Version</b> 2.4.0
     </div>
-    <b>中证宝</b> 管理后台
+    <b>中证宝</b> 商户后台
   </footer>
 
   <!-- Control Sidebar -->
@@ -546,15 +509,11 @@ var app = new Vue({
 
 	view: {},
 
-    list1: {
+    list: {
       data: [],
       post: {
         pageNum: 1,
-        pageSize: 10,
-        provinceId: '',
-        cityId: '',
-        agent1Id: '',
-        agent2Id: '',
+        pageSize: 10
       },
       info: {},
       page: {},
@@ -570,15 +529,95 @@ var app = new Vue({
       a: {},
     },
 
+    view_pca:{
+      p: {},
+      c: {},
+      a: {},
+    },
+
     上级代理商:{
       lv1: {},
       lv2: {},
     },
 
-    area: {},
+    行业: {
+      1: '旅馆',
+      2: '网吧',
+      3: '汽车站',
+      4: '机场',
+      5: '旅行社',
+      6: '访客',
+    },
+
+    状态: {
+      1: '可用',
+      2: '不可用',
+    },
 
   },
   methods: {
+/*    getList: function(key, val){
+
+      _this = this
+
+      if(key == 'page'){
+
+        if(val == '+1'){
+          if( this.param.page < this.param.page_total ){
+            this.param.page++
+          }else{
+            return;
+          }
+        }
+
+        if(val == '-1'){
+          if( this.param.page > 1 ){
+            this.param.page--
+          }else{
+            return;
+          }
+        }
+
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + this.param.dir,
+        // data: this.param,
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.param = re.param
+          _this.list.data = re.data
+
+          //所有id
+          for( var i in re.data ){
+            var v = re.data[i]
+
+            _this.ids_all.push(v.id)
+          }
+
+          //分页
+          _this.list.prev = []
+          for(var i = _this.param.page - 4; i < _this.param.page; i++){
+            if(i <= 0)continue;
+            _this.list.prev.push(i)
+          }
+
+          _this.list.next = []
+          for(var i = _this.param.page + 1; i < _this.param.page + 5; i++){
+            if(i > re.param.page_total)break;
+            _this.list.next.push(i)
+          }
+
+        }
+      })
+
+    },*/
+
     checkAll: function(){
 
       if( $('#checkAll').prop('checked') ){
@@ -588,6 +627,64 @@ var app = new Vue({
       }
 
     },
+
+/*    getView: function(id){
+
+      _this.view = {}
+
+      if(id == -1){
+        this.view = {}
+        $('#view').modal('show')
+        return;
+      }
+
+      $.ajax({
+        type: 'GET',
+        url: manager_api + 'adm/view',
+        data: {
+          table: this.param.table,
+          id: id,
+        },
+        dataType: 'json',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view = re
+
+          $('#view').modal('show')
+
+        }
+      })
+
+    },*/
+
+
+/*    save: function(){
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'adm/save?table=' + this.param.table,
+        data: this.view,
+        dataType: 'text',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re == '1'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re)
+          }
+
+        },
+      })
+
+    },*/
+
 
     onoff: function(field, value, id){
 
@@ -679,104 +776,104 @@ var app = new Vue({
 
     },
 
-    getList1: function(){
+    getList: function(key, val){
 
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          provinceId: this.list1.post.provinceId,
-          cityId: this.list1.post.cityId,
-          agent1Id: this.list1.post.agent1Id,
-          agent2Id: this.list1.post.agent2Id,
-          startTime: $('#list1StartTime').val(),
-          endTime: $('#list1EndTime').val()
-        }
-      }
+      _this = this
 
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/areaConsumptionStatistics/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
+      //这里用v-model会有大坑
+      this.list.post.settlementDateStartTime = $('#startTime').val()
+      this.list.post.settlementDateEndTime = $('#endTime').val()
 
-          _this.area = re.rspBody.agentOrdersStatisticsList
 
-        }
-      })
+      if(key == 'page'){
 
-    },
-
-    区域消费排行导出: function(){
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          provinceId: this.list1.post.provinceId,
-          cityId: this.list1.post.cityId,
-          agent1Id: this.list1.post.agent1Id,
-          agent2Id: this.list1.post.agent2Id,
-          startTime: $('#list1StartTime').val(),
-          endTime: $('#list1EndTime').val()
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/exportAreaConsumptionStatistics/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode == '1'){
-
-            location.href = re.rspBody.file
+        if(val == '+1'){
+          if( this.list.post.pageNum < this.list.info.pages ){
+            this.list.post.pageNum++
           }else{
+            return
+          }
+        }
 
-            alert(re.rspHead.retMsg)
+        if(val == '-1'){
+          if( this.list.post.pageNum > 1 ){
+            this.list.post.pageNum--
+          }else{
+            return
+          }
+        }
+
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "8D5AA5642162A6B05A08D3B6896144DD"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getMerchantReceiptList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.list.data = re.rspBody.rspDTOList
+
+          var total = {
+            mchName: '总计',
+            consumeNum: 0,
+            consumeIntegral: 0,
+            refundNum: 0,
+            refundIntegral: 0,
+            provinceName: '-',
+            cityName: '-',
+            areaName: '-',
+            industryId: '-',
           }
 
+          for ( var i in _this.list.data ){
+            var v = _this.list.data[i]
+
+            // console.log(v)
+            total.consumeNum += v.consumeNum
+            total.consumeIntegral += v.consumeIntegral
+            total.refundNum += v.refundNum
+            total.refundIntegral += v.refundIntegral
+          }
+
+          _this.list.data.push(total)
+
+
         }
       })
 
     },
 
-    getArea: function(){
+    export_excel: function(){
 
       var data = {
         "reqHead":
         {
-          clientType: 1,
+          clientType: 6,
           format: "json",
           version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
         },
-        reqBody: {
-
-        }
+        reqBody: this.list.post
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/homePage/interface',
+        url: mp_api + 'mp/exporMerchantReceiptList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -784,7 +881,46 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.view = re.rspBody
+          location.href = re.rspBody.file
+
+        }
+      })
+
+    },
+
+    getLV2: function(fid, clean_lv2){
+
+      // console.log(this.view.一级代理)
+
+      if ( clean_lv2 != undefined ){
+        this.view.secondAgentId = ''
+      }
+
+      //上级代理商
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {
+          agentId: fid
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getSecondAgent/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.上级代理商.lv2 = re.rspBody.secondAgentList
 
         }
       })
@@ -809,7 +945,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/allProvince/interface',
+        url: mp_api + 'mp/allProvince/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -818,6 +954,7 @@ var app = new Vue({
         success: function(re){
 
           _this.search_pca.p = re.rspBody.areaRspDTOList
+          _this.view_pca.p = re.rspBody.areaRspDTOList
 
         }
       })
@@ -845,7 +982,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/allCity/interface',
+        url: mp_api + 'mp/allCity/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -883,7 +1020,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/allRegion/interface',
+        url: mp_api + 'mp/allRegion/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -899,46 +1036,6 @@ var app = new Vue({
       // console.log(who, parent)
 
     },
-
-    getLV2: function(fid, clean_lv2){
-
-      // console.log(this.view.一级代理)
-
-      if ( clean_lv2 != undefined ){
-        this.view.secondAgentId = ''
-      }
-
-      //上级代理商
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: {
-          agentId: fid
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/getSecondAgent/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.上级代理商.lv2 = re.rspBody.secondAgentList
-
-        }
-      })
-
-    },
-
 
   },
   mounted() {
@@ -967,20 +1064,34 @@ var app = new Vue({
     }
 
 
+    if(this.admin.type == 2){
+      var url = '../../db/menu-mp-agent.json'
+    }else{
+      var url = '../../db/menu-mp.json'
+    }
+
+
     // 侧栏菜单
-/*    $.ajax({
+    $.ajax({
       type: 'GET',
-      url: '../../db/menu-manager.json',
+      url: url,
+      //url: 'http://192.168.199.196:8692/token/generate',
       dataType: 'json',
+      beforeSend: function(request){
+        //request.setRequestHeader("token", _this.admin.token)
+      },
       success: function(re){
 
+        // $.cookie('token', re.data.token);
+
+        // re.data.info.token = re.data.token
+        // LS.admin = JSON.stringify(re.data.info)
+
         _this.sidemenu = re
+        //console.log(_this.sidemenu)
 
       }
-    })*/
-
-    this.sidemenu = JSON.parse(LS.menu)
-    // console.log(this.sidemenu)
+    })
 
 
     // 显示主体
@@ -1000,15 +1111,16 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    var date = new Date(new Date() - 86400000)
-    var today = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).substr(-2) + '-' + ('0' + (date.getDate())).substr(-2)
-
-    $('#list1StartTime').val(today)
-    $('#list1EndTime').val(today)
-
     $('.datepicker2').datepicker({
       format: "yyyy-mm-dd",
     })
+
+    var date = new Date()
+    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
+
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01')
+    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date)
+
 
     //上级代理商
     var data = {
@@ -1024,7 +1136,7 @@ var app = new Vue({
 
     $.ajax({
       type: 'POST',
-      url: manager_api + 'manager/getFirstAgentAll/interface',
+      url: mp_api + 'mp/getFirstAgentAll/interface',
       data: JSON.stringify(data),
       dataType: 'json',
       beforeSend: function(request){
@@ -1037,16 +1149,12 @@ var app = new Vue({
       }
     })
 
-
     this.getP()
 
-    this.getArea()
-
-    this.getList1()
+    this.getList()
 
   }
-});
+})
 </script>
-
 </body>
 </html>

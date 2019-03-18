@@ -436,6 +436,19 @@
               </div>
 
               <div class="form-group">
+                <label class="col-sm-3 control-label">APP二次验证</label>
+                <div class="col-sm-4">
+                  <select class="form-control input-sm" v-model="view.appSecondVerify">
+                    <option value="1">开启</option>
+                    <option value="0">关闭</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
                 <label class="col-sm-3 control-label">APP类型</label>
                 <div class="col-sm-4">
                   <select class="form-control input-sm" v-model="view.clientType">
