@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.9, user-scalable=no">
+<meta name="keyword" content="">
+<meta name="description" content="">
+<meta name="author" content="lightuni.com">
+
+<link rel="stylesheet" href="../../css/all.css">
+
+<!-- <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="../../plugins/adminLTE/css/AdminLTE.min.css">
+<link rel="stylesheet" href="../../plugins/adminLTE/css/skins/_all-skins.min.css">
+<link rel="stylesheet" href="../../plugins/Font-Awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/cong/cong.css">
+
+
+<script src="../../js/all.js"></script>
+
+    <title>文章管理</title>
+
+</head>
+<body class="hold-transition sidebar-mini skin-blue">
+
+<div id="loading">
+  <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+  <span class="sr-only">Loading...</span>
+</div>
+
+<div class="wrapper" id="app" style="display: none">
+
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="../index.html" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini">管理后台</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg">管理后台</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <span class="hidden-xs">{{admin.user}}</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <p>
+                  {{admin.user}}
+                  <small>管理员</small>
+                </p>
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <!-- <a href="#" class="btn btn-default btn-flat">设置</a> -->
+                </div>
+                <div class="pull-right">
+                  <a href="../account/index.html?logout=1" class="btn btn-default btn-flat">登出</a>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <!-- Control Sidebar Toggle Button -->
+<!--           <li>
+            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+          </li> -->
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+
+  <aside class="main-sidebar">
+
+    <section class="sidebar">
+
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+          <p>{{admin.user}}</p>
+          <i class="fa fa-circle text-success"></i> 在线
+        </div>
+      </div>
+
+<!--       <form action="#" method="get" class="sidebar-form">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Search...">
+          <span class="input-group-btn">
+            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div>
+      </form> -->
+
+      <ul class="sidebar-menu" data-widget="tree">
+
+        <li :class="{'treeview': v.menuType == 1, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
+
+          <a :href="`../${v.href == '#' ? v.href : v.href + '.html'}`">
+            <i :class="`fa fa-${v.icon}`"></i> <span>{{v.title}}</span>
+            <span class="pull-right-container" v-if="v.menuList.length != 0">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu" v-if="v.menuList.length != 0">
+
+            <li :class="{'treeview': v2.menuList != null, 'active': v2.perms == mca.a}" v-for="(v2, i2) in v.menuList">
+
+              <a :href="`../${v2.href == '#' ? v2.href : v2.href + '.html'}`">
+                <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
+                <span class="pull-right-container" v-if="v2.menuList != null">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu" v-if="v2.menuList != null">
+
+                <li v-for="(v3, i3) in v2.menuList">
+                  <a :href="`../${v3.url == '#' ? v3.url : v3.url + '.html'}`">
+                    <i :class="`fa fa-${v3.icon}`"></i> {{v3.title}}
+                  </a>
+                </li>
+
+              </ul>
+            </li>
+
+          </ul>
+        </li>
+
+      </ul>
+    </section>
+
+  </aside>
+
+
+  <div class="content-wrapper">
+
+    <section class="content-header">
+      <h1>
+        文章管理
+      </h1>
+      <ol class="breadcrumb">
+        <li><i class="fa fa-home"></i> 首页</li>
+        <li>业务管理</li>
+        <li class="active">文章管理</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <div class="nav-tabs-custom">
+
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
+              <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+            </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane active" id="操作">
+
+                <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
+
+                <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
+
+              </div>
+              <div class="tab-pane" id="搜索">
+
+                <div class="form-horizontal">
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">登录账号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.account">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">姓名</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.realname">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">手机号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.mobile">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="clearfix p10 pt0">
+
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr class="text-nowrap">
+                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
+                    <th>文章类型</th>
+                    <th>文章标题</th>
+                    <th>网页链接</th>
+                    <th width="1%">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(v, i) in list.data">
+                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
+                    <td>{{类型[v.type]}}</td>
+                    <td>{{v.title}}</td>
+                    <td>{{v.link}}</td>
+                    <td class="text-nowrap operation">
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
+                      <!-- <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br> -->
+                    </td>
+                  </tr>
+                  <tr v-if="list.data.length == 0">
+                    <td colspan="99">没有数据</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="pull-left mt15">
+                <label>
+                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
+                    <option value="2">每页 2 条</option>
+                    <option value="10">每页 10 条</option>
+                    <option value="25">每页 25 条</option>
+                    <option value="50">每页 50 条</option>
+                    <option value="100">每页 100 条</option>
+                  </select>
+                </label>
+
+                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
+              </div>
+
+              <div class="pull-right" v-if="list.info.pages > 1">
+                <ul class="pagination pagination-sm">
+
+                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
+
+                  <li class="paginate_button" v-for="i in list.page.prev"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+
+                  <li class="paginate_button active"><a href="#">{{list.post.pageNum}}</a></li>
+
+                  <li class="paginate_button" v-for="i in list.page.next"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+
+                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
+                  </li>
+
+                </ul>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <div class="modal fade" id="view">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              <span v-if="view.id == undefined">新增</span>
+              <span v-if="view.id != undefined">编辑</span>
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">文章类型</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.type">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 类型">{{v}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">APP类型</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.clientType">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in app类型">{{v}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">文章图片</label>
+                <div class="col-sm-4">
+                  <input type="file" class="form-control input-sm">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">文章标题</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.title">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">网页链接</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control input-sm" v-model="view.link">
+                </div>
+              </div>
+
+              <hr>
+
+              <textarea rows="8" class="form-control" v-model="view.content"></textarea>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="saveView">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.0
+    </div>
+    <b>中证宝</b> 管理后台
+  </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Create the tabs -->
+    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+      <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+      <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!-- Home tab content -->
+      <div class="tab-pane" id="control-sidebar-home-tab">
+        <h3 class="control-sidebar-heading">维护团队</h3>
+        <ul class="control-sidebar-menu">
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-user bg-red"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">韦聪</h4>
+
+                <p>产品设计师</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-phone bg-green"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">电话</h4>
+
+                <p>18902300094</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">邮件</h4>
+
+                <p>57425133@qq.com</p>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- /.control-sidebar-menu -->
+
+      </div>
+      <!-- /.tab-pane -->
+      <!-- Stats tab content -->
+      <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
+      <!-- /.tab-pane -->
+      <!-- Settings tab content -->
+      <div class="tab-pane" id="control-sidebar-settings-tab">
+        <form method="post">
+          <h3 class="control-sidebar-heading">General Settings</h3>
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Report panel usage
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+
+            <p>
+              Some information about this general settings option
+            </p>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Allow mail redirect
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+
+            <p>
+              Other sets of options are available
+            </p>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Expose author name in posts
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+
+            <p>
+              Allow the user to show his name in blog posts
+            </p>
+          </div>
+          <!-- /.form-group -->
+
+          <h3 class="control-sidebar-heading">Chat Settings</h3>
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Show me as online
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Turn off notifications
+              <input type="checkbox" class="pull-right">
+            </label>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Delete chat history
+              <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
+            </label>
+          </div>
+          <!-- /.form-group -->
+        </form>
+      </div>
+      <!-- /.tab-pane -->
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- <script src="../plugins/jquery/jquery.min.js"></script> -->
+<!-- <script src="../plugins/bootstrap/js/bootstrap.min.js"></script> -->
+<script src="../../plugins/adminLTE/js/adminlte.min.js"></script>
+<script src="../../plugins/adminLTE/js/demo.js"></script>
+<script src="../../plugins/cong/cong.js"></script>
+
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+	mca: {},
+    admin: {},
+    sidemenu: {},
+
+	list: {},
+	// page: {},
+	ids: [],
+	ids_all: [],
+
+	view: {},
+
+    list: {
+      data: [],
+      post: {
+        title: '',
+        pageNum: 1,
+        pageSize: 10
+      },
+      info: {},
+      page: {},
+      checkbox: {
+        all: [],
+        checked: [],
+      },
+    },
+
+    类型: {
+      1: '用户协议',
+      2: '用户指南',
+      3: '帮助中心',
+      4: '关于我们',
+      5: '酒店公告',
+      6: '网吧公告'
+    },
+
+    app类型: {
+      1: '中证宝App',
+      2: '旺宝App'
+    }
+
+  },
+  methods: {
+    checkAll: function(){
+
+      if( $('#checkAll').prop('checked') ){
+        this.list.checkbox.checked = this.list.checkbox.all
+      }else{
+        this.list.checkbox.checked = []
+      }
+
+    },
+
+    onoff: function(field, value, id){
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.ids.length == 0){
+        console.log('一个都没有选中')
+        return void(0)
+      }else{
+
+        var ids = this.ids
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'adm/onoff',
+        data: {
+          table: this.param.table,
+          field: field,
+          value: value,
+          id: ids,
+        },
+        dataType: 'text',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re == 1){
+            _this.getList()
+
+            _this.ids = []
+          }else{
+            alert(re)
+          }
+
+        }
+      })
+
+    },
+
+
+    del: function(id){
+
+      if(!confirm('确认删除？')){
+        return void(0)
+      }
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.ids.length == 0){
+        console.log('一个都没有选中')
+        return void(0)
+      }else{
+
+        var ids = this.ids
+      }
+
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'adm/del',
+        data: {
+          table: this.param.table,
+          id: ids,
+        },
+        dataType: 'text',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re == 1){
+            _this.getList()
+
+            _this.ids = []
+          }else{
+            alert(re)
+          }
+
+        }
+      })
+
+    },
+
+    getList: function(key, val){
+
+      _this = this
+
+      if(key == 'page'){
+
+        if(val == '+1'){
+          if( this.list.post.pageNum < this.list.info.pages ){
+            this.list.post.pageNum++
+          }else{
+            return
+          }
+        }
+
+        if(val == '-1'){
+          if( this.list.post.pageNum > 1 ){
+            this.list.post.pageNum--
+          }else{
+            return
+          }
+        }
+
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getArticleList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.list.data = re.rspBody.articlerList
+          delete re.rspBody.articlerList
+
+          _this.list.info = re.rspBody          
+
+
+          //id
+/*          for( var i in _this.list.data ){
+            var v = _this.list.data[i]
+
+            _this.list.checkbox.all.push(v.id)
+          }*/
+
+          //分页
+          _this.list.page.prev = []
+          for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
+            if(i <= 0)continue;
+            _this.list.page.prev.push(i)
+          }
+
+          _this.list.page.next = []
+          for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
+            if(i > _this.list.info.pages)break;
+            _this.list.page.next.push(i)
+          }
+
+        }
+      })
+
+    },
+
+    getView: function(id){
+
+      this.view = {}
+
+      if(id == -1){
+        $('#view').modal('show')
+        return
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getArticleInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view = re.rspBody
+
+          $('#view').modal('show')
+
+        }
+      })
+
+    },
+
+    saveView: function(){
+
+      var _this = this
+
+/*      for(var i in this.view){
+        var v = this.view[i]
+        // console.log(i, v)
+        url += '&' + i + '=' + v
+      }*/
+      // return
+
+      // console.log(this.view.roleList)
+
+/*      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.view
+      }*/
+
+      var add_or_edit = this.view.id == undefined ? 'add':'edit'
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/' + add_or_edit + 'Article',
+        data: this.view,
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retMsg == '成功'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    del: function(id){
+
+      if(!confirm('确认删除？')){
+        return
+      }
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.list.checkbox.checked.length == 0){
+        alert('一个都没有选中')
+        return
+      }else{
+
+        var ids = this.list.checkbox.checked
+      }
+
+      // console.log(ids)
+
+      for( var i in ids ){
+        var id = ids[i]
+
+
+        var data = {
+          "reqHead":
+          {
+            clientType: 1,
+            format: "json",
+            version: "1.0",
+            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          },
+          reqBody: {
+            id: id
+          }
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: manager_api + 'manager/deleteManager/interface',
+          data: JSON.stringify(data),
+          dataType: 'json',
+          beforeSend: function(request){
+            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+          },
+          success: function(re){
+
+            if(re.rspHead.retMsg != '成功'){
+              alert(re.rspHead.retMsg)
+            }else{
+              _this.getList()
+            }
+
+          }
+        })
+
+      }
+
+    },
+
+  },
+  mounted() {
+    _this = this
+
+    // console.log(LS.admin)
+
+    // 登录信息
+    if(LS.admin != undefined){
+      this.admin = JSON.parse(LS.admin)
+
+      var expire = ((this.admin.expire - new Date().getTime() ) / 1000 / 60).toFixed(0)
+
+      console.log('登录超时剩余', expire)
+
+      //过期
+      if(expire < 0){
+        //console.log('登录超时跳转')
+        location.href = '../account/index.html?logout=1'
+      }
+
+    }else{
+
+      //未登录
+      location.href = '../account/index.html'
+    }
+
+
+    // 侧栏菜单
+/*    $.ajax({
+      type: 'GET',
+      url: '../../db/menu-manager.json',
+      dataType: 'json',
+      success: function(re){
+
+        _this.sidemenu = re
+
+      }
+    })*/
+
+    this.sidemenu = JSON.parse(LS.menu)
+    // console.log(this.sidemenu)
+
+
+    // 显示主体
+    $('#loading').hide()
+    $('#app').show()
+
+    // mca
+    var tmp = location.pathname.split('/')
+    this.mca = {
+      m: decodeURI(tmp[1]),
+      c: decodeURI(tmp[2]),
+      a: decodeURI(tmp[3].split('.html')[0]),
+    }
+
+    // console.log(this.mca)
+
+    $('[data-toggle="tooltip"]').tooltip()
+
+
+    this.getList()
+
+  }
+})
+</script>
+</body>
+</html>
