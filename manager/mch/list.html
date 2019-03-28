@@ -454,6 +454,26 @@
               </div>
 
               <div class="form-group">
+                <label class="col-sm-3 control-label">资源数量</label>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control input-sm" v-model="view.payIntegral">
+                </div>
+                <div class="col-sm-5 mt5">
+                  如网吧-机器数量；旅业-房间数量
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">渗透率</label>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control input-sm" v-model="view.payIntegral">
+                </div>
+                <div class="col-sm-5 mt5">
+                  月保底量 = 资源数量 * 渗透率 *每月天数
+                </div>
+              </div>
+
+              <div class="form-group">
                 <label class="col-sm-3 control-label">所属行业</label>
                 <div class="col-sm-4">
                   <select class="form-control" v-model="view.industryId">
@@ -892,6 +912,39 @@ var app = new Vue({
 	ids_all: [],
 
 	view: {},
+
+	行业:{
+		1:'旅馆',
+		2:'网吧',
+		3:'汽车站',
+		4:'机场',
+		5:'旅行社'
+	},
+
+	软件版本:{
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家'
+	},
+
+    接口类型: {
+      1: '公安部',
+      2: '海鑫',
+      3: '国政通',
+      4: '上海爱金'
+    },
+
+    接口版本: {
+      1: '标准版',
+      2: '简化版'
+    },
+
+    状态: {
+      1: '可用',
+      2: '不可用'
+    },
 
     list: {
       data: [],

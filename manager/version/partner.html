@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>内部接口管理</title>
+    <title>合作伙伴账号管理</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -150,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        内部接口管理
+        合作伙伴账号管理
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
         <li>版本管理</li>
-        <li class="active">内部接口管理</li>
+        <li class="active">合作伙伴账号管理</li>
       </ol>
     </section>
 
@@ -167,7 +167,7 @@
 
             <ul class="nav nav-tabs">
               <!-- <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
-              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <!-- <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li> -->
             </ul>
 
             <div class="tab-content">
@@ -178,7 +178,7 @@
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
               </div>
-              <div class="tab-pane active" id="搜索">
+              <div class="tab-pane" id="搜索">
 
                 <div class="form-horizontal">
 
@@ -204,21 +204,22 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>接口名称</th>
-                    <th>接口手续费</th>
-                    <th>接口状态</th>
+                    <th>行业</th>
+                    <th>软件版本</th>
+                    <th>用户名</th>
+                    <th>备注</th>
                     <th width="1%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.name}}</td>
-                    <td>{{v.poundage}}</td>
-                    <td>{{状态[v.status]}}</td>
+                    <td>{{v.industryTitle}}</td>
+                    <td>{{v.softwareVersionTitle}}</td>
+                    <td>{{v.account}}</td>
+                    <td>{{v.remark}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
-                      <!-- <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br> -->
                     </td>
                   </tr>
                   <tr v-if="list.data.length == 0">
@@ -253,49 +254,49 @@
             <form class="form-horizontal">
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">接口名称</label>
+                <label class="col-sm-3 control-label">行业</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.name">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
+                  <input type="text" class="form-control input-sm" v-model="行业[view.industryId]" disabled>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">接口手续费</label>
+                <label class="col-sm-3 control-label">软件版本</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.poundage">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
+                  <input type="text" class="form-control input-sm" v-model="软件版本[view.softwareVersion]" disabled>
                 </div>
               </div>
 
-              <hr>
+              <div class="form-group">
+                <label class="col-sm-3 control-label">IP</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.mqIp" disabled>
+                </div>
+              </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">接口状态</label>
+                <label class="col-sm-3 control-label">端口</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.status">
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 状态">{{v}}</option>
-                  </select>
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
+                  <input type="text" class="form-control input-sm" v-model="view.mqPort" disabled>
                 </div>
               </div>
 
               <hr>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">接口版本</label>
+                <label class="col-sm-3 control-label">商户账号</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.version" disabled>
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 接口版本">{{v}}</option>
-                  </select>
+                  <input type="text" class="form-control input-sm" v-model="view.account">
+                </div>
+                <div class="col-sm-5 mt5 text-danger">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户密码</label>
+                <div class="col-sm-4">
+                  <input type="password" class="form-control input-sm" id="password">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -522,15 +523,6 @@ var app = new Vue({
       },
     },
 
-    接口版本: {
-      1: '标准版',
-      2: '简化版',
-    },
-
-    状态: {
-      1: '可用',
-      2: '不可用',
-    },
 
   },
   methods: {
@@ -671,7 +663,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getInterfaceList/interface',
+        url: manager_api + 'manager/cooperateSetList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -679,8 +671,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.interfaceList
-          delete re.rspBody.interfaceList
+          _this.list.data = re.rspBody.cooperateSetList
+          delete re.rspBody.cooperateSetList
 
           _this.list.info = re.rspBody          
 
@@ -734,7 +726,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getInterface/interface',
+        url: manager_api + 'manager/getCooperateSetInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -753,6 +745,12 @@ var app = new Vue({
 
     saveView: function(){
 
+      if($('#password').val() != ''){
+        this.view.password = $('#password').val()
+      }else{
+        delete this.view.password
+      }
+
       var data = {
         "reqHead":
         {
@@ -768,7 +766,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/' + add_or_edit + 'Interface/interface',
+        url: manager_api + 'manager/' + add_or_edit + 'CooperateSet/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){

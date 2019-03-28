@@ -293,7 +293,7 @@
           </div>
           <div class="modal-body">
 
-            <form class="form-horizontal">
+            <form class="form-horizontal" id="uploadForm">
 
               <div class="form-group">
                 <label class="col-sm-3 control-label">文章类型</label>
@@ -324,7 +324,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">文章图片</label>
                 <div class="col-sm-4">
-                  <input type="file" class="form-control input-sm">
+                  <input type="file" accept="image/jpeg" class="form-control input-sm">
                 </div>
               </div>
 
@@ -520,6 +520,39 @@ var app = new Vue({
 	ids_all: [],
 
 	view: {},
+
+	行业:{
+		1:'旅馆',
+		2:'网吧',
+		3:'汽车站',
+		4:'机场',
+		5:'旅行社'
+	},
+
+	软件版本:{
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家'
+	},
+
+    接口类型: {
+      1: '公安部',
+      2: '海鑫',
+      3: '国政通',
+      4: '上海爱金'
+    },
+
+    接口版本: {
+      1: '标准版',
+      2: '简化版'
+    },
+
+    状态: {
+      1: '可用',
+      2: '不可用'
+    },
 
     list: {
       data: [],
@@ -773,14 +806,8 @@ var app = new Vue({
 
       var _this = this
 
-/*      for(var i in this.view){
-        var v = this.view[i]
-        // console.log(i, v)
-        url += '&' + i + '=' + v
-      }*/
-      // return
-
-      // console.log(this.view.roleList)
+      var aa = new FormData($('#uploadForm')[0])
+      console.log(aa)
 
 /*      var data = {
         "reqHead":
