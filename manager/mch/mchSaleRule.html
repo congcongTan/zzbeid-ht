@@ -219,7 +219,7 @@
                     <td>{{v.modeTitle}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.promotionStrategyId)">修改政策</a><br>
-                      <a class="btn btn-xs btn-primary" @click="bindingMch(v.mchId, v.title)">绑定新商户</a><br>
+                      <a class="btn btn-xs btn-primary" @click="绑定新商户win(v.mchId)">绑定新商户</a><br>
                       <a class="btn btn-xs btn-primary" @click="商户二维码(v.mchId)">查看已绑商户</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.promotionStrategyId)">删除</a><br>
                     </td>
@@ -377,7 +377,7 @@
     </div>
 
 
-    <div class="modal fade" id="绑定新商户modal">
+    <div class="modal fade" id="绑定新商户win">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -393,13 +393,13 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">代理商</label>
                 <div class="col-sm-3">
-                  <select class="form-control" v-model="view.superiorAgentId" onchange="app.getLV2(this.value, 1)">
+                  <select class="form-control" v-model="list2.post.agent1Id" onchange="app.getLV2(this.value, 1)">
                     <option value="">--请选择--</option>
                     <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
                   </select>
                 </div>
                 <div class="col-sm-3">
-                  <select class="form-control" v-model="view.agentId">
+                  <select class="form-control" v-model="list2.post.agent2Id">
                     <option value="">--请选择--</option>
                     <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
                   </select>
@@ -409,19 +409,19 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">商户区域</label>
                 <div class="col-sm-3">
-                  <select class="form-control" v-model="view.province" onchange="app.getC('view', this.value)">
+                  <select class="form-control" v-model="list2.post.province" onchange="app.getC('view', this.value)">
                     <option value="" selected>--请选择--</option>
                     <option :value="`${v.code}`" v-for="(v, i) in view_pca.p">{{v.name}}</option>
                   </select>
                 </div>
                 <div class="col-sm-3">
-                  <select class="form-control" v-model="view.city" onchange="app.getA('view', this.value)">
+                  <select class="form-control" v-model="list2.post.city" onchange="app.getA('view', this.value)">
                     <option value="" selected>--请选择--</option>
                     <option :value="`${v.code}`" v-for="(v, i) in view_pca.c">{{v.name}}</option>
                   </select>
                 </div>
                 <div class="col-sm-3">
-                  <select class="form-control" v-model="view.area">
+                  <select class="form-control" v-model="list2.post.area">
                     <option value="" selected>--请选择--</option>
                     <option :value="`${v.code}`" v-for="(v, i) in view_pca.a">{{v.name}}</option>
                   </select>
@@ -431,13 +431,13 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">商户名称</label>
                 <div class="col-sm-3">
-                  <input type="text" class="form-control input-sm" v-model="view.title">
+                  <input type="text" class="form-control input-sm" v-model="list2.post.title">
                 </div>
               </div>
 
               <div class="form-group">
                 <div class="col-sm-3 col-sm-offset-3">
-                  <button class="btn btn-sm btn-primary">查询</button>
+                  <button type="button" class="btn btn-sm btn-primary" @click="绑定新商户list()">查询</button>
                 </div>
               </div>
 
@@ -450,11 +450,14 @@
                   <div class="oys" style="height:300px;">
 
                     <div class="col-xs-6 mb5">
-                      <label><input type="checkbox"> 全选</label>
+                      <label><input type="checkbox" @click="绑定新商户_全选(this.checked, '加入绑定')"> 全选</label>
                     </div>
 
-                    <div class="col-xs-6 mb5" v-for="i in 100">
-                      <label><input type="checkbox"> 一二三四五六七八</label>
+                    <div class="col-xs-6 mb5" v-for="v in list2.data">
+                      <label>
+                        <input type="checkbox" :value="`${v.mchId}`" v-model="list2.checkbox.checked">
+                        {{v.title}}
+                      </label>
                     </div>
 
                   </div>
@@ -663,7 +666,8 @@ var app = new Vue({
 		2:'网吧',
 		3:'汽车站',
 		4:'机场',
-		5:'旅行社'
+		5:'旅行社',
+		6:'访客'
 	},
 
 	软件版本:{
@@ -686,64 +690,17 @@ var app = new Vue({
       2: '简化版'
     },
 
-    状态: {
-      1: '可用',
-      2: '不可用'
-    },
-
-    list: {
-      data: [],
-      post: {
-        pageNum: 1,
-        pageSize: 10,
-        chooseDay: 0,
-        industryId: 0,
-      },
-      info: {},
-      page: {},
-      checkbox: {
-        all: [],
-        checked: [],
-      },
-    },
-
-    search_pca: {
-      p: {},
-      c: {},
-      a: {},
-    },
-
-    view_pca:{
-      p: {},
-      c: {},
-      a: {},
-    },
-
-    上级代理商:{
-      lv1: {},
-      lv2: {},
-    },
-
-    行业: {
-      1: '旅馆',
-      2: '网吧',
-      3: '汽车站',
-      4: '机场',
-      5: '旅行社',
-      6: '访客'
-    },
-
-    状态: {
-      0: '不可用',
-      1: '可用'
-    },
-
     网吧行业软件: {
       1: '佳星',
       2: '万象',
       3: '湖南万象(斯雨)',
       4: '云辰',
       5: '龙管家'
+    },
+
+    状态: {
+      1: '可用',
+      2: '不可用'
     },
 
     是否加密: {
@@ -765,6 +722,59 @@ var app = new Vue({
     分成模式: {
       1: '阶梯式累计分成'
     },
+
+
+    list: {
+      data: [],
+      post: {
+        pageNum: 1,
+        pageSize: 10,
+        chooseDay: 0,
+        industryId: 0,
+      },
+      info: {},
+      page: {},
+      checkbox: {
+        all: [],
+        checked: [],
+      },
+    },
+
+    list2: {
+      data: [],
+      post: {
+        agent1Id: '',
+        agent2Id: '',
+        province: '',
+        city: '',
+        area: ''
+      },
+      info: {},
+      checkbox: {
+        all: [],
+        checked: [],
+      },
+      选择: [],
+    },
+
+    search_pca: {
+      p: {},
+      c: {},
+      a: {},
+    },
+
+    view_pca:{
+      p: {},
+      c: {},
+      a: {},
+    },
+
+    上级代理商:{
+      lv1: {},
+      lv2: {},
+    },
+
+
 
   },
   methods: {
@@ -1043,18 +1053,17 @@ var app = new Vue({
 
     },
 
-    bindingMch: function(id, title){
+    绑定新商户win: function(id){
 
-      this.view = {
-        title: title, 
-        rules: []
-      }
+      this.绑定新商户list()
 
-      if(id == -1){
-        this.add_rules()
-        $('#sale').modal('show')
-        return
-      }
+      $('#绑定新商户win').modal('show')
+
+    },
+
+    绑定新商户list: function(){
+
+      var _this = this
 
       var data = {
         "reqHead":
@@ -1064,14 +1073,12 @@ var app = new Vue({
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
-        reqBody: {
-          mchId: id
-        }
+        reqBody: this.list2.post
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getMchProfitRule/interface',
+        url: manager_api + 'manager/getCanBindStrategyMchList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1080,38 +1087,34 @@ var app = new Vue({
         success: function(re){
 
           //换变量名
-          re.rspBody.rules = re.rspBody.ruleList
-          delete re.rspBody.ruleList
+          _this.list2.data = re.rspBody.simpleMchInfoList
 
-          //防空
-          if ( re.rspBody['rules'] == undefined ){
-            re.rspBody['rules'] = []
+          for(var i in _this.list2.data){
+            var v = _this.list2.data[i]
+
+            _this.list2.checkbox.all.push(v.mchId)
           }
 
-          //提取
-          if(re.rspBody['rules'][0] != undefined){
-            re.rspBody.radix = re.rspBody['rules'][0].radix
-            re.rspBody.mode = re.rspBody['rules'][0].mode
-            re.rspBody.poundage = re.rspBody['rules'][0].poundage
-          }
 
-          //清除
-          for(var i in re.rspBody['rules']){
-            delete re.rspBody['rules'][i]['mchId']
-            delete re.rspBody['rules'][i]['radix']
-            delete re.rspBody['rules'][i]['mode']
-            delete re.rspBody['rules'][i]['poundage']
-          }
-
-          _this.view = re.rspBody
-          _this.view.mchId = id
-          _this.view.title = title
-
-
-          $('#绑定新商户modal').modal('show')
+          $('#绑定新商户win').modal('show')
 
         }
       })
+
+    },
+
+    绑定新商户_全选: function(state, which_list){
+      console.log(state)
+
+      _this.list2.checkbox.checked = _this.list2.checkbox.all
+
+    },
+
+    绑定新商户_加入绑定: function(){
+
+    },
+
+    绑定新商户_取消绑定: function(){
 
     },
 
@@ -1154,143 +1157,6 @@ var app = new Vue({
     },
 
 
-    editMchStatus: function(){
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: this.view
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/editMchStatus/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retMsg == '成功'){
-            _this.getList()
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
-      })
-
-    },
-
-    setStatus: function(id){
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "401E79DEC2E7AA1F645D67924E6EE0F3"
-        },
-        reqBody: {
-          mchId: id
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/editMchStatus/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
-      })
-
-    },
-
-    开启二次验证: function(id){
-
-      //单个
-      if(id != undefined){
-        var ids = [id]
-      }
-      //多个
-      else if(this.list.checkbox.checked.length == 0){
-        alert('一个都没有选中')
-        return
-      }else{
-
-        var ids = this.list.checkbox.checked
-      }
-
-      var mchIds = []
-
-      // 换翻mchId
-      for( var i in ids ){
-        var v = ids[i]
-
-        for(var i2 in this.list.data){
-          var v2 = this.list.data[i2]
-
-          if(v2.id == v){
-            mchIds.push(v2.mchId)
-          }
-        }
-
-      }
-      // console.log(mchIds)
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          mchIdList: mchIds
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/secondVerifyManager/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode != '1'){
-            alert(re.rspHead.retMsg)
-          }else{
-            alert('设置完成')
-            _this.getList()
-          }
-
-        }
-      })
-
-
-    },
     del: function(id){
 
       if(!confirm('确认删除？')){
@@ -1498,105 +1364,6 @@ var app = new Vue({
       })
 
       // console.log(who, parent)
-
-    },
-
-    导出excel: function(){
-
-      var _this = this
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
-        },
-        reqBody: this.list.post
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/exportMchList/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode == 1){
-            location.href = re.rspBody.file
-          }
-
-        }
-      })
-
-    },
-
-    商户二维码: function(mchId){
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
-        },
-        reqBody: {
-          mchId: mchId
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/downloadMchQrcode/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          location.href = re.rspBody.file
-        }
-      })
-
-    },
-
-    批量下载商户二维码: function(){
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
-        },
-        reqBody: this.list.post
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/downloadMchQrcodeZip/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode != 1){
-            alert(re.rspHead.retMsg)
-          }else{
-            location.href = re.rspBody.file
-          }
-
-        }
-      })
 
     },
 
