@@ -560,6 +560,16 @@ var app = new Vue({
 
     },
 
+    checkAll2: function(checked, id){
+
+      if( checked ){
+        this[id].checkbox.checked = this[id].checkbox.all
+      }else{
+        this[id].checkbox.checked = []
+      }
+
+    },
+
     onoff: function(field, value, id){
 
       //单个
