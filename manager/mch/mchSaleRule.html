@@ -530,6 +530,7 @@
                   <th>资源数量</th>
                   <th>渗透率</th>
                   <th>营销组</th>
+                  <th>当月保底量</th>
                   <th>下月保底量</th>
                 </tr>
               </thead>
@@ -540,6 +541,7 @@
                   <td>{{v.resourceNumber}}</td>
                   <td>{{v.permeability}}</td>
                   <td>{{v.marketingTeamName}}</td>
+                  <td>{{v.thisMonthGuaranteeAmount}}</td>
                   <td>{{v.nextMonthGuaranteeAmount}}</td>
                 </tr>
                 <tr v-if="list.length == 0">
@@ -547,6 +549,8 @@
                 </tr>
               </tbody>
             </table>
+
+            共 {{查看已绑商户list.data.length}} 个商户
 
           </div>
         </div>
