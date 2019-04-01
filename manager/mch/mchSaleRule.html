@@ -182,9 +182,9 @@
 
                 <div class="form-horizontal">
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">营销组名称</label>
+                    <label class="col-sm-2 control-label">名称</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.appVersion">
+                      <input type="text" class="form-control" v-model="list.post.promotionStrategyName">
                     </div>
                   </div>
                   <div class="form-group">
@@ -313,7 +313,7 @@
                 <label class="col-sm-3 control-label">分成基数</label>
                 <div class="col-sm-4">
                   <select class="form-control" v-model="view.radix">
-                    <option :value="`${i}`" v-for="(v, i) in {1:'月消费总积分',2:'日均消费总积分'}">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in {1:'月消费总积分'}">{{v}}</option>
                   </select>
                 </div>
               </div>
@@ -518,7 +518,7 @@
           <div class="modal-body">
 
             <div class="mb10">
-              <button class="btn btn-sm btn-danger" @click="查看已绑商户_删除()">删除</button>
+              <button class="btn btn-sm btn-danger" @click="查看已绑商户_删除()">移除绑定商户</button>
               <button class="btn btn-sm btn-primary" @click="查看已绑商户_导出()">导出</button>
             </div>
 
@@ -1101,6 +1101,9 @@ var app = new Vue({
 
       if(id == -1){
         this.view.config = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+        this.view.radix = 1
+        this.view.mode = 1
+        this.view.poundage = 1.2
         $('#view').modal('show')
         return
       }
@@ -1200,7 +1203,7 @@ var app = new Vue({
         id: id
       }
 
-      this.绑定新商户list()
+      // this.绑定新商户list()
 
       $('#绑定新商户').modal('show')
 
@@ -1233,6 +1236,8 @@ var app = new Vue({
           //换变量名
           _this.list2.data = re.rspBody.simpleMchInfoList
 
+          //清空
+          _this.list2.checkbox.all = []
           for(var i in _this.list2.data){
             var v = _this.list2.data[i]
 

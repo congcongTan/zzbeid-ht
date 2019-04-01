@@ -304,7 +304,7 @@
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br>
-                      <a class="btn btn-xs btn-primary" @click="getSale(v.mchId, v.title)" v-if="admin.type == 2">促销政策</a><br>
+                      <!-- <a class="btn btn-xs btn-primary" @click="getSale(v.mchId, v.title)" v-if="admin.type == 2">促销政策</a><br> -->
                       <a class="btn btn-xs btn-primary" @click="商户二维码(v.mchId)">商户二维码</a><br>
                       <a :class="`btn btn-xs btn-${v.status == '1' ? 'success':'warning'}`" @click="setStatus(v.mchId)">{{v.status == '1' ? '锁定':'解锁'}}</a><br>
                       <!-- <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br> -->

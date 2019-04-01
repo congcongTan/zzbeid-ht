@@ -257,7 +257,7 @@
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.agentId)">编辑</a><br>
-                      <a class="btn btn-xs btn-primary" @click="getSale(v.agentId, v.title)" v-if="v.parentTitle != null">渠道政策</a><br>
+                      <!-- <a class="btn btn-xs btn-primary" @click="getSale(v.agentId, v.title)" v-if="v.parentTitle != null">渠道政策</a><br> -->
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
