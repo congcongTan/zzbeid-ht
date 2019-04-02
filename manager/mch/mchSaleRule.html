@@ -437,7 +437,7 @@
 
               <div class="form-group">
                 <div class="col-sm-3 col-sm-offset-3">
-                  <button type="button" class="btn btn-sm btn-primary" @click="绑定新商户list()">查询</button>
+                  <button type="button" class="btn btn-sm btn-primary" onclick="app.绑定新商户list(this)">查询 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
                 </div>
               </div>
 
@@ -1203,6 +1203,16 @@ var app = new Vue({
 
     绑定新商户: function(id){
 
+      //清除上次搜索条件
+      this.list2.data = []
+      this.list2.post = {
+        agent1Id: '',
+        agent2Id: '',
+        province: '',
+        city: '',
+        area: ''
+      },
+
       this.view = {
         id: id
       }
@@ -1212,7 +1222,10 @@ var app = new Vue({
       $('#绑定新商户').modal('show')
 
     },
-    绑定新商户list: function(){
+    绑定新商户list: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
 
       var _this = this
 
@@ -1236,6 +1249,9 @@ var app = new Vue({
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
         success: function(re){
+
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
 
           //换变量名
           _this.list2.data = re.rspBody.simpleMchInfoList
