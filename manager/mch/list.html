@@ -486,33 +486,20 @@
                 </div>
               </div>
 
-<!--               <div class="form-group">
-                <label class="col-sm-3 control-label">B端二次验证</label>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">行业软件</label>
                 <div class="col-sm-4">
-                  <select class="form-control">
+                  <select class="form-control" v-model="view.softwareVersion">
                     <option value="">--请选择--</option>
-                    <option value="1">启用</option>
-                    <option value="0">不启用</option>
+                    <option :value="`${i}`" v-for="(v, i) in 行业软件">{{v}}</option>
                   </select>
                 </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div> -->
+              </div>
 
               <span v-if="view.industryId == 2">
 
                 <hr>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">网吧行业软件</label>
-                  <div class="col-sm-4">
-                    <select class="form-control" v-model="view.softwareVersion">
-                      <option value="">--请选择--</option>
-                      <option :value="`${i}`" v-for="(v, i) in 网吧行业软件">{{v}}</option>
-                    </select>
-                  </div>
-                </div>
 
                 <div class="form-group">
                   <label class="col-sm-3 control-label">是否加密</label>
@@ -935,12 +922,15 @@ var app = new Vue({
       2: '简化版'
     },
 
-    网吧行业软件: {
+    行业软件: {
       1: '佳星',
       2: '万象',
       3: '湖南万象(斯雨)',
       4: '云辰',
-      5: '龙管家'
+      5: '龙管家',
+      10000: '中证宝酒店',
+      10001: '优速酒店',
+      10002: '千里马酒店',
     },
 
     状态: {
@@ -1000,48 +990,6 @@ var app = new Vue({
     上级代理商:{
       lv1: {},
       lv2: {},
-    },
-
-    行业: {
-      1: '旅馆',
-      2: '网吧',
-      3: '汽车站',
-      4: '机场',
-      5: '旅行社',
-      6: '访客'
-    },
-
-    状态: {
-      0: '不可用',
-      1: '可用'
-    },
-
-    网吧行业软件: {
-      1: '佳星',
-      2: '万象',
-      3: '湖南万象(斯雨)',
-      4: '云辰',
-      5: '龙管家'
-    },
-
-    是否加密: {
-      0: '否',
-      1: '是'
-    },
-
-    同步模式: {
-      1: '在线（云服务器）',
-      2: 'xml文件（铃铛）',
-      3: '本地数据库（LockSend）'
-    },
-
-    分成基数: {
-      1: '月消费总积分（对冲退款）',
-      // 2: '日均消费总积分（对冲退款）'
-    },
-
-    分成模式: {
-      1: '阶梯式累计分成'
     },
 
   },
