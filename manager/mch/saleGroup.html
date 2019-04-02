@@ -220,7 +220,7 @@
                     <td>{{v.account}}</td>
                     <td>{{v.mobile}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.marketingTeamId)">修改政策</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getView(v.marketingTeamId)">编辑营销组</a><br>
                       <a class="btn btn-xs btn-primary" @click="绑定新商户(v.marketingTeamId)">绑定新商户</a><br>
                       <a class="btn btn-xs btn-primary" @click="查看已绑商户(v.marketingTeamId, v.marketingTeamName)">查看已绑商户</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
@@ -350,7 +350,7 @@
 
 
     <div class="modal fade" id="绑定新商户">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
