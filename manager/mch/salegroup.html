@@ -182,9 +182,9 @@
 
                 <div class="form-horizontal">
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">营销组名称</label>
+                    <label class="col-sm-2 control-label">名称</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.appVersion">
+                      <input type="text" class="form-control" v-model="list.post.promotionStrategyName">
                     </div>
                   </div>
                   <div class="form-group">
@@ -202,7 +202,7 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr class="text-nowrap">
-                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
+                    <th width="1%"><input type="checkbox" onclick="app.checkAll2(this.checked, 'list')"></th>
                     <th>ID</th>
                     <th>营销组名称</th>
                     <th>负责人</th>
@@ -215,14 +215,14 @@
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td>{{v.id}}</td>
-                    <td>{{行业[v.industryId]}}</td>
-                    <td>{{v.title}}</td>
+                    <td>{{v.marketingTeamName}}</td>
+                    <td>{{v.linkman}}</td>
+                    <td>{{v.account}}</td>
                     <td>{{v.mobile}}</td>
-                    <td>{{v.identifier}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br>
-                      <a class="btn btn-xs btn-primary" @click="getSale(v.mchId, v.title)">绑定新商户</a><br>
-                      <a class="btn btn-xs btn-primary" @click="商户二维码(v.mchId)">查看已绑商户</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getView(v.marketingTeamId)">修改政策</a><br>
+                      <a class="btn btn-xs btn-primary" @click="绑定新商户(v.marketingTeamId)">绑定新商户</a><br>
+                      <a class="btn btn-xs btn-primary" @click="查看已绑商户(v.marketingTeamId, v.promotionStrategyName)">查看已绑商户</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
                   </tr>
@@ -280,8 +280,8 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
-              <span v-if="view.agentId == undefined">新增</span>
-              <span v-if="view.agentId != undefined">编辑</span>
+              <span v-if="view.id == undefined">新增</span>
+              <span v-if="view.id != undefined">编辑</span>
             </h4>
           </div>
           <div class="modal-body">
@@ -291,7 +291,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">营销组名称</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.title">
+                  <input type="text" class="form-control input-sm" v-model="view.marketingTeamName">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -301,7 +301,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">负责人</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.title">
+                  <input type="text" class="form-control input-sm" v-model="view.linkman">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -311,7 +311,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">手机号</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.title">
+                  <input type="text" class="form-control input-sm" v-model="view.mobile">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -321,7 +321,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">登录账号</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.identifier">
+                  <input type="text" class="form-control input-sm" v-model="view.account">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -349,13 +349,13 @@
     </div>
 
 
-    <div class="modal fade" id="sale">
+    <div class="modal fade" id="绑定新商户">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
-              商户分成
+              绑定新商户
             </h4>
           </div>
           <div class="modal-body">
@@ -363,74 +363,172 @@
             <form class="form-horizontal">
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">适用商户</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.title" disabled>
+                <label class="col-sm-3 control-label">代理商</label>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="list2.post.agent1Id" onchange="app.getLV2(this.value, 1)">
+                    <option value="">--请选择--</option>
+                    <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="list2.post.agent2Id">
+                    <option value="">--请选择--</option>
+                    <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户区域</label>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="list2.post.province" onchange="app.getC('view', this.value)">
+                    <option value="" selected>--请选择--</option>
+                    <option :value="`${v.code}`" v-for="(v, i) in view_pca.p">{{v.name}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="list2.post.city" onchange="app.getA('view', this.value)">
+                    <option value="" selected>--请选择--</option>
+                    <option :value="`${v.code}`" v-for="(v, i) in view_pca.c">{{v.name}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="list2.post.area">
+                    <option value="" selected>--请选择--</option>
+                    <option :value="`${v.code}`" v-for="(v, i) in view_pca.a">{{v.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户名称</label>
+                <div class="col-sm-3">
+                  <input type="text" class="form-control input-sm" v-model="list2.post.title">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-3 col-sm-offset-3">
+                  <button type="button" class="btn btn-sm btn-primary" onclick="app.绑定新商户list(this)">查询 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
                 </div>
               </div>
 
               <hr>
 
-              <div class="form-group">
-                <label class="col-sm-3 control-label">分成基数</label>
-                <div class="col-sm-4">
-                  <select class="form-control" v-model="view.radix">
-                    <option :value="`${i}`" v-for="(v, i) in 分成基数">{{v}}</option>
-                  </select>
+              <div class="row">
+
+                <div class="col-xs-8">
+
+                  <div class="oys" style="height:300px;">
+
+                    <div class="col-xs-6 mb5">
+                      <label><input type="checkbox" onclick="app.绑定新商户_全选(this.checked, 'list2')"> 全选</label>
+                    </div>
+
+                    <div class="col-xs-6 mb5" v-for="(v, i) in list2.data">
+                      <label>
+                        <input type="checkbox" :value="`${v.mchId}`" v-model="list2.checkbox.checked">
+                        {{v.title}}
+                      </label>
+                    </div>
+
+                  </div>
+
+                  <hr>
+
+                  <button type="button" class="btn btn-sm btn-primary" @click="绑定新商户_加入绑定()">加入绑定</button>
+                  <button type="button" class="btn btn-link">已选中 {{list2.checkbox.checked.length}} 个</button>
+
                 </div>
+
+                <div class="col-xs-4">
+
+                  <div class="oys" style="height:300px;">
+
+                    <div class="col-xs-6 mb5">
+                      <label><input type="checkbox" onclick="app.绑定新商户_全选(this.checked, 'list3')"> 全选</label>
+                    </div>
+
+                    <div class="col-xs-12 mb5" v-for="v in list3.data">
+                      <label>
+                        <input type="checkbox" :value="`${v.mchId}`" v-model="list3.checkbox.checked">
+                        {{v.title}}
+                      </label>
+                    </div>
+
+                  </div>
+
+                  <hr>
+
+                  <button type="button" class="btn btn-sm btn-primary" @click="绑定新商户_取消绑定()">取消绑定</button>
+                  <button type="button" class="btn btn-link">已加入绑定 {{list3.data.length}} 个</button>
+
+
+                </div>
+
               </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">分成模式</label>
-                <div class="col-sm-4">
-                  <select class="form-control" v-model="view.mode">
-                    <option :value="`${i}`" v-for="(v, i) in 分成模式">{{v}}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">结算手续费</label>
-                <div class="col-sm-2">
-                  <input type="text" class="form-control input-sm" v-model="view.poundage">
-                </div>
-                <div class="col-sm-2 mt5">
-                  %
-                </div>
-              </div>
-
-              <div class="mb10"><a class="btn btn-sm btn-primary" href="javascript:;" @click="add_rules()">增加一条</a></div>
-
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>分成基数</th>
-                    <th>商户分成</th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(v, i) in view['rules']">
-                    <td><input type="text" class="w40" v-model="v.beginAmount"> 至 <input type="text" class="w40" v-model="v.endAmount"></td>
-                    <td><input type="text" class="w40" v-model="v.selftRoyalty"> %</td>
-                    <td>
-                      <a class="btn btn-xs btn-default" @click="order_rules(i, '-')"><i class="fa fa-arrow-up"></i></a>
-                      <a class="btn btn-xs btn-default" @click="order_rules(i, '+')"><i class="fa fa-arrow-down"></i></a>
-                      <a class="btn btn-xs btn-danger" @click="del_rules(i)"><i class="fa fa-remove"></i></a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
 
             </form>
 
           </div>
           <div class="modal-footer">
-            <a class="btn btn-primary" @click="saveSale">确定</a>
+            <a class="btn btn-primary" @click="绑定新商户_保存()">确定</a>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="modal fade" id="查看已绑商户">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              促销政策名称：{{view.title}}
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <div class="mb10">
+              <button class="btn btn-sm btn-danger" @click="查看已绑商户_删除()">移除绑定商户</button>
+              <button class="btn btn-sm btn-primary" @click="查看已绑商户_导出()">导出</button>
+            </div>
+
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr class="text-nowrap">
+                  <th width="1%"><input type="checkbox" onclick="app.checkAll2(this.checked,'查看已绑商户list')"></th>
+                  <th>商户名称</th>
+                  <th>资源数量</th>
+                  <th>渗透率</th>
+                  <th>营销组</th>
+                  <th>当月保底量</th>
+                  <th>下月保底量</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(v, i) in 查看已绑商户list.data">
+                  <td><input type="checkbox" :value="`${v.mchId}`" v-model="查看已绑商户list.checkbox.checked"></td>
+                  <td>{{v.title}}</td>
+                  <td>{{v.resourceNumber}}</td>
+                  <td>{{v.permeability}}</td>
+                  <td>{{v.marketingTeamName}}</td>
+                  <td>{{v.thisMonthGuaranteeAmount}}</td>
+                  <td>{{v.nextMonthGuaranteeAmount}}</td>
+                </tr>
+                <tr v-if="list.length == 0">
+                  <td colspan="99">没有数据</td>
+                </tr>
+              </tbody>
+            </table>
+
+            共 {{查看已绑商户list.data.length}} 个商户
+
+          </div>
+        </div>
+      </div>
+    </div>
+
 
   </div>
 
@@ -676,6 +774,40 @@ var app = new Vue({
       },
     },
 
+    //待添加
+    list2: {
+      data: [],
+      post: {
+        agent1Id: '',
+        agent2Id: '',
+        province: '',
+        city: '',
+        area: ''
+      },
+      info: {},
+      checkbox: {
+        all: [],
+        checked: [],
+      },
+    },
+
+    list3: {
+      data: [],
+      checkbox: {
+        all: [],
+        checked: [],
+      },
+    },
+
+    查看已绑商户list: {
+      data: [],
+      checkbox: {
+        all: [],
+        checked: [],
+      },
+    },
+
+
     search_pca: {
       p: {},
       c: {},
@@ -693,47 +825,7 @@ var app = new Vue({
       lv2: {},
     },
 
-    行业: {
-      1: '旅馆',
-      2: '网吧',
-      3: '汽车站',
-      4: '机场',
-      5: '旅行社',
-      6: '访客'
-    },
 
-    状态: {
-      0: '不可用',
-      1: '可用'
-    },
-
-    网吧行业软件: {
-      1: '佳星',
-      2: '万象',
-      3: '湖南万象(斯雨)',
-      4: '云辰',
-      5: '龙管家'
-    },
-
-    是否加密: {
-      0: '否',
-      1: '是'
-    },
-
-    同步模式: {
-      1: '在线（云服务器）',
-      2: 'xml文件（铃铛）',
-      3: '本地数据库（LockSend）'
-    },
-
-    分成基数: {
-      1: '月消费总积分（对冲退款）',
-      // 2: '日均消费总积分（对冲退款）'
-    },
-
-    分成模式: {
-      1: '阶梯式累计分成'
-    },
 
   },
   methods: {
@@ -884,7 +976,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getMchList/interface',
+        url: manager_api + 'manager/getMarketingTeamList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -892,8 +984,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.mchPageList
-          delete re.rspBody.mchPageList
+          _this.list.data = re.rspBody.marketingTeamList
+          delete re.rspBody.marketingTeamList
 
           _this.list.info = re.rspBody          
 
@@ -920,398 +1012,6 @@ var app = new Vue({
 
         }
       })
-
-    },
-
-    getView: function(id){
-
-      this.view = {}
-
-      if(id == -1){
-        $('#view').modal('show')
-        return
-      }
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          mchId: id
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/getMchInfo/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.view = re.rspBody
-
-          _this.getLV2(_this.view.superiorAgentId)
-
-          _this.getC('view', _this.view.province)
-          _this.getA('view', _this.view.city)
-
-          $('#view').modal('show')
-
-        }
-      })
-
-    },
-
-    saveView: function(){
-
-      if($('#password').val() != ''){
-        this.view.password = $('#password').val()
-      }else{
-        delete this.view.password
-      }
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: this.view
-      }
-
-      if ( data.reqBody.superiorAgentId != '' && data.reqBody.agentId == '' ){
-
-        data.reqBody.agentId = data.reqBody.superiorAgentId
-        delete data.reqBody.superiorAgentId
-
-      }
-
-      var add_or_edit = this.view.mchId == undefined ? 'add':'edit'
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/' + add_or_edit + 'Mch/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-            $('#view').modal('hide')
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
-      })
-
-    },
-
-    getSale: function(id, title){
-
-      this.view = {
-        title: title, 
-        rules: []
-      }
-
-      if(id == -1){
-        this.add_rules()
-        $('#sale').modal('show')
-        return
-      }
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          mchId: id
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/getMchProfitRule/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          //换变量名
-          re.rspBody.rules = re.rspBody.ruleList
-          delete re.rspBody.ruleList
-
-          //防空
-          if ( re.rspBody['rules'] == undefined ){
-            re.rspBody['rules'] = []
-          }
-
-          //提取
-          if(re.rspBody['rules'][0] != undefined){
-            re.rspBody.radix = re.rspBody['rules'][0].radix
-            re.rspBody.mode = re.rspBody['rules'][0].mode
-            re.rspBody.poundage = re.rspBody['rules'][0].poundage
-          }
-
-          //清除
-          for(var i in re.rspBody['rules']){
-            delete re.rspBody['rules'][i]['mchId']
-            delete re.rspBody['rules'][i]['radix']
-            delete re.rspBody['rules'][i]['mode']
-            delete re.rspBody['rules'][i]['poundage']
-          }
-
-          _this.view = re.rspBody
-          _this.view.mchId = id
-          _this.view.title = title
-
-
-          $('#sale').modal('show')
-
-        }
-      })
-
-    },
-
-    saveSale: function(){
-
-      // this.view.
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: this.view
-      }
-
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/updateMchProfitRule/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-            $('#sale').modal('hide')
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
-      })
-
-    },
-
-    add_rules: function(){
-
-      this.view['rules'].push({
-        beginAmount: '',
-        endAmount: '',
-        selftRoyalty: '',
-      })
-
-    },
-
-    del_rules: function(i){
-
-      if(!confirm('确认删除？')){
-        return
-      }
-
-      this.view['rules'].splice(i, 1)
-
-    },
-
-    order_rules: function(i, way){
-
-      var tmp = this.view['rules'][i]
-
-      if(way == '-'){
-
-        if(i == 0){
-          console.log('不能上移')
-          return
-        }
-
-        var new_i = i - 1
-
-      }else{
-
-        if( i == this.view['rules'].length - 1 ){
-          console.log('不能下移')
-          return
-        }
-
-        var new_i = i + 1
-      }
-
-      this.view['rules'].splice(i, 1)
-      this.view['rules'].splice(new_i, 0, tmp)
-
-    },
-
-    editMchStatus: function(){
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: this.view
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/editMchStatus/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retMsg == '成功'){
-            _this.getList()
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
-      })
-
-    },
-
-    setStatus: function(id){
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "401E79DEC2E7AA1F645D67924E6EE0F3"
-        },
-        reqBody: {
-          mchId: id
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/editMchStatus/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
-      })
-
-    },
-
-    开启二次验证: function(id){
-
-      //单个
-      if(id != undefined){
-        var ids = [id]
-      }
-      //多个
-      else if(this.list.checkbox.checked.length == 0){
-        alert('一个都没有选中')
-        return
-      }else{
-
-        var ids = this.list.checkbox.checked
-      }
-
-      var mchIds = []
-
-      // 换翻mchId
-      for( var i in ids ){
-        var v = ids[i]
-
-        for(var i2 in this.list.data){
-          var v2 = this.list.data[i2]
-
-          if(v2.id == v){
-            mchIds.push(v2.mchId)
-          }
-        }
-
-      }
-      // console.log(mchIds)
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          mchIdList: mchIds
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/secondVerifyManager/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode != '1'){
-            alert(re.rspHead.retMsg)
-          }else{
-            alert('设置完成')
-            _this.getList()
-          }
-
-        }
-      })
-
 
     },
     del: function(id){
@@ -1354,7 +1054,7 @@ var app = new Vue({
 
         $.ajax({
           type: 'POST',
-          url: manager_api + 'manager/deleteMch/interface',
+          url: manager_api + 'manager/delMarketingTeam/interface',
           data: JSON.stringify(data),
           dataType: 'json',
           beforeSend: function(request){
@@ -1374,6 +1074,408 @@ var app = new Vue({
       }
 
     },
+    getView: function(id){
+
+      this.view = {}
+
+      if(id == -1){
+        $('#view').modal('show')
+        return
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          marketingTeamId: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getMarketingTeamInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          delete re.rspBody.mchList
+          delete re.rspBody.total
+
+          _this.view = re.rspBody
+
+          $('#view').modal('show')
+
+        }
+      })
+
+    },
+
+    saveView: function(){
+
+      //有密码才传
+      if($('#password').val() != ''){
+        this.view.password = $('#password').val()
+      }else{
+        delete this.view.password
+      }
+
+      //转回数组
+      var post = this.view
+      post.config = JSON.stringify(post.config)
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: post
+      }
+
+
+      var add_or_edit = this.view.id == undefined ? 'edit':'edit'
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/' + add_or_edit + 'MarketingTeam/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    绑定新商户: function(id){
+
+      //清除上次搜索条件
+      this.list2.data = []
+      this.list2.post = {
+        agent1Id: '',
+        agent2Id: '',
+        province: '',
+        city: '',
+        area: ''
+      },
+
+      this.view = {
+        id: id
+      }
+
+      // this.绑定新商户list()
+
+      $('#绑定新商户').modal('show')
+
+    },
+    绑定新商户list: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
+
+      var _this = this
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.list2.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getUnboundForMch/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+
+          _this.list2.data = re.rspBody.resultRspDTO
+
+          //清空
+          _this.list2.checkbox.all = []
+          for(var i in _this.list2.data){
+            var v = _this.list2.data[i]
+
+            _this.list2.checkbox.all.push(v.mchId)
+          }
+
+
+          $('#绑定新商户').modal('show')
+
+        }
+      })
+
+    },
+    绑定新商户_全选: function(checked, which_list){
+
+      if(checked){
+        _this[which_list].checkbox.checked = _this.list2.checkbox.all
+      }else{
+        _this[which_list].checkbox.checked = []
+      }
+
+    },
+    绑定新商户_加入绑定: function(){
+
+      for(var i in this.list2.checkbox.checked){
+        var v = this.list2.checkbox.checked[i]
+
+        for(var i2 in this.list2.data){
+          var v2 = this.list2.data[i2]
+
+          //找到对应记录
+          if(v2['mchId'] == v){
+            // console.log(i2)
+
+            //list2 -> list3
+            this.list3.data.push(v2)
+            this.list2.data.splice(i2, 1)
+
+            break
+          }
+        }
+
+      }
+
+      //清除选择
+      this.list2.checkbox.checked = []
+
+    },
+    绑定新商户_取消绑定: function(){
+
+      for(var i in this.list3.checkbox.checked){
+        var v = this.list3.checkbox.checked[i]
+
+        for(var i2 in this.list3.data){
+          var v2 = this.list3.data[i2]
+
+          //找到对应记录
+          if(v2['mchId'] == v){
+            // console.log(i2)
+
+            //list2 -> list3
+            this.list2.data.push(v2)
+            this.list3.data.splice(i2, 1)
+
+            break
+          }
+        }
+
+      }
+
+      //清除选择
+      this.list3.checkbox.checked = []
+
+    },
+    绑定新商户_保存: function(){
+
+      // console.log(this.list3.data)
+
+      var ids = []
+      for(var i in this.list3.data){
+        var v = this.list3.data[i]
+
+        ids.push(v.mchId)
+      }
+      // console.log(ids)
+
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: this.view.id,
+          mchIdList: ids
+        }
+      }
+
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/editMarketingTeam/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.list3.data = []
+            _this.getList()
+            $('#绑定新商户').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    查看已绑商户: function(id, title){
+
+      this.view = {
+        id: id,
+        title: title
+      }
+
+      //清空上次结果
+      this.查看已绑商户list.data = []
+
+      var _this = this
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          promotionStrategyId: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getBindThisStrategyMchList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspBody.bindStrategOfMchInfoList != null){
+            _this.查看已绑商户list.data = re.rspBody.bindStrategOfMchInfoList
+          }
+
+          //id
+          for( var i in _this.查看已绑商户list.data ){
+            var v = _this.查看已绑商户list.data[i]
+
+            _this.查看已绑商户list.checkbox.all.push(v.mchId)
+          }
+
+
+          $('#查看已绑商户').modal('show')
+
+        }
+      })
+
+    },
+    查看已绑商户_删除: function(){
+
+      // console.log(this.查看已绑商户list.checkbox.checked)
+
+      var _this = this
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchIdList: this.查看已绑商户list.checkbox.checked
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/removTiedStrategOfMch/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+            alert(re.rspHead.retMsg)
+          }else{
+            _this.查看已绑商户(_this.view.id, _this.view.title)
+          }
+
+        }
+      })
+
+    },
+    查看已绑商户_导出: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          promotionStrategyId: this.view.id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/exportMarketingTeam/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+            alert(re.rspHead.retMsg)
+          }else{
+            location.href = re.rspBody.file
+          }
+
+        }
+      })
+
+    },
+
 
     getLV2: function(fid, clean_lv2){
 
@@ -1524,105 +1626,6 @@ var app = new Vue({
 
     },
 
-    导出excel: function(){
-
-      var _this = this
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
-        },
-        reqBody: this.list.post
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/exportMchList/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode == 1){
-            location.href = re.rspBody.file
-          }
-
-        }
-      })
-
-    },
-
-    商户二维码: function(mchId){
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
-        },
-        reqBody: {
-          mchId: mchId
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/downloadMchQrcode/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          location.href = re.rspBody.file
-        }
-      })
-
-    },
-
-    批量下载商户二维码: function(){
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
-        },
-        reqBody: this.list.post
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/downloadMchQrcodeZip/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode != 1){
-            alert(re.rspHead.retMsg)
-          }else{
-            location.href = re.rspBody.file
-          }
-
-        }
-      })
-
-    },
-
   },
   mounted() {
     _this = this
@@ -1711,7 +1714,6 @@ var app = new Vue({
 
       }
     })
-
 
     this.getList()
 
