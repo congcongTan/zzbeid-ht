@@ -1454,13 +1454,13 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          promotionStrategyId: this.view.id
+          marketingTeamId: this.view.id
         }
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/exportMarketingTeam/interface',
+        url: manager_api + 'manager/exporBindThisMarketingTeamOfMchList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
