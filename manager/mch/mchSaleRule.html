@@ -519,7 +519,7 @@
 
             <div class="mb10">
               <button class="btn btn-sm btn-danger" @click="查看已绑商户_删除()">移除绑定商户</button>
-              <button class="btn btn-sm btn-primary" @click="查看已绑商户_导出()">导出</button>
+              <button class="btn btn-sm btn-primary" onclick="app.查看已绑商户_导出(this)">导出 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
             </div>
 
             <table class="table table-bordered table-hover">
@@ -1478,7 +1478,10 @@ var app = new Vue({
       })
 
     },
-    查看已绑商户_导出: function(){
+    查看已绑商户_导出: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
 
       var data = {
         "reqHead":

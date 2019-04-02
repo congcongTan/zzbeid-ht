@@ -208,6 +208,7 @@
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                      <button class="btn btn-default">导出</button>
                       <a href="javascript:;" class="btn btn-link">注意：当月分成会在次月才能查询</a>
                     </div>
                   </div>
@@ -222,7 +223,7 @@
                 <thead>
                   <tr class="text-nowrap">
                     <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
-                    <th>代理商名称</th>
+                    <th>代理名称</th>
                     <th>代理等级</th>
                     <th>直属商户总订单</th>
                     <th>直属商户总积分</th>
@@ -237,9 +238,9 @@
                   <tr v-for="(v, i) in list.data">
                     <!-- <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td> -->
                     <td>{{v.agentName}}</td>
-                    <td>{{v.grade}}</td>
+                    <td>{{v.level}}</td>
                     <td>{{v.consumeNum}}</td>
-                    <td>{{v.consumeIntegral}}</td>
+                    <td>{{v.orderCoefficientNum}}</td>
                     <td>{{v.radixTitle}}</td>
                     <td>{{v.poundage}}%</td>
                     <td>{{v.profitIntegral}}</td>

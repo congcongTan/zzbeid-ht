@@ -221,6 +221,7 @@
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                      <button class="btn btn-default">导出</button>
                       <a href="javascript:;" class="btn btn-link">注意：当月分成会在次月才能查询</a>
                     </div>
                   </div>
@@ -236,13 +237,13 @@
                   <tr class="text-nowrap">
                     <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
                     <th>商户名称</th>
-                    <th>二级代理</th>
                     <th>一级代理</th>
-                    <th>总订单</th>
-                    <th>总积分</th>
-                    <th>分成基数</th>
-                    <th>结算手续费</th>
-                    <th>分成</th>
+                    <th>二级代理</th>
+                    <th>月保底量</th>
+                    <th>当月消费量</th>
+                    <th>结算手续费(%)</th>
+                    <th>商户分成</th>
+                    <th>收银分成</th>
                     <!-- <th width="1%">操作</th> -->
                   </tr>
                 </thead>
@@ -250,13 +251,13 @@
                   <tr v-for="(v, i) in list.data">
                     <!-- <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td> -->
                     <td>{{v.mchName}}</td>
-                    <td>{{v.agent2Name}}</td>
                     <td>{{v.agent1Name}}</td>
+                    <td>{{v.agent2Name}}</td>
+                    <td>{{v.lowestConsumeNum}}</td>
                     <td>{{v.consumeNum}}</td>
-                    <td>{{v.consumeIntegral}}</td>
-                    <td>{{v.radixTitle}}</td>
-                    <td>{{v.poundage}}%</td>
-                    <td>{{v.divideIntegral}}</td>
+                    <td>{{v.poundage}}</td>
+                    <td>{{v.mchDivideIntegral}}</td>
+                    <td>{{v.collectDivideIntegral}}</td>
 <!--                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
@@ -693,15 +694,12 @@ var app = new Vue({
           _this.list.data = re.rspBody.MchtProfitStatsInfoDTOList
 
           var total = {
-            mchName: '总计',
+            // mchName: '总计',
+            lowestConsumeNum: '小计',
+            poundage: '-',
             consumeNum: 0,
-            consumeIntegral: 0,
-            refundNum: 0,
-            refundIntegral: 0,
-            provinceName: '-',
-            cityName: '-',
-            areaName: '-',
-            industryId: '-',
+            mchDivideIntegral: 0,
+            collectDivideIntegral: 0,
           }
 
           for ( var i in _this.list.data ){
@@ -710,8 +708,8 @@ var app = new Vue({
             // console.log(v)
             total.consumeNum += v.consumeNum
             total.consumeIntegral += v.consumeIntegral
-            total.refundNum += v.refundNum
-            total.refundIntegral += v.refundIntegral
+            total.mchDivideIntegral += v.mchDivideIntegral
+            total.collectDivideIntegral += v.collectDivideIntegral
           }
 
           _this.list.data.push(total)

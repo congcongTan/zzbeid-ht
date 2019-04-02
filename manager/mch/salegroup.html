@@ -222,7 +222,7 @@
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.marketingTeamId)">修改政策</a><br>
                       <a class="btn btn-xs btn-primary" @click="绑定新商户(v.marketingTeamId)">绑定新商户</a><br>
-                      <a class="btn btn-xs btn-primary" @click="查看已绑商户(v.marketingTeamId, v.promotionStrategyName)">查看已绑商户</a><br>
+                      <a class="btn btn-xs btn-primary" @click="查看已绑商户(v.marketingTeamId, v.marketingTeamName)">查看已绑商户</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
                   </tr>
@@ -484,14 +484,14 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
-              促销政策名称：{{view.title}}
+              营销组：{{view.title}}
             </h4>
           </div>
           <div class="modal-body">
 
             <div class="mb10">
               <button class="btn btn-sm btn-danger" @click="查看已绑商户_删除()">移除绑定商户</button>
-              <button class="btn btn-sm btn-primary" @click="查看已绑商户_导出()">导出</button>
+              <button class="btn btn-sm btn-primary" onclick="app.查看已绑商户_导出(this)">导出 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
             </div>
 
             <table class="table table-bordered table-hover">
@@ -513,8 +513,8 @@
                   <td>{{v.resourceNumber}}</td>
                   <td>{{v.permeability}}</td>
                   <td>{{v.marketingTeamName}}</td>
-                  <td>{{v.thisMonthGuaranteeAmount}}</td>
-                  <td>{{v.nextMonthGuaranteeAmount}}</td>
+                  <td>{{v.thisMonthGuarantee}}</td>
+                  <td>{{v.nextMonthGuarantee}}</td>
                 </tr>
                 <tr v-if="list.length == 0">
                   <td colspan="99">没有数据</td>
@@ -1319,7 +1319,7 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          id: this.view.id,
+          marketingTeamId: this.view.id,
           mchIdList: ids
         }
       }
@@ -1327,7 +1327,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/editMarketingTeam/interface',
+        url: manager_api + 'manager/mchTiedMarketingTeam/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1369,13 +1369,13 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          promotionStrategyId: id
+          marketingTeamId: id
         }
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getBindThisStrategyMchList/interface',
+        url: manager_api + 'manager/getBindThisMarketingTeamMchList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1383,8 +1383,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          if(re.rspBody.bindStrategOfMchInfoList != null){
-            _this.查看已绑商户list.data = re.rspBody.bindStrategOfMchInfoList
+          if(re.rspBody.getMarketingTeamInfoVOList != null){
+            _this.查看已绑商户list.data = re.rspBody.getMarketingTeamInfoVOList
           }
 
           //id
@@ -1422,7 +1422,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/removTiedStrategOfMch/interface',
+        url: manager_api + 'manager/removTiedMarketingTeamOfMch/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1440,7 +1440,10 @@ var app = new Vue({
       })
 
     },
-    查看已绑商户_导出: function(){
+    查看已绑商户_导出: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
 
       var data = {
         "reqHead":
