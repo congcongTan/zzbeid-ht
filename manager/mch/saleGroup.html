@@ -1468,6 +1468,9 @@ var app = new Vue({
         },
         success: function(re){
 
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+
           if(re.rspHead.retCode != '1'){
             alert(re.rspHead.retMsg)
           }else{
