@@ -189,9 +189,8 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">代理商</label>
                     <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.agent1Id" onchange="app.getLV2(this.value, 1)">
-                        <option value="">--请选择--</option>
-                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
+                      <select class="form-control" v-model="list.post.agent1Id">
+                        <option :value="`${admin.id}`" selected>{{admin.user}}</option>
                       </select>
                     </div>
                     <div class="col-sm-3">
@@ -505,7 +504,9 @@ var app = new Vue({
       data: [],
       post: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        agent1Id: '',
+        agent2Id: ''
       },
       info: {},
       page: {},
@@ -973,6 +974,8 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
+    this.list.post.agent1Id = this.admin.id
+
     var date = new Date(new Date().getTime() - 2592000000)
 
     $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1))
@@ -987,12 +990,14 @@ var app = new Vue({
         version: "1.0",
         sign: "30C7398578F1F7C995BAF67D18F89B33"
       },
-      reqBody: {}
+      reqBody: {
+        agentId: this.admin.id
+      }
     }
 
     $.ajax({
       type: 'POST',
-      url: mp_api + 'mp/getFirstAgentAll/interface',
+      url: mp_api + 'mp/getSecondAgent/interface',
       data: JSON.stringify(data),
       dataType: 'json',
       beforeSend: function(request){
@@ -1000,7 +1005,7 @@ var app = new Vue({
       },
       success: function(re){
 
-        _this.上级代理商.lv1 = re.rspBody.firstAgentList
+        _this.上级代理商.lv2 = re.rspBody.secondAgentList
 
       }
     })
