@@ -192,7 +192,7 @@
                   </div>
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">代理商</label>
+                    <label class="col-sm-2 control-label">营销组</label>
                     <div class="col-sm-3">
                       <select class="form-control" v-model="list.post.marketingTeamId">
                         <option value="">--请选择--</option>
@@ -637,10 +637,10 @@ var app = new Vue({
 
       _this = this
 
+      delete this.list.post.isExport
+
       //这里用v-model会有大坑
       this.list.post.settlementDate = $('#startTime').val()
-
-      delete this.list.post.isExport
 
       var data = {
         "reqHead":
@@ -671,8 +671,8 @@ var app = new Vue({
             poundage: '-',
             mchDivideIntegral: 0,
             collectDivideIntegral: 0,
-            mchDivideIntegral: 0,
-            collectDivideIntegral: 0
+            salesDivideIntegral: 0,
+            agent1ProfitIntegral: 0
           }
 
           for ( var i in _this.list.data ){
@@ -682,9 +682,15 @@ var app = new Vue({
             total.consumeNum += v.consumeNum
             total.mchDivideIntegral += v.mchDivideIntegral
             total.collectDivideIntegral += v.collectDivideIntegral
-            total.mchDivideIntegral += v.mchDivideIntegral
-            total.collectDivideIntegral += v.collectDivideIntegral
+            total.salesDivideIntegral += v.salesDivideIntegral
+            total.agent1ProfitIntegral += v.agent1ProfitIntegral
           }
+
+          total.consumeNum = total.consumeNum.toFixed(2)
+          total.mchDivideIntegral = total.mchDivideIntegral.toFixed(2)
+          total.collectDivideIntegral = total.collectDivideIntegral.toFixed(2)
+          total.salesDivideIntegral = total.salesDivideIntegral.toFixed(2)
+          total.agent1ProfitIntegral = total.agent1ProfitIntegral.toFixed(2)
 
           _this.list.data.push(total)
 
@@ -701,10 +707,10 @@ var app = new Vue({
 
       var _this = this
 
+      this.list.post.isExport = 'true'
+
       //这里用v-model会有大坑
       this.list.post.settlementDate = $('#startTime').val()
-
-      this.list.post.isExport = 'true'
 
       var data = {
         "reqHead":

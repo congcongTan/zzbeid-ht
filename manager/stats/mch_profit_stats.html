@@ -221,7 +221,7 @@
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
-                      <button class="btn btn-default">导出</button>
+                      <button class="btn btn-default" onclick="app.导出(this)">导出 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
                       <a href="javascript:;" class="btn btn-link">注意：当月分成会在次月才能查询</a>
                     </div>
                   </div>
@@ -646,29 +646,10 @@ var app = new Vue({
 
       _this = this
 
+      delete this.list.post.isExport
+
       //这里用v-model会有大坑
       this.list.post.settlementDate = $('#startTime').val()
-
-
-      if(key == 'page'){
-
-        if(val == '+1'){
-          if( this.list.post.pageNum < this.list.info.pages ){
-            this.list.post.pageNum++
-          }else{
-            return
-          }
-        }
-
-        if(val == '-1'){
-          if( this.list.post.pageNum > 1 ){
-            this.list.post.pageNum--
-          }else{
-            return
-          }
-        }
-
-      }
 
       var data = {
         "reqHead":
@@ -712,8 +693,64 @@ var app = new Vue({
             total.collectDivideIntegral += v.collectDivideIntegral
           }
 
+          total.consumeNum = total.consumeNum.toFixed(2)
+          total.consumeIntegral = total.consumeIntegral.toFixed(2)
+          total.mchDivideIntegral = total.mchDivideIntegral.toFixed(2)
+          total.collectDivideIntegral = total.collectDivideIntegral.toFixed(2)
+
+
           _this.list.data.push(total)
 
+
+        }
+      })
+
+    },
+
+    导出: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
+
+      var _this = this
+
+      this.list.post.isExport = 'true'
+
+      //这里用v-model会有大坑
+      this.list.post.settlementDate = $('#startTime').val()
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "8D5AA5642162A6B05A08D3B6896144DD"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getMchProfitStats/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+
+          if(re.rspHead.retCode == 1){
+            location.href = re.rspBody.file
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+
+          $('#绑定新商户').modal('show')
 
         }
       })

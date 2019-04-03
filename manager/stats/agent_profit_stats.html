@@ -208,7 +208,7 @@
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
-                      <button class="btn btn-default">导出</button>
+                      <button class="btn btn-default" onclick="app.导出(this)">导出 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
                       <a href="javascript:;" class="btn btn-link">注意：当月分成会在次月才能查询</a>
                     </div>
                   </div>
@@ -228,7 +228,7 @@
                     <th>直属商户总订单</th>
                     <th>直属商户总积分</th>
                     <th>分成基数</th>
-                    <th>结算手续费</th>
+                    <th>结算手续费（%）</th>
                     <th>分润</th>
                     <th>分成</th>
                     <!-- <th width="1%">操作</th> -->
@@ -242,9 +242,9 @@
                     <td>{{v.consumeNum}}</td>
                     <td>{{v.orderCoefficientNum}}</td>
                     <td>{{v.radixTitle}}</td>
-                    <td>{{v.poundage}}%</td>
-                    <td>{{v.profitIntegral}}</td>
-                    <td>{{v.divideIntegral}}</td>
+                    <td>{{v.poundage}}</td>
+                    <td>{{v.agent1ProfitIntegral}}</td>
+                    <td>{{v.agent2ProfitIntegral}}</td>
 <!--                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
@@ -633,29 +633,10 @@ var app = new Vue({
 
       _this = this
 
+      delete this.list.post.isExport
+
       //这里用v-model会有大坑
       this.list.post.settlementDate = $('#startTime').val()
-
-
-      if(key == 'page'){
-
-        if(val == '+1'){
-          if( this.list.post.pageNum < this.list.info.pages ){
-            this.list.post.pageNum++
-          }else{
-            return
-          }
-        }
-
-        if(val == '-1'){
-          if( this.list.post.pageNum > 1 ){
-            this.list.post.pageNum--
-          }else{
-            return
-          }
-        }
-
-      }
 
       var data = {
         "reqHead":
@@ -681,15 +662,14 @@ var app = new Vue({
           _this.list.data = re.rspBody.agentProfitStatsInfoDTOList
 
           var total = {
-            mchName: '总计',
+            agentName: '总计',
+            level: '-',
+            poundage: '-',
+            radixTitle: '-',
             consumeNum: 0,
-            consumeIntegral: 0,
-            refundNum: 0,
-            refundIntegral: 0,
-            provinceName: '-',
-            cityName: '-',
-            areaName: '-',
-            industryId: '-',
+            orderCoefficientNum: 0,
+            agent1ProfitIntegral: 0,
+            agent2ProfitIntegral: 0,
           }
 
           for ( var i in _this.list.data ){
@@ -697,13 +677,68 @@ var app = new Vue({
 
             // console.log(v)
             total.consumeNum += v.consumeNum
-            total.consumeIntegral += v.consumeIntegral
-            total.refundNum += v.refundNum
-            total.refundIntegral += v.refundIntegral
+            total.orderCoefficientNum += v.orderCoefficientNum
+            total.agent1ProfitIntegral += v.agent1ProfitIntegral
+            total.agent2ProfitIntegral += v.agent2ProfitIntegral
           }
+
+          total.consumeNum = total.consumeNum.toFixed(2)
+          total.orderCoefficientNum = total.orderCoefficientNum.toFixed(2)
+          total.agent1ProfitIntegral = total.agent1ProfitIntegral.toFixed(2)
+          total.agent2ProfitIntegral = total.agent2ProfitIntegral.toFixed(2)
 
           _this.list.data.push(total)
 
+
+        }
+      })
+
+    },
+
+    导出: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
+
+      var _this = this
+
+      this.list.post.isExport = 'true'
+
+      //这里用v-model会有大坑
+      this.list.post.settlementDate = $('#startTime').val()
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "8D5AA5642162A6B05A08D3B6896144DD"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getAgentProfitStats/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+
+          if(re.rspHead.retCode == 1){
+            location.href = re.rspBody.file
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+
+          $('#绑定新商户').modal('show')
 
         }
       })
