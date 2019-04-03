@@ -186,7 +186,7 @@
                     <label class="col-sm-2 control-label">营销组</label>
                     <div class="col-sm-3">
                       <select class="form-control" disabled>
-                        <option selected>{{admin.user}}</option>
+                        <option selected>{{admin.market}}</option>
                       </select>
                     </div>
                   </div>
@@ -739,6 +739,8 @@ var app = new Vue({
 
       delete this.list.post.isExport
 
+      this.list.post.marketingTeamId = this.admin.id
+
       //这里用v-model会有大坑
       this.list.post.settlementDate = $('#startTime').val()
 
@@ -806,6 +808,8 @@ var app = new Vue({
       $(obj).children('i').show()
 
       var _this = this
+
+      this.list.post.marketingTeamId = this.admin.id
 
       this.list.post.isExport = 'true'
 

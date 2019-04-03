@@ -427,9 +427,12 @@ var app = new Vue({
             admin.id = re.rspBody.adminResponseInfoDTO.adminId
             admin.user = re.rspBody.adminResponseInfoDTO.account
             admin.type = re.rspBody.adminResponseInfoDTO.type
+            admin.market = re.rspBody.adminResponseInfoDTO.marketingTeamName
             admin.token = re.rspBody.token
             admin.expire = new Date().getTime() + (180 * 60 * 1000)
             LS.admin = JSON.stringify(admin)
+
+            // return
 
             if(admin.type == 1){
               location.href = '../index/index.html'

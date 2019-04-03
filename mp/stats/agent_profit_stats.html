@@ -774,11 +774,19 @@ var app = new Vue({
             var v = _this.list.data[i]
 
             // console.log(v)
-            total.consumeNum += v.consumeNum
-            total.orderCoefficientNum += v.orderCoefficientNum
+            if(typeof v.consumeNum == 'number')
+              total.consumeNum += v.consumeNum
+
+            if(typeof v.orderCoefficientNum == 'number')
+              total.orderCoefficientNum += v.orderCoefficientNum
+
+            if(typeof v.agent1ProfitIntegral == 'number')
             total.agent1ProfitIntegral += v.agent1ProfitIntegral
+
+            if(typeof v.agent2ProfitIntegral == 'number')
             total.agent2ProfitIntegral += v.agent2ProfitIntegral
           }
+
 
           total.consumeNum = total.consumeNum.toFixed(2)
           total.orderCoefficientNum = total.orderCoefficientNum.toFixed(2)
