@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>商户分成统计</title>
+    <title>营销组分成统计</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -150,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        代理商分成统计
+        营销组分成统计
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
         <li>数据分析</li>
-        <li class="active">代理商分成统计</li>
+        <li class="active">营销组分成统计</li>
       </ol>
     </section>
 
@@ -186,22 +186,25 @@
 
                   <div class="form-group">
                     <label class="col-sm-2 control-label">统计月份</label>
-                    <div class="col-sm-10">
-                      <div class="row">
-                        <div class="col-xs-5 col-sm-3">
-                          <input type="text" class="form-control" id="startTime">
-                        </div>
-                      </div>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" id="startTime">
                     </div>
                   </div>
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">代理商</label>
+                    <label class="col-sm-2 control-label">营销组</label>
                     <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.agent1Id" onchange="app.getLV2(this.value, 1)">
+                      <select class="form-control" v-model="list.post.marketingTeamId">
                         <option value="">--请选择--</option>
-                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
+                        <option :value="`${v.marketingTeamId}`" v-for="(v, i) in 上级代理商.lv1">{{v.marketingTeamName}}</option>
                       </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">商户名称</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.mchName">
                     </div>
                   </div>
 
@@ -223,30 +226,33 @@
                 <thead>
                   <tr class="text-nowrap">
                     <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
-                    <th>代理名称</th>
-                    <th>代理等级</th>
-                    <th>直属商户总订单</th>
-                    <th>直属商户总积分</th>
-                    <th>分成基数</th>
-                    <th>分润</th>
-                    <th>分成</th>
-                    <!-- <th width="1%">操作</th> -->
+                    <th>商户名称</th>
+                    <th>营销组</th>
+                    <th>资源数</th>
+                    <th>月保底量（笔）</th>
+                    <th>当月消费量（笔）</th>
+                    <th>超出保底笔数（笔）</th>
+                    <th>结算手续费（%）</th>
+                    <th>商户分成</th>
+                    <th>收银分成</th>
+                    <th>营销组分成</th>
+                    <th>中心分成</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <!-- <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td> -->
-                    <td>{{v.agentName}}</td>
-                    <td>{{v.level}}</td>
+                    <td>{{v.mchName}}</td>
+                    <td>{{v.marketingTeamName}}</td>
+                    <td>{{v.resourceNumber}}</td>
+                    <td>{{v.lowestConsumeNum}}</td>
                     <td>{{v.consumeNum}}</td>
-                    <td>{{v.orderCoefficientNum}}</td>
-                    <td>{{v.radixTitle}}</td>
+                    <td>{{v.overflowNum}}</td>
+                    <td>{{v.poundage}}</td>
+                    <td>{{v.mchDivideIntegral}}</td>
+                    <td>{{v.collectDivideIntegral}}</td>
+                    <td>{{v.mchDivideIntegral}}</td>
                     <td>{{v.agent1ProfitIntegral}}</td>
-                    <td>{{v.agent2ProfitIntegral}}</td>
-<!--                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
-                      <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
-                    </td> -->
                   </tr>
                   <tr v-if="list.data.length == 0">
                     <td colspan="99">没有数据</td>
@@ -759,7 +765,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getAgentProfitStats/interface',
+        url: mp_api + 'mp/getMarketingTeamProfitStats/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -767,16 +773,16 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.agentProfitStatsInfoDTOList
+          _this.list.data = re.rspBody.MarketingTeamProfitStatsInfoVOList
 
           var total = {
-            agentName: '总计',
-            level: '-',
-            radixTitle: '-',
+            lowestConsumeNum: '总计',
             consumeNum: 0,
-            orderCoefficientNum: 0,
-            agent1ProfitIntegral: 0,
-            agent2ProfitIntegral: 0,
+            poundage: '-',
+            mchDivideIntegral: 0,
+            collectDivideIntegral: 0,
+            salesDivideIntegral: 0,
+            agent1ProfitIntegral: 0
           }
 
           for ( var i in _this.list.data ){
@@ -784,15 +790,17 @@ var app = new Vue({
 
             // console.log(v)
             total.consumeNum += v.consumeNum
-            total.orderCoefficientNum += v.orderCoefficientNum
+            total.mchDivideIntegral += v.mchDivideIntegral
+            total.collectDivideIntegral += v.collectDivideIntegral
+            total.salesDivideIntegral += v.salesDivideIntegral
             total.agent1ProfitIntegral += v.agent1ProfitIntegral
-            total.agent2ProfitIntegral += v.agent2ProfitIntegral
           }
 
           total.consumeNum = total.consumeNum.toFixed(2)
-          total.orderCoefficientNum = total.orderCoefficientNum.toFixed(2)
+          total.mchDivideIntegral = total.mchDivideIntegral.toFixed(2)
+          total.collectDivideIntegral = total.collectDivideIntegral.toFixed(2)
+          total.salesDivideIntegral = total.salesDivideIntegral.toFixed(2)
           total.agent1ProfitIntegral = total.agent1ProfitIntegral.toFixed(2)
-          total.agent2ProfitIntegral = total.agent2ProfitIntegral.toFixed(2)
 
           _this.list.data.push(total)
 
@@ -827,7 +835,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getAgentProfitStats/interface',
+        url: mp_api + 'mp/getMarketingTeamProfitStats/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -850,47 +858,7 @@ var app = new Vue({
         }
       })
 
-    },
-
-    getLV2: function(fid, clean_lv2){
-
-      // console.log(this.view.一级代理)
-      var _this = this
-
-      if ( clean_lv2 != undefined ){
-        this.view.secondAgentId = ''
-      }
-
-      //上级代理商
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: {
-          agentId: fid
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/getSecondAgent/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.上级代理商.lv2 = re.rspBody.secondAgentList
-
-        }
-      })
-
-    },
+    }
 
   },
   mounted() {
@@ -972,7 +940,7 @@ var app = new Vue({
     $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1))
 
 
-    //上级代理商
+    //营销组列表
     var data = {
       "reqHead":
       {
@@ -986,7 +954,7 @@ var app = new Vue({
 
     $.ajax({
       type: 'POST',
-      url: mp_api + 'mp/getFirstAgentAll/interface',
+      url: mp_api + 'mp/getMarketingTeamList/interface',
       data: JSON.stringify(data),
       dataType: 'json',
       beforeSend: function(request){
@@ -994,7 +962,7 @@ var app = new Vue({
       },
       success: function(re){
 
-        _this.上级代理商.lv1 = re.rspBody.firstAgentList
+        _this.上级代理商.lv1 = re.rspBody.marketingTeamList
 
       }
     })

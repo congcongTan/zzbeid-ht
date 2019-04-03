@@ -228,7 +228,6 @@
                     <th>直属商户总订单</th>
                     <th>直属商户总积分</th>
                     <th>分成基数</th>
-                    <th>结算手续费（%）</th>
                     <th>分润</th>
                     <th>分成</th>
                     <!-- <th width="1%">操作</th> -->
@@ -242,7 +241,6 @@
                     <td>{{v.consumeNum}}</td>
                     <td>{{v.orderCoefficientNum}}</td>
                     <td>{{v.radixTitle}}</td>
-                    <td>{{v.poundage}}</td>
                     <td>{{v.agent1ProfitIntegral}}</td>
                     <td>{{v.agent2ProfitIntegral}}</td>
 <!--                     <td class="text-nowrap operation">
@@ -664,7 +662,6 @@ var app = new Vue({
           var total = {
             agentName: '总计',
             level: '-',
-            poundage: '-',
             radixTitle: '-',
             consumeNum: 0,
             orderCoefficientNum: 0,
