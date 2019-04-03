@@ -96,15 +96,6 @@
         </div>
       </div>
 
-      <form action="#" method="get" class="sidebar-form">
-        <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Search...">
-          <span class="input-group-btn">
-            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-            </button>
-          </span>
-        </div>
-      </form>
 
       <ul class="sidebar-menu" data-widget="tree">
 
@@ -934,6 +925,8 @@ var app = new Vue({
 
     if(this.admin.type == 2){
       var url = '../../db/menu-mp-agent.json'
+    }else if(this.admin.type == 4){
+      var url = '../../db/menu-mp-sale-group.json'
     }else{
       var url = '../../db/menu-mp.json'
     }
