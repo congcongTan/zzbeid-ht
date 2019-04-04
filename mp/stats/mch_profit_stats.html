@@ -189,14 +189,20 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">代理商</label>
                     <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.agent1Id">
+                      <select class="form-control" v-if="admin.lv == '1'" v-model="list.post.agent1Id">
                         <option :value="`${admin.id}`" selected>{{admin.user}}</option>
+                      </select>
+                      <select class="form-control" v-if="admin.lv == '2'" v-model="list.post.agent1Id">
+                        <option :value="`${admin.parentId}`" selected>{{admin.parentUser}}</option>
                       </select>
                     </div>
                     <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.agent2Id">
+                      <select class="form-control" v-if="admin.lv == '1'" v-model="list.post.agent2Id">
                         <option value="">--请选择--</option>
                         <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
+                      </select>
+                      <select class="form-control" v-if="admin.lv == '2'" v-model="list.post.agent2Id">
+                        <option :value="`${admin.id}`" selected>{{admin.user}}</option>
                       </select>
                     </div>
                   </div>
@@ -974,7 +980,13 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    this.list.post.agent1Id = this.admin.id
+    if(this.admin.lv == '1'){//1级代理
+      this.list.post.agent1Id = this.admin.id
+    }
+    else if(this.admin.lv == '2'){//1级代理
+      this.list.post.agent1Id = this.admin.parentId
+      this.list.post.agent2Id = this.admin.id
+    }
 
     var date = new Date(new Date().getTime() - 2592000000)
 

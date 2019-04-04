@@ -423,30 +423,79 @@ var app = new Vue({
           if(re.rspHead.retCode != 1){
             alert(re.rspHead.retMsg)
           }else{
-            var admin = {}
-            admin.id = re.rspBody.adminResponseInfoDTO.adminId
-            admin.user = re.rspBody.adminResponseInfoDTO.account
-            admin.type = re.rspBody.adminResponseInfoDTO.type
-            admin.market = re.rspBody.adminResponseInfoDTO.marketingTeamName
-            admin.token = re.rspBody.token
-            admin.expire = new Date().getTime() + (180 * 60 * 1000)
-            LS.admin = JSON.stringify(admin)
 
-            // return
+            //有老豆信息
+            if(re.rspBody.adminResponseInfoDTO.agent1Id != 0){
 
-            if(admin.type == 1){
-              location.href = '../index/index.html'
+              var data = {
+                reqHead: {
+                  clientType: 6,
+                  format: "json",
+                  version: "1.0",
+                  sign: "4600D5BC2AACE2929E9CEBB44121B8CF"
+                },
+                reqBody: {
+                  parentId: re.rspBody.adminResponseInfoDTO.agent1Id
+                }
+              }
+
+              $.ajax({
+                type: 'POST',
+                url: mp_api + 'mp/getFirstAgent/interface',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                beforeSend: function(request){
+                  request.setRequestHeader('Authorization', 'Bearer ' + re.rspBody.token )
+                },
+                success: function(re2){
+
+                  // return
+
+                  re.rspBody.adminResponseInfoDTO.parentId = re2.rspBody.agentId
+                  re.rspBody.adminResponseInfoDTO.parentUser = re2.rspBody.title
+                  _this.save(re.rspBody.adminResponseInfoDTO)
+
+                }
+              })
+            }else{
+
+              _this.save(re.rspBody.adminResponseInfoDTO)
+
             }
-            if(admin.type == 2){
-              location.href = '../index/agent.html'
-            }
-            if(admin.type == 4){
-              location.href = '../stats/sale_group_stats.html'
-            }
+
           }
 
         }
       })
+
+    },
+    save: function(data){
+
+      // console.log(data)
+      // return
+
+      var admin = {}
+      admin.id = data.adminId
+      admin.user = data.account
+      admin.type = data.type
+      admin.lv = data.agent1Id == 0 ? '1':'2'
+      admin.parentId = data.parentId
+      admin.parentUser = data.parentUser
+      admin.token = data.token
+      admin.expire = new Date().getTime() + (180 * 60 * 1000)
+      LS.admin = JSON.stringify(admin)
+
+      // return
+
+      if(admin.type == 1){
+        location.href = '../index/index.html'
+      }
+      if(admin.type == 2){
+        location.href = '../index/agent.html'
+      }
+      if(admin.type == 4){
+        location.href = '../stats/sale_group_stats.html'
+      }
 
     }
 
