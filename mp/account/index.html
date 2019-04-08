@@ -453,13 +453,13 @@ var app = new Vue({
 
                   re.rspBody.adminResponseInfoDTO.parentId = re2.rspBody.agentId
                   re.rspBody.adminResponseInfoDTO.parentUser = re2.rspBody.title
-                  _this.save(re.rspBody.adminResponseInfoDTO)
+                  _this.save(re.rspBody.adminResponseInfoDTO, re.rspBody.token)
 
                 }
               })
             }else{
 
-              _this.save(re.rspBody.adminResponseInfoDTO)
+              _this.save(re.rspBody.adminResponseInfoDTO, re.rspBody.token)
 
             }
 
@@ -469,7 +469,7 @@ var app = new Vue({
       })
 
     },
-    save: function(data){
+    save: function(data, token){
 
       // console.log(data)
       // return
@@ -481,7 +481,7 @@ var app = new Vue({
       admin.lv = data.agent1Id == 0 ? '1':'2'
       admin.parentId = data.parentId
       admin.parentUser = data.parentUser
-      admin.token = data.token
+      admin.token = token
       admin.expire = new Date().getTime() + (180 * 60 * 1000)
       LS.admin = JSON.stringify(admin)
 
