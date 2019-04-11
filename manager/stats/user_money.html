@@ -295,7 +295,7 @@
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
-                      <button class="btn btn-default" @click="导出()">导出</button>
+                      <button class="btn btn-default" onclick="app.导出(this)">导出 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
                     </div>
                   </div>
                 </div>
@@ -713,6 +713,8 @@ var app = new Vue({
 
     getList: function(key, val){
 
+      delete this.list.post.isExport
+
       _this = this
 
       //这里用v-model会有大坑
@@ -796,7 +798,14 @@ var app = new Vue({
 
     },
 
-    导出: function(){
+    导出: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
+
+      var _this = this
+
+      this.list.post.isExport = 'true'
 
       var data = {
         "reqHead":
@@ -811,7 +820,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/exporMerchantReceiptList/interface',
+        url: manager_api + 'manager/userMoneyStatistics/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -819,7 +828,14 @@ var app = new Vue({
         },
         success: function(re){
 
-          location.href = re.rspBody.file
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+
+          if(re.rspHead.retCode == 1){
+            location.href = re.rspBody.file
+          }else{
+            alert(re.rspHead.retMsg)
+          }
 
         }
       })
