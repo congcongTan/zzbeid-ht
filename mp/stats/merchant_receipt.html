@@ -112,7 +112,7 @@
             <li :class="{'treeview': v2.children.length != 0, 'active': v2.title_en == mca.a}" v-for="(v2, i2) in v.children">
 
               <a :href="`../${v2.url == '#' ? v2.url : v2.url + '.html'}`"
-              v-if="admin.isPrimaryAccount != 1 && v2.title != '员工账号'">
+              v-if="!(admin.isPrimaryAccount == 2 && v2.title == '员工账号')">
                 <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
                 <span class="pull-right-container" v-if="v2.children.length != 0">
                   <i class="fa fa-angle-left pull-right"></i>
