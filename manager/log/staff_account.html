@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>商户分成统计</title>
+    <title>员工账号管理</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -34,9 +34,9 @@
     <!-- Logo -->
     <a href="../index.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini">商户后台</span>
+      <span class="logo-mini">管理后台</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg">商户后台</span>
+      <span class="logo-lg">管理后台</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -96,30 +96,39 @@
         </div>
       </div>
 
+<!--       <form action="#" method="get" class="sidebar-form">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Search...">
+          <span class="input-group-btn">
+            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div>
+      </form> -->
 
       <ul class="sidebar-menu" data-widget="tree">
 
-        <li :class="{'treeview': v.children.length != 0, 'active': v.title_en == mca.c}" v-for="(v, i) in sidemenu">
+        <li :class="{'treeview': v.menuType == 1, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
 
-          <a :href="`../${v.url == '#' ? v.url : v.url + '.html'}`">
+          <a :href="`../${v.href == '#' ? v.href : v.href + '.html'}`">
             <i :class="`fa fa-${v.icon}`"></i> <span>{{v.title}}</span>
-            <span class="pull-right-container" v-if="v.children.length != 0">
+            <span class="pull-right-container" v-if="v.menuList.length != 0">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
-          <ul class="treeview-menu" v-if="v.children.length != 0">
+          <ul class="treeview-menu" v-if="v.menuList.length != 0">
 
-            <li :class="{'treeview': v2.children.length != 0, 'active': v2.title_en == mca.a}" v-for="(v2, i2) in v.children">
+            <li :class="{'treeview': v2.menuList != null, 'active': v2.perms == mca.a}" v-for="(v2, i2) in v.menuList">
 
-              <a :href="`../${v2.url == '#' ? v2.url : v2.url + '.html'}`">
+              <a :href="`../${v2.href == '#' ? v2.href : v2.href + '.html'}`">
                 <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
-                <span class="pull-right-container" v-if="v2.children.length != 0">
+                <span class="pull-right-container" v-if="v2.menuList != null">
                   <i class="fa fa-angle-left pull-right"></i>
                 </span>
               </a>
-              <ul class="treeview-menu" v-if="v2.children.length != 0">
+              <ul class="treeview-menu" v-if="v2.menuList != null">
 
-                <li v-for="(v3, i3) in v2.children">
+                <li v-for="(v3, i3) in v2.menuList">
                   <a :href="`../${v3.url == '#' ? v3.url : v3.url + '.html'}`">
                     <i :class="`fa fa-${v3.icon}`"></i> {{v3.title}}
                   </a>
@@ -141,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        商户分成统计
+        员工账号管理
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>数据分析</li>
-        <li class="active">商户分成统计</li>
+        <li>客服管理</li>
+        <li class="active">员工账号管理</li>
       </ol>
     </section>
 
@@ -157,68 +166,33 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <!-- <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
-              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
+              <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane" id="操作">
+              <div class="tab-pane active" id="操作">
 
-                <a class="btn btn-sm btn-danger" @click="del()">删除</a>
+                <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
 
-                <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a>
+                <!-- <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a> -->
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
               </div>
-              <div class="tab-pane active" id="搜索">
+              <div class="tab-pane" id="搜索">
 
                 <div class="form-horizontal">
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">统计月份</label>
-                    <div class="col-sm-10">
-                      <div class="row">
-                        <div class="col-xs-5 col-sm-3">
-                          <input type="text" class="form-control" id="startTime">
-                        </div>
-                      </div>
+                    <label class="col-sm-2 control-label">发送手机</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.mobile">
                     </div>
                   </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">代理商</label>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-if="admin.type == '1'" v-model="list.post.agent1Id" disabled>
-                        <option :value="`${admin.id}`" selected>{{admin.user}}</option>
-                      </select>
-                      <select class="form-control" v-if="admin.type == '2'" v-model="list.post.agent1Id" disabled>
-                        <option :value="`${admin.parentAgentId}`" selected>{{admin.parentAgentTitle}}</option>
-                      </select>
-                    </div>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-if="admin.type == '1'" v-model="list.post.agent2Id">
-                        <option value="">--请选择--</option>
-                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
-                      </select>
-                      <select class="form-control" v-if="admin.type == '2'" v-model="list.post.agent2Id" disabled>
-                        <option :value="`${admin.id}`" selected>{{admin.user}}</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">商户名称</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.mchName">
-                    </div>
-                  </div>
-
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
-                      <button class="btn btn-default" onclick="app.导出(this)">导出 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
-                      <a href="javascript:;" class="btn btn-link">注意：当月分成会在次月才能查询</a>
                     </div>
                   </div>
                 </div>
@@ -231,29 +205,23 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr class="text-nowrap">
-                    <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
-                    <th>商户名称</th>
-                    <th>一级代理</th>
-                    <th>二级代理</th>
-                    <th>月保底量</th>
-                    <th>当月消费量</th>
-                    <th>结算手续费(%)</th>
-                    <th>商户分成</th>
-                    <th>收银分成</th>
+                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
+                    <th>发送类型</th>
+                    <th>发送手机</th>
+                    <th>发送内容</th>
+                    <th>发送时间</th>
+                    <th>发送状态</th>
                     <!-- <th width="1%">操作</th> -->
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <!-- <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td> -->
-                    <td>{{v.mchName}}</td>
-                    <td>{{v.agent1Name}}</td>
-                    <td>{{v.agent2Name}}</td>
-                    <td>{{v.lowestConsumeNum}}</td>
-                    <td>{{v.consumeNum}}</td>
-                    <td>{{v.poundage}}</td>
-                    <td>{{v.mchDivideIntegral}}</td>
-                    <td>{{v.collectDivideIntegral}}</td>
+                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
+                    <td>{{v.typeTitle}}</td>
+                    <td>{{v.mobile}}</td>
+                    <td>{{v.codeTitle}}</td>
+                    <td>{{v.createTime}}</td>
+                    <td>{{v.sendStatusTitle}}</td>
 <!--                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
@@ -265,6 +233,37 @@
                 </tbody>
               </table>
 
+              <div class="pull-left mt15">
+                <label>
+                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
+                    <option value="2">每页 2 条</option>
+                    <option value="10">每页 10 条</option>
+                    <option value="25">每页 25 条</option>
+                    <option value="50">每页 50 条</option>
+                    <option value="100">每页 100 条</option>
+                  </select>
+                </label>
+
+                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
+              </div>
+
+              <div class="pull-right" v-if="list.info.pages > 1">
+                <ul class="pagination pagination-sm">
+
+                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
+
+                  <li class="paginate_button" v-for="i in list.page.prev"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+
+                  <li class="paginate_button active"><a href="#">{{list.post.pageNum}}</a></li>
+
+                  <li class="paginate_button" v-for="i in list.page.next"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+
+                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
+                  </li>
+
+                </ul>
+              </div>
+
             </div>
 
           </div>
@@ -275,13 +274,82 @@
 
     </section>
 
+    <div class="modal fade" id="view">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              新增
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <div class="alert alert-info">
+              如用户手机号无法接受信息，可添加验证记录，再把验证码发给用户验证。
+            </div>
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">发送类型</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.type">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 发送类型">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">发送手机</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.mobile">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">6位数字验证码</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.code">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+<!--               <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">发送时间</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.integral">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 默认系统当前时间
+                </div>
+              </div> -->
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="saveView">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Version</b> 2.4.0
+      <b>Version</b> 2.0
     </div>
-    <b>中证宝</b> 商户后台
+    <b>中证宝</b> 管理后台
   </footer>
 
   <!-- Control Sidebar -->
@@ -422,9 +490,6 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
-<link rel="stylesheet" href="../../plugins/datepicker/datepicker.css">
-<script src="../../plugins/datepicker/datepicker.js"></script>
-
 <script>
 var app = new Vue({
   el: '#app',
@@ -510,9 +575,7 @@ var app = new Vue({
       data: [],
       post: {
         pageNum: 1,
-        pageSize: 10,
-        agent1Id: '',
-        agent2Id: ''
+        pageSize: 10
       },
       info: {},
       page: {},
@@ -522,76 +585,21 @@ var app = new Vue({
       },
     },
 
-    上级代理商:{
-      lv1: {},
-      lv2: {},
+    发送类型: {
+      1: '注册',
+      2: '找回密码',
+      3: '更换手机(忘记手机号)',
+      4: '非常用设备',
+      5: '忘记支付密码',
     },
 
+    状态: {
+      1: '可用',
+      2: '不可用',
+    },
 
   },
   methods: {
-/*    getList: function(key, val){
-
-      _this = this
-
-      if(key == 'page'){
-
-        if(val == '+1'){
-          if( this.param.page < this.param.page_total ){
-            this.param.page++
-          }else{
-            return;
-          }
-        }
-
-        if(val == '-1'){
-          if( this.param.page > 1 ){
-            this.param.page--
-          }else{
-            return;
-          }
-        }
-
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + this.param.dir,
-        // data: this.param,
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.param = re.param
-          _this.list.data = re.data
-
-          //所有id
-          for( var i in re.data ){
-            var v = re.data[i]
-
-            _this.ids_all.push(v.id)
-          }
-
-          //分页
-          _this.list.prev = []
-          for(var i = _this.param.page - 4; i < _this.param.page; i++){
-            if(i <= 0)continue;
-            _this.list.prev.push(i)
-          }
-
-          _this.list.next = []
-          for(var i = _this.param.page + 1; i < _this.param.page + 5; i++){
-            if(i > re.param.page_total)break;
-            _this.list.next.push(i)
-          }
-
-        }
-      })
-
-    },*/
-
     checkAll: function(){
 
       if( $('#checkAll').prop('checked') ){
@@ -602,63 +610,15 @@ var app = new Vue({
 
     },
 
-/*    getView: function(id){
+    checkAll2: function(checked, id){
 
-      _this.view = {}
-
-      if(id == -1){
-        this.view = {}
-        $('#view').modal('show')
-        return;
+      if( checked ){
+        this[id].checkbox.checked = this[id].checkbox.all
+      }else{
+        this[id].checkbox.checked = []
       }
 
-      $.ajax({
-        type: 'GET',
-        url: manager_api + 'adm/view',
-        data: {
-          table: this.param.table,
-          id: id,
-        },
-        dataType: 'json',
-        beforeSend: function(request){
-          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.view = re
-
-          $('#view').modal('show')
-
-        }
-      })
-
-    },*/
-
-
-/*    save: function(){
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'adm/save?table=' + this.param.table,
-        data: this.view,
-        dataType: 'text',
-        beforeSend: function(request){
-          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re == '1'){
-            _this.getList()
-            $('#view').modal('hide')
-          }else{
-            alert(re)
-          }
-
-        },
-      })
-
-    },*/
-
+    },
 
     onoff: function(field, value, id){
 
@@ -754,10 +714,25 @@ var app = new Vue({
 
       _this = this
 
-      delete this.list.post.isExport
+      if(key == 'page'){
 
-      //这里用v-model会有大坑
-      this.list.post.settlementDate = $('#startTime').val()
+        if(val == '+1'){
+          if( this.list.post.pageNum < this.list.info.pages ){
+            this.list.post.pageNum++
+          }else{
+            return
+          }
+        }
+
+        if(val == '-1'){
+          if( this.list.post.pageNum > 1 ){
+            this.list.post.pageNum--
+          }else{
+            return
+          }
+        }
+
+      }
 
       var data = {
         "reqHead":
@@ -772,7 +747,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getMchProfitStats/interface',
+        url: manager_api + 'manager/logMessageList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -780,72 +755,61 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.MchtProfitStatsInfoDTOList
+          _this.list.data = re.rspBody.logMessageList
+          delete re.rspBody.logMessageList
 
-          if(_this.list.data == undefined){
-            _this.list.data = []
-          }
+          _this.list.info = re.rspBody          
 
-          var total = {
-            // mchName: '总计',
-            lowestConsumeNum: '小计',
-            poundage: '-',
-            consumeNum: 0,
-            consumeIntegral: 0,
-            mchDivideIntegral: 0,
-            collectDivideIntegral: 0,
-          }
 
-          for ( var i in _this.list.data ){
+          //id
+          for( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-            // console.log(v)
-            total.consumeNum += v.consumeNum
-            total.consumeIntegral += v.consumeIntegral
-            total.mchDivideIntegral += v.mchDivideIntegral
-            total.collectDivideIntegral += v.collectDivideIntegral
+            _this.list.checkbox.all.push(v.id)
           }
 
-          total.consumeNum = total.consumeNum.toFixed(2)
-          total.consumeIntegral = total.consumeIntegral.toFixed(2)
-          total.mchDivideIntegral = total.mchDivideIntegral.toFixed(2)
-          total.collectDivideIntegral = total.collectDivideIntegral.toFixed(2)
+          //分页
+          _this.list.page.prev = []
+          for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
+            if(i <= 0)continue;
+            _this.list.page.prev.push(i)
+          }
 
-
-          _this.list.data.push(total)
-
+          _this.list.page.next = []
+          for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
+            if(i > _this.list.info.pages)break;
+            _this.list.page.next.push(i)
+          }
 
         }
       })
 
     },
 
-    导出: function(obj){
+    getView: function(id){
 
-      $(obj).prop('disabled', true)
-      $(obj).children('i').show()
+      this.view = {}
 
-      var _this = this
+      $('#view').modal('show')
 
-      this.list.post.isExport = 'true'
+    },
 
-      //这里用v-model会有大坑
-      this.list.post.settlementDate = $('#startTime').val()
+    saveView: function(){
 
       var data = {
         "reqHead":
         {
-          clientType: 6,
+          clientType: 1,
           format: "json",
           version: "1.0",
-          sign: "8D5AA5642162A6B05A08D3B6896144DD"
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
-        reqBody: this.list.post
+        reqBody: this.view
       }
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getMchProfitStats/interface',
+        url: manager_api + 'manager/addLogMessage/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -853,58 +817,14 @@ var app = new Vue({
         },
         success: function(re){
 
-          $(obj).prop('disabled', false)
-          $(obj).children('i').hide()
-
-          if(re.rspHead.retCode == 1){
-            location.href = re.rspBody.file
+          if(re.rspHead.retMsg == '成功'){
+            _this.getList()
+            $('#view').modal('hide')
           }else{
             alert(re.rspHead.retMsg)
           }
 
-
-          $('#绑定新商户').modal('show')
-
-        }
-      })
-
-    },
-
-    getLV2: function(fid, clean_lv2){
-
-      // console.log(this.view.一级代理)
-
-      if ( clean_lv2 != undefined ){
-        this.view.secondAgentId = ''
-      }
-
-      //上级代理商
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
         },
-        reqBody: {
-          agentId: fid
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/getSecondAgent/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.上级代理商.lv2 = re.rspBody.secondAgentList
-
-        }
       })
 
     },
@@ -936,36 +856,20 @@ var app = new Vue({
     }
 
 
-    if(this.admin.type == 2){
-      var url = '../../db/menu-mp-agent.json'
-    }else if(this.admin.type == 4){
-      var url = '../../db/menu-mp-sale-group.json'
-    }else{
-      var url = '../../db/menu-mp.json'
-    }
-
-
     // 侧栏菜单
-    $.ajax({
+/*    $.ajax({
       type: 'GET',
-      url: url,
-      //url: 'http://192.168.199.196:8692/token/generate',
+      url: '../../db/menu-manager.json',
       dataType: 'json',
-      beforeSend: function(request){
-        //request.setRequestHeader("token", _this.admin.token)
-      },
       success: function(re){
 
-        // $.cookie('token', re.data.token);
-
-        // re.data.info.token = re.data.token
-        // LS.admin = JSON.stringify(re.data.info)
-
         _this.sidemenu = re
-        //console.log(_this.sidemenu)
 
       }
-    })
+    })*/
+
+    this.sidemenu = JSON.parse(LS.menu)
+    // console.log(this.sidemenu)
 
 
     // 显示主体
@@ -984,48 +888,6 @@ var app = new Vue({
 
     $('[data-toggle="tooltip"]').tooltip()
 
-
-    if(this.admin.roleFlag == '1'){//1级代理
-      this.list.post.agent1Id = this.admin.id
-    }
-    else if(this.admin.roleFlag == '2'){//1级代理
-      this.list.post.agent1Id = this.admin.parentAgentId
-      this.list.post.agent2Id = this.admin.id
-    }
-
-    var date = new Date(new Date().getTime() - 2592000000)
-
-    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1))
-
-
-    //上级代理商
-    var data = {
-      "reqHead":
-      {
-        clientType: 1,
-        format: "json",
-        version: "1.0",
-        sign: "30C7398578F1F7C995BAF67D18F89B33"
-      },
-      reqBody: {
-        agentId: this.admin.id
-      }
-    }
-
-    $.ajax({
-      type: 'POST',
-      url: mp_api + 'mp/getSecondAgent/interface',
-      data: JSON.stringify(data),
-      dataType: 'json',
-      beforeSend: function(request){
-        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-      },
-      success: function(re){
-
-        _this.上级代理商.lv2 = re.rspBody.secondAgentList
-
-      }
-    })
 
     this.getList()
 

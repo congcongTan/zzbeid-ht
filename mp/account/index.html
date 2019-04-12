@@ -48,7 +48,7 @@
         </div>
       </div>
 
-      <div class="form-group">
+<!--       <div class="form-group">
         <label class="col-sm-3 control-label">登录角色</label>
         <div class="col-sm-9">
           <label>
@@ -63,7 +63,7 @@
             <input type="radio" value="4" v-model="account.type"> 营销组
           </label>
         </div>
-      </div>
+      </div> -->
 
       <div class="form-group">
         <div class="col-sm-9 col-sm-offset-3">
@@ -161,7 +161,7 @@ var app = new Vue({
     account: {
       // account: "6104040759",
       // password: "123456",
-      type: 2,
+      // type: 2,
     },
 
   },
@@ -415,7 +415,6 @@ var app = new Vue({
       $.ajax({
         type: 'POST',
         url: mp_api + 'mp/tokenGenerate/interface',
-        // url: 'http://mp.stage.zzbeid.cn/zzb/mp/tokenGenerate/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         success: function(re){
@@ -424,8 +423,16 @@ var app = new Vue({
             alert(re.rspHead.retMsg)
           }else{
 
+            //装埋入去
+            re.rspBody.adminResponseInfoDTO.token = re.rspBody.token
+
+            //变短变量名
+            var data1 = re.rspBody.adminResponseInfoDTO
+
+            // _this.save(re.rspBody.adminResponseInfoDTO)
+
             //有老豆信息
-            if(0){
+            if(data1.roleFlag == 2){
 
               var data = {
                 reqHead: {
@@ -435,13 +442,13 @@ var app = new Vue({
                   sign: "4600D5BC2AACE2929E9CEBB44121B8CF"
                 },
                 reqBody: {
-                  parentId: re.rspBody.adminResponseInfoDTO.agent1Id
+                  agentId: data1.primaryAccountId
                 }
               }
 
               $.ajax({
                 type: 'POST',
-                url: mp_api + 'mp/getFirstAgent/interface',
+                url: mp_api + 'mp/getParentAgent/interface',
                 data: JSON.stringify(data),
                 dataType: 'json',
                 beforeSend: function(request){
@@ -449,17 +456,21 @@ var app = new Vue({
                 },
                 success: function(re2){
 
-                  // return
+                  if(re2.rspHead.retCode != 1){
+                    alert(re2.rspHead.retMsg)
+                  }else{
 
-                  re.rspBody.adminResponseInfoDTO.parentId = re2.rspBody.agentId
-                  re.rspBody.adminResponseInfoDTO.parentUser = re2.rspBody.title
-                  _this.save(re.rspBody.adminResponseInfoDTO, re.rspBody.token)
+                    //变短变量名
+                    var data2 = re2.rspBody
+
+                    _this.save(data1, data2)
+                  }
 
                 }
               })
             }else{
 
-              _this.save(re.rspBody.adminResponseInfoDTO, re.rspBody.token)
+              _this.save(data1)
 
             }
 
@@ -469,23 +480,28 @@ var app = new Vue({
       })
 
     },
-    save: function(data, token){
+    save: function(data, data2){
 
-      // console.log(data)
+      // console.log('data1', data)
+      // console.log('data2', data2)
       // return
 
-      var admin = {}
-      admin.id = data.adminId
-      admin.user = data.account
-      admin.type = data.type
-      admin.lv = data.agent1Id == 0 ? '1':'2'
-      admin.parentId = data.parentId
-      admin.parentUser = data.parentUser
-      admin.token = token
+      // var admin = {}
+      var admin = data
+      admin.id = admin.primaryAccountId
+      admin.user = admin.primaryAccountName
+      admin.type = admin.roleFlag
+
+      if(data2 != undefined){
+        admin.parentAgentId = data2.parentAgentId
+        admin.parentAgentTitle = data2.parentAgentTitle
+      }
+
       admin.expire = new Date().getTime() + (180 * 60 * 1000)
       LS.admin = JSON.stringify(admin)
+      // console.log(admin)
 
-      return
+      // return
 
       if(admin.type == 1){
         location.href = '../index/index.html'
