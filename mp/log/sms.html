@@ -111,7 +111,8 @@
 
             <li :class="{'treeview': v2.children.length != 0, 'active': v2.title_en == mca.a}" v-for="(v2, i2) in v.children">
 
-              <a :href="`../${v2.url == '#' ? v2.url : v2.url + '.html'}`">
+              <a :href="`../${v2.url == '#' ? v2.url : v2.url + '.html'}`"
+              v-if="admin.isPrimaryAccount != 1 && v2.title != '员工账号'">
                 <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
                 <span class="pull-right-container" v-if="v2.children.length != 0">
                   <i class="fa fa-angle-left pull-right"></i>
@@ -873,7 +874,23 @@ var app = new Vue({
         // LS.admin = JSON.stringify(re.data.info)
 
         _this.sidemenu = re
-        //console.log(_this.sidemenu)
+/*        console.log(_this.sidemenu)
+
+        if(_this.admin.isPrimaryAccount != 1){
+          // console.log('我不是主帐户')
+
+          for(var i in _this.sidemenu){
+            var v = _this.sidemenu[i]
+
+            if(v.title == '客服管理'){
+
+              console.log(v)
+              delete _this.sidemenu[i]
+              break
+
+            }
+          }
+        }*/
 
       }
     })
