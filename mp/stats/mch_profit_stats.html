@@ -194,7 +194,10 @@
                         <option :value="`${admin.id}`" selected>{{admin.user}}</option>
                       </select>
                       <select class="form-control" v-if="admin.type == '2'" v-model="list.post.agent1Id" disabled>
-                        <option :value="`${admin.parentAgentId}`" selected>{{admin.parentAgentTitle}}</option>
+                        <option :value="`${admin.primaryAccountId}`" selected>{{admin.primaryAccountName}}</option>
+                      </select>
+                      <select class="form-control" v-if="admin.type == '3'" v-model="list.post.agent1Id">
+                        <option :value="`${admin.primaryAccountId}`" selected>{{admin.primaryAccountName}}</option>
                       </select>
                     </div>
                     <div class="col-sm-3">
@@ -203,6 +206,9 @@
                         <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
                       </select>
                       <select class="form-control" v-if="admin.type == '2'" v-model="list.post.agent2Id" disabled>
+                        <option :value="`${admin.id}`" selected>{{admin.user}}</option>
+                      </select>
+                      <select class="form-control" v-if="admin.type == '3'" v-model="list.post.agent2Id">
                         <option :value="`${admin.id}`" selected>{{admin.user}}</option>
                       </select>
                     </div>
