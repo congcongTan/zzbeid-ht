@@ -206,7 +206,8 @@
                             <i v-if="v.childMenuList == null" :class="`fa fa-square-o`"></i>
                             <i v-if="v.childMenuList != null" :class="`fa fa-${v.open == 1 ? 'minus':'plus'}-square-o`"></i>
                           </a>
-                        </div>{{v.title}}
+                        </div>
+                        {{v.title}} {{v.id}}
                       </td>
                       <td>{{v.sort}}</td>
                       <td>{{类型[v.menuType]}}</td>
@@ -220,7 +221,15 @@
                     </tr>
                     <template v-if="v.open === 1" v-for="(v2, i2) in v.childMenuList">
                       <tr>
-                        <td><div class="fl ml20 w20"><i :class="`fa fa-square-o`"></i></div>{{v2.title}}</td>
+                        <td>
+                          <div class="fl ml20 w20">
+                            <a href="javascript:;" @click="open(v2.id)">
+                              <i v-if="v2.childMenuList == null" :class="`fa fa-square-o`"></i>
+                              <i v-if="v2.childMenuList != null" :class="`fa fa-${v2.open == 1 ? 'minus':'plus'}-square-o`"></i>
+                            </a>
+                          </div>
+                          {{v2.title}} {{v2.id}}
+                        </td>
                         <td>{{v2.sort}}</td>
                         <td>{{类型[v2.menuType]}}</td>
                         <td>{{v2.href}}</td>
@@ -231,6 +240,20 @@
                           <a class="btn btn-xs btn-danger" @click="del(v2.id)">删除</a>
                         </td>
                       </tr>
+                      <template v-if="v2.open === 1" v-for="(v3, i3) in v2.childMenuList">
+                        <tr>
+                          <td><div class="fl ml40 w20"><i :class="`fa fa-square-o`"></i></div>{{v3.title}}</td>
+                          <td>{{v3.sort}}</td>
+                          <td>{{类型[v3.menuType]}}</td>
+                          <td>{{v3.href}}</td>
+                          <td>{{v3.perms}}</td>
+                          <td>{{状态[v3. status]}}</td>
+                          <td class="text-nowrap">
+                            <a class="btn btn-xs btn-primary" @click="getView(v3.id)">编辑</a>
+                            <a class="btn btn-xs btn-danger" @click="del(v3.id)">删除</a>
+                          </td>
+                        </tr>
+                      </template>
                     </template>
                   </template>
                   <tr v-if="list.data.length == 0">
@@ -593,11 +616,6 @@ var app = new Vue({
       3: '功能',
     },
 
-    状态: {
-      1: '可用',
-      2: '不可用',
-    },
-
     上级菜单: [],
 
   },
@@ -760,6 +778,11 @@ var app = new Vue({
           //初始化开关状态，必需
           for(var i in re.rspBody.menuList){
             re.rspBody.menuList[i]['open'] = 0
+
+            for(var i2 in re.rspBody.menuList[i]['childMenuList']){
+              re.rspBody.menuList[i]['childMenuList'][i2]['open'] = 0
+
+            }
           }
 
           _this.list.data = re.rspBody.menuList
@@ -798,6 +821,7 @@ var app = new Vue({
       for(var i in this.list.data){
         var v = this.list.data[i]
 
+        //lv1
         if(v['id'] == id){
           if(v['open'] == 1){
             this.list.data[i]['open'] = 0
@@ -805,9 +829,25 @@ var app = new Vue({
             this.list.data[i]['open'] = 1
           }
 
-          // console.log(this.list.data[i])
-
+          // console.log('lv1找到了', i)
           break
+        }
+
+        for(var i2 in v.childMenuList){
+          var v2 = v.childMenuList[i2]
+
+          //lv2
+          if(v2['id'] == id){
+            if(v2['open'] == 1){
+              this.list.data[i].childMenuList[i2].open = 0
+            }else{
+              this.list.data[i].childMenuList[i2].open = 1
+            }
+
+            // console.log('lv2找到了', i + '-' + i2)
+            break
+          }
+
         }
 
       }
@@ -818,6 +858,8 @@ var app = new Vue({
 
       //上级菜单
       this.上级菜单 = []//清空
+
+
       for(var i in this.list.data){
         var v = this.list.data[i]
 
@@ -826,6 +868,17 @@ var app = new Vue({
           'id': v.id,
           'title': v.title
         })
+
+        for(var i2 in v['childMenuList']){
+          var v2 = v['childMenuList'][i2]
+
+          //lv2
+          this.上级菜单.push({
+            'id': v2.id,
+            'title': '　' + v2.title
+          })
+
+        }
 
       }
 

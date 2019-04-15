@@ -568,11 +568,6 @@ var app = new Vue({
 
     菜单: {},
 
-    状态: {
-      1: '可用',
-      2: '不可用',
-    },
-
   },
   methods: {
     checkAll: function(){
@@ -856,9 +851,31 @@ var app = new Vue({
 
             menu.push(data)
 
+            //LV3
+            pId3 = v2.id
+            for(var i3 in v2.childMenuList){
+              var v3 = v2.childMenuList[i3]
+              // id++
+
+              var data = {}
+              data.id = v3.id
+              data.pId = pId3
+              data.name = v3.title
+              data.open = true
+
+              // 选中
+              if(menu_checked.indexOf(v3.id) != -1){
+                data.checked = true
+              }
+
+              menu.push(data)
+
+            }
+
           }
 
         }
+        // console.log(menu)
 
 
         $.fn.zTree.init($("#zTree_role"), setting, menu);
@@ -952,6 +969,27 @@ var app = new Vue({
               }
 
               menu.push(data)
+
+              //LV3
+              pId3 = v2.id
+              for(var i3 in v2.childMenuList){
+                var v3 = v2.childMenuList[i3]
+                // id++
+
+                var data = {}
+                data.id = v3.id
+                data.pId = pId3
+                data.name = v3.title
+                data.open = true
+
+                // 选中
+                if(menu_checked.indexOf(v3.id) != -1){
+                  data.checked = true
+                }
+
+                menu.push(data)
+
+              }
 
             }
 
