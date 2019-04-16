@@ -173,9 +173,9 @@
             <div class="tab-content">
               <div class="tab-pane" id="操作">
 
-                <a class="btn btn-sm btn-danger" @click="del()">删除</a>
+                <a class="btn btn-sm btn-danger" v-if="权限.indexOf('del') != -1" @click="del()">删除</a>
 
-                <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
+                <a class="btn btn-sm btn-primary" v-if="权限.indexOf('add') != -1" @click="getView(-1)">新增</a>
 
               </div>
               <div class="tab-pane active" id="搜索">
@@ -217,7 +217,7 @@
                     <td>{{v.poundage}}</td>
                     <td>{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
+                      <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="getView(v.id)">编辑</a><br>
                       <!-- <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br> -->
                     </td>
                   </tr>
@@ -989,7 +989,7 @@ var app = new Vue({
 
     //本页有无权进入
     if(!enter){
-      alert('你无权方问本页面')
+      alert('你无权访问本页面')
     }
 
 
