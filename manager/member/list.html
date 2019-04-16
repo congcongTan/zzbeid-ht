@@ -245,7 +245,7 @@
                     <td>{{认证状态[v.isAuthentication]}}</td>
                     <td>{{账号锁定[v.isLock]}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" :href="`integral.html?id=${v.memberId}`">积分明细</a><br>
+                      <a class="btn btn-xs btn-primary" :href="`integral.html?id=${v.memberId}`" v-if="权限.indexOf('edit') != -1">积分明细</a><br>
 
                       <a :class="`btn btn-xs btn-${v.isLock == 0 ? 'success':'warning'}`" v-if="权限.indexOf('edit') != -1" @click="lock(v.memberId, v.isLock)">{{v.isLock == 0 ? '锁定':'解锁'}}</a><br>
 
