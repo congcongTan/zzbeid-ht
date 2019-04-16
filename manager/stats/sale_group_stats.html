@@ -853,7 +853,12 @@ var app = new Vue({
 
 
     //本页有无权进入
-    if(!enter && this.mca.c != 'index'){
+    if(
+        !( enter
+          || (this.mca.c == 'index') //首页
+          || (this.mca.c == 'member' && this.mca.a == 'integral' )
+        )
+      ){
       alert('你无权访问本页面')
     }
 
