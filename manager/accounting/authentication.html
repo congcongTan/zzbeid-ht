@@ -118,15 +118,15 @@
           </a>
           <ul class="treeview-menu" v-if="v.menuList.length != 0">
 
-            <li :class="{'treeview': v2.menuList != null, 'active': v2.perms == mca.a}" v-for="(v2, i2) in v.menuList">
+            <li :class="{'active': v2.perms == mca.a}" v-for="(v2, i2) in v.menuList">
 
               <a :href="`../${v2.href == '#' ? v2.href : v2.href + '.html'}`">
                 <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
-                <span class="pull-right-container" v-if="v2.menuList != null">
+<!--                 <span class="pull-right-container" v-if="v2.menuList != null">
                   <i class="fa fa-angle-left pull-right"></i>
-                </span>
+                </span> -->
               </a>
-              <ul class="treeview-menu" v-if="v2.menuList != null">
+<!--               <ul class="treeview-menu" v-if="v2.menuList != null">
 
                 <li v-for="(v3, i3) in v2.menuList">
                   <a :href="`../${v3.url == '#' ? v3.url : v3.url + '.html'}`">
@@ -134,7 +134,7 @@
                   </a>
                 </li>
 
-              </ul>
+              </ul> -->
             </li>
 
           </ul>
@@ -794,10 +794,6 @@ var app = new Vue({
       }
     })*/
 
-    this.sidemenu = JSON.parse(LS.menu)
-    // console.log(this.sidemenu)
-
-
     // 显示主体
     $('#loading').hide()
     $('#app').show()
@@ -809,6 +805,30 @@ var app = new Vue({
       c: decodeURI(tmp[2]),
       a: decodeURI(tmp[3].split('.html')[0]),
     }
+
+    //菜单
+    this.sidemenu = JSON.parse(LS.menu)
+    // console.log(this.sidemenu)
+
+    //当前页面权限
+    for(var i in this.sidemenu){
+      var v = this.sidemenu[i]
+
+      //lv1不是飞掉
+      if(v.perms != this.mca.c)continue
+
+      for(var i2 in v.menuList){
+        var v2 = v.menuList[i2]
+
+        //lv2找到
+        if(v2.perms == this.mca.a){
+          console.log(v2.perms)
+        }
+
+
+      }
+    }
+
 
     // console.log(this.mca)
 
