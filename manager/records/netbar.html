@@ -459,7 +459,12 @@ var app = new Vue({
 
 	view: {},
 
-  权限: '',
+	权限: '',
+
+	上架渠道:{
+		1:'中证宝',
+		2:'旺宝'
+	},
 
 	行业:{
 		1:'旅馆',
@@ -809,12 +814,14 @@ var app = new Vue({
 
       //lv1找到
       if(v.perms == this.mca.c){
+        // console.log('lv1', v.perms)
 
         for(var i2 in v.menuList){
           var v2 = v.menuList[i2]
 
           //lv2找到
           if(v2.perms == this.mca.a){
+            // console.log('lv2', v2.perms)
             // console.log(v2.menuList)
 
             // this.权限 += 'enter,'
@@ -841,7 +848,7 @@ var app = new Vue({
 
 
     //本页有无权进入
-    if(!enter){
+    if(!enter && this.mca.c != 'index'){
       alert('你无权访问本页面')
     }
 
