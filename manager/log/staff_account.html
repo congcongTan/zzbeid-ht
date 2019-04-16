@@ -495,8 +495,8 @@ var app = new Vue({
   el: '#app',
   data: {
 	mca: {},
-    admin: {},
-    sidemenu: {},
+	admin: {},
+	sidemenu: {},
 
 	list: {},
 	// page: {},
@@ -504,6 +504,8 @@ var app = new Vue({
 	ids_all: [],
 
 	view: {},
+
+  权限: '',
 
 	行业:{
 		1:'旅馆',
@@ -522,53 +524,53 @@ var app = new Vue({
 		5:'龙管家'
 	},
 
-    接口类型: {
-      1: '公安部',
-      2: '海鑫',
-      3: '国政通',
-      4: '上海爱金'
-    },
+	接口类型: {
+		1:'公安部',
+		2:'海鑫',
+		3:'国政通',
+		4:'上海爱金'
+	},
 
-    接口版本: {
-      1: '标准版',
-      2: '简化版'
-    },
+	接口版本: {
+		1:'标准版',
+		2:'简化版'
+	},
 
-    行业软件: {
-      1: '佳星',
-      2: '万象',
-      3: '湖南万象(斯雨)',
-      4: '云辰',
-      5: '龙管家',
-      10000: '中证宝酒店',
-      10001: '优速酒店',
-      10002: '千里马酒店',
-    },
+	行业软件: {
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家',
+		10000:'中证宝酒店',
+		10001:'优速酒店',
+		10002:'千里马酒店',
+	},
 
-    状态: {
-      1: '可用',
-      2: '不可用'
-    },
+	状态: {
+		1:'可用',
+		2:'不可用'
+	},
 
-    是否加密: {
-      0: '否',
-      1: '是'
-    },
+	是否加密: {
+		0:'否',
+		1:'是'
+	},
 
-    同步模式: {
-      1: '在线（云服务器）',
-      2: 'xml文件（铃铛）',
-      3: '本地数据库（LockSend）'
-    },
+	同步模式: {
+		1:'在线（云服务器）',
+		2:'xml文件（铃铛）',
+		3:'本地数据库（LockSend）'
+	},
 
-    分成基数: {
-      1: '月消费总积分（对冲退款）',
-      // 2: '日均消费总积分（对冲退款）'
-    },
+	分成基数: {
+		1:'月消费总积分（对冲退款）',
+		// 2:'日均消费总积分（对冲退款）'
+	},
 
-    分成模式: {
-      1: '阶梯式累计分成'
-    },
+	分成模式: {
+		1:'阶梯式累计分成'
+	},
 
 
     list: {
@@ -885,22 +887,46 @@ var app = new Vue({
     // console.log(this.sidemenu)
 
     //当前页面权限
+    var enter = 0 //本页可否进入
     for(var i in this.sidemenu){
       var v = this.sidemenu[i]
 
-      //lv1不是飞掉
-      if(v.perms != this.mca.c)continue
+      //lv1找到
+      if(v.perms == this.mca.c){
 
-      for(var i2 in v.menuList){
-        var v2 = v.menuList[i2]
+        for(var i2 in v.menuList){
+          var v2 = v.menuList[i2]
 
-        //lv2找到
-        if(v2.perms == this.mca.a){
-          console.log(v2.perms)
+          //lv2找到
+          if(v2.perms == this.mca.a){
+            // console.log(v2.menuList)
+
+            // this.权限 += 'enter,'
+            enter = 1 //本页可否进入 可以
+
+            for(var i3 in v2.menuList){
+              var v3 = v2.menuList[i3]
+
+              //menu:add 只要 add
+              var tmp = v3.perms.split(':')
+
+              this.权限 += tmp[1] + ','
+
+            }
+
+            break
+          }
         }
 
-
+        break
       }
+    }
+    console.log('权限', this.权限)
+
+
+    //本页有无权进入
+    if(!enter){
+      alert('你无权方问本页面')
     }
 
 
