@@ -217,7 +217,7 @@
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
-                    <td>{{{1:'安卓',2:'IOS'}[v.type]}}</td>
+                    <td>{{app系统[v.type]}}</td>
                     <td>{{v.versionCode}}</td>
                     <td>{{v.versionName}}</td>
                     <td>{{app类型[v.clientType]}}</td>
@@ -260,39 +260,12 @@
             <form class="form-horizontal">
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">行业</label>
+                <label class="col-sm-3 control-label">类型</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="行业[view.industryId]" disabled>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">软件版本</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="软件版本[view.softwareVersion]" disabled>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">IP</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.mqIp" disabled>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">端口</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.mqPort" disabled>
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">商户账号</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.account">
+                  <select class="form-control" v-model="view.type">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in app系统">{{v}}</option>
+                  </select>
                 </div>
                 <div class="col-sm-5 mt5 text-danger">
                   *
@@ -300,12 +273,67 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">商户密码</label>
+                <label class="col-sm-3 control-label">APP类型</label>
                 <div class="col-sm-4">
-                  <input type="password" class="form-control input-sm" id="password">
+                  <select class="form-control" v-model="view.clientType">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in app类型">{{v}}</option>
+                  </select>
                 </div>
-                <div class="col-sm-5 text-danger mt5">
+                <div class="col-sm-5 mt5 text-danger">
                   *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">版本名称</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.versionName">
+                </div>
+                <div class="col-sm-5 mt5 text-danger">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">版本号</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.versionCode">
+                </div>
+                <div class="col-sm-5 mt5 text-danger">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">强制更新</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.isForceUpdate">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 是否">{{v}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-5 mt5 text-danger">
+                  *
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">安卓下载地址</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.downloadUrl">
+                </div>
+                <div class="col-sm-5 mt5 text-danger">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">版本内容</label>
+                <div class="col-sm-9">
+                  <textarea class="form-control input-sm" v-model="view.updateContent"></textarea>
                 </div>
               </div>
 
@@ -482,6 +510,11 @@ var app = new Vue({
 	view: {},
 
 	权限: '',
+
+	app系统:{
+		1:'安卓',
+		2:'IOS'
+	},
 
 	app类型:{
 		1:'中证宝APP',
@@ -792,7 +825,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getCooperateSetInfo/interface',
+        url: manager_api + 'manager/getAppVersion/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -811,12 +844,6 @@ var app = new Vue({
 
     saveView: function(){
 
-      if($('#password').val() != ''){
-        this.view.password = $('#password').val()
-      }else{
-        delete this.view.password
-      }
-
       var data = {
         "reqHead":
         {
@@ -832,7 +859,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/' + add_or_edit + 'CooperateSet/interface',
+        url: manager_api + 'manager/' + add_or_edit + 'AppVersion/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
