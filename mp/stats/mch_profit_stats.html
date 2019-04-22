@@ -187,7 +187,7 @@
                     </div>
                   </div>
 
-                  <div class="form-group">
+                  <div class="form-group" v-if="admin.roleFlag == 1 || admin.roleFlag == 2">
                     <label class="col-sm-2 control-label">代理商</label>
                     <div class="col-sm-3">
                       <select class="form-control" v-if="admin.roleFlag == 1" v-model="list.post.agent1Id" disabled>
@@ -196,9 +196,6 @@
                       <select class="form-control" v-if="admin.roleFlag == 2" v-model="list.post.agent1Id" disabled>
                         <option :value="`${admin.parentAgentId}`" selected>{{admin.parentAgentTitle}}</option>
                       </select>
-                      <select class="form-control" v-if="admin.roleFlag == 3" v-model="list.post.agent1Id">
-                        <option :value="`${admin.parentAgentId}`" selected>{{admin.primaryAccountName}}</option>
-                      </select>
                     </div>
                     <div class="col-sm-3">
                       <select class="form-control" v-if="admin.roleFlag == 1" v-model="list.post.agent2Id">
@@ -206,10 +203,7 @@
                         <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
                       </select>
                       <select class="form-control" v-if="admin.roleFlag == 2" v-model="list.post.agent2Id" disabled>
-                        <option :value="`${admin.id}`" selected>{{admin.user}}</option>
-                      </select>
-                      <select class="form-control" v-if="admin.roleFlag == 3" v-model="list.post.agent2Id">
-                        <option :value="`${admin.id}`" selected>{{admin.user}}</option>
+                        <option :value="`${admin.id}`" selected>{{admin.primaryAccountName}}</option>
                       </select>
                     </div>
                   </div>
