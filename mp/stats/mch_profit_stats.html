@@ -191,7 +191,7 @@
                     <label class="col-sm-2 control-label">代理商</label>
                     <div class="col-sm-3">
                       <select class="form-control" v-if="admin.roleFlag == 1" v-model="list.post.agent1Id" disabled>
-                        <option :value="`${admin.id}`" selected>{{admin.user}}</option>
+                        <option :value="`${admin.id}`" selected>{{admin.primaryAccountName}}</option>
                       </select>
                       <select class="form-control" v-if="admin.roleFlag == 2" v-model="list.post.agent1Id" disabled>
                         <option :value="`${admin.parentAgentId}`" selected>{{admin.parentAgentTitle}}</option>

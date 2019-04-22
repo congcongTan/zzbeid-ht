@@ -346,7 +346,7 @@
                 <label class="col-sm-3 control-label">上级代理商</label>
                 <div class="col-sm-4">
                   <select class="form-control" v-if="admin.roleFlag == 1" disabled>
-                    <option selected>{{admin.user}}</option>
+                    <option selected>{{admin.primaryAccountName}}</option>
                   </select>
                   <select class="form-control" v-if="admin.roleFlag != 1" disabled>
                     <option selected>{{admin.parentAgentTitle}}</option>
