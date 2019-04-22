@@ -294,7 +294,11 @@
 
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
+                        查找
+                        <i class="fa fa-spinner fa-pulse" v-if="list.loading == 1"></i>
+                      </button>
+
                       <button class="btn btn-default" onclick="app.导出(this)">导出 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
                     </div>
                   </div>
@@ -739,6 +743,13 @@ var app = new Vue({
 
       _this = this
 
+      if(this.list.loading == 1){
+        return
+      }
+
+      //loading
+      this.list.loading = 1
+
       //这里用v-model会有大坑
       this.list.post.statisticalDateStart = $('#startTime').val()
       this.list.post.statisticalDateEnd = $('#endTime').val()
@@ -782,6 +793,9 @@ var app = new Vue({
         dataType: 'json',
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        complete: function(){
+          _this.list.loading = 0
         },
         success: function(re){
 
@@ -985,7 +999,7 @@ var app = new Vue({
     $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate())
     $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate())
 
-    this.getList()
+    // this.getList()
 
   }
 })
