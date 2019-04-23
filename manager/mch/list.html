@@ -1850,7 +1850,7 @@ var app = new Vue({
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
-        complete: function(obj){
+        complete: function(){
           $(obj).prop('disabled', false)
           $(obj).children('i').hide()
         },
