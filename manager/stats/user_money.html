@@ -299,7 +299,10 @@
                         <i class="fa fa-spinner fa-pulse" v-if="list.loading == 1"></i>
                       </button>
 
-                      <button class="btn btn-default" onclick="app.导出(this)">导出 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
+                      <button class="btn btn-default" onclick="app.导出(this)">
+                        导出
+                        <i class="fa fa-spinner fa-spin" style="display: none"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -619,6 +622,7 @@ var app = new Vue({
       },
       info: {},
       page: {},
+      loading: 0,
       checkbox: {
         all: [],
         checked: [],
