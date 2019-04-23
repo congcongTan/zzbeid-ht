@@ -245,10 +245,20 @@
                   </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
+                        查找
+                        <i class="fa fa-spinner fa-spin" v-if="list.loading == 1"></i>
+                      </button>
 
-                      <a class="btn btn-default" v-if="权限.indexOf('export') != -1" @click="导出excel()">导出</a>
-                      <a class="btn btn-default" v-if="权限.indexOf('export') != -1" @click="批量下载商户二维码()">批量下载商户二维码</a>
+                      <a class="btn btn-default" v-if="权限.indexOf('export') != -1" onclick="app.导出excel(this)">
+                        导出
+                        <i class="fa fa-spinner fa-spin" style="display: none"></i>
+                      </a>
+
+                      <a class="btn btn-default" v-if="权限.indexOf('export') != -1" onclick="app.批量下载商户二维码(this)">
+                        批量下载商户二维码
+                        <i class="fa fa-spinner fa-spin" style="display: none"></i>
+                      </a>
 
                     </div>
                   </div>
@@ -992,6 +1002,7 @@ var app = new Vue({
       },
       info: {},
       page: {},
+      loading: 0,
       checkbox: {
         all: [],
         checked: [],
@@ -1133,6 +1144,8 @@ var app = new Vue({
         alert('没有搜索权限')
       }
 
+      this.list.loading = 1
+
       _this = this
 
       if(key == 'page'){
@@ -1173,6 +1186,9 @@ var app = new Vue({
         dataType: 'json',
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        complete: function(){
+          _this.list.loading = 0
         },
         success: function(re){
 
@@ -1808,7 +1824,10 @@ var app = new Vue({
 
     },
 
-    导出excel: function(){
+    导出excel: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
 
       var _this = this
 
@@ -1830,6 +1849,10 @@ var app = new Vue({
         dataType: 'json',
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        complete: function(obj){
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
         },
         success: function(re){
 
@@ -1873,7 +1896,10 @@ var app = new Vue({
 
     },
 
-    批量下载商户二维码: function(){
+    批量下载商户二维码: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
 
       var data = {
         "reqHead":
@@ -1893,6 +1919,10 @@ var app = new Vue({
         dataType: 'json',
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        complete: function(){
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
         },
         success: function(re){
 

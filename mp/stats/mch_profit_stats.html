@@ -852,10 +852,11 @@ var app = new Vue({
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
-        success: function(re){
-
+        complete: function(obj){
           $(obj).prop('disabled', false)
           $(obj).children('i').hide()
+        },
+        success: function(re){
 
           if(re.rspHead.retCode == 1){
             location.href = re.rspBody.file
