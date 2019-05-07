@@ -248,7 +248,7 @@
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td>{{v.memberName}}</td>
-                    <td>{{v.mobile}}</td>
+                    <td>{{v.mobile.substr(0, 3)}}****{{v.mobile.substr(7, 4)}}</td>
                     <td>{{v.mchName}}</td>
                     <td>{{v.changeIntegral}}</td>
                     <td>{{v.payTypeTitle}}</td>
