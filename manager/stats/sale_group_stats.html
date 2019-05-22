@@ -690,6 +690,7 @@ var app = new Vue({
           var total = {
             lowestConsumeNum: '总计',
             consumeNum: 0,
+            overflowNum: 0,
             poundage: '-',
             mchDivideIntegral: 0,
             collectDivideIntegral: 0,
@@ -702,6 +703,7 @@ var app = new Vue({
 
             // console.log(v)
             total.consumeNum += v.consumeNum
+            total.overflowNum += v.overflowNum
             total.mchDivideIntegral += v.mchDivideIntegral
             total.collectDivideIntegral += v.collectDivideIntegral
             total.salesDivideIntegral += v.salesDivideIntegral
@@ -709,6 +711,7 @@ var app = new Vue({
           }
 
           total.consumeNum = total.consumeNum.toFixed(2)
+          total.overflowNum = total.overflowNum.toFixed(2)
           total.mchDivideIntegral = total.mchDivideIntegral.toFixed(2)
           total.collectDivideIntegral = total.collectDivideIntegral.toFixed(2)
           total.salesDivideIntegral = total.salesDivideIntegral.toFixed(2)
