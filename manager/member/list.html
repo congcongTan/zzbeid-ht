@@ -226,6 +226,7 @@
                     <th>积分</th>
                     <th>imei</th>
                     <th>认证状态</th>
+                    <th>来源</th>
                     <th>账号锁定</th>
                     <th width="1%">操作</th>
                   </tr>
@@ -243,6 +244,7 @@
                     <td>{{v.integral}}</td>
                     <td>{{v.mobileMact.substr(0,4)}}***</td>
                     <td>{{认证状态[v.isAuthentication]}}</td>
+                    <td>{{v.source}}</td>
                     <td>{{账号锁定[v.isLock]}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" :href="`integral.html?id=${v.memberId}`" v-if="权限.indexOf('edit') != -1">积分明细</a><br>
