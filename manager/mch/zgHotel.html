@@ -208,7 +208,6 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>ID</th>
                     <th>商户名称</th>
                     <th>商户编号</th>
                     <th>主数据库IP</th>
@@ -220,7 +219,6 @@
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.id}}</td>
                     <td>{{v.title}}</td>
                     <td>{{v.identifier}}</td>
                     <td>{{v.mainHost}}</td>
