@@ -339,7 +339,7 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">主数据库</label>
+                <label class="col-sm-3 control-label">主数据库名称</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="mainJson.datebase">
                 </div>
@@ -391,7 +391,7 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">副数据库</label>
+                <label class="col-sm-3 control-label">副数据库名称</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="standbyJson.datebase">
                 </div>
@@ -922,6 +922,10 @@ var app = new Vue({
           _this.view.id = id
           _this.view.title = title
           _this.view.identifier = identifier
+
+          if(_this.view.status == null){
+            _this.view.status = 1
+          }
 
           if(re.rspBody.mainJson != null){
             _this.mainJson = JSON.parse(re.rspBody.mainJson)
