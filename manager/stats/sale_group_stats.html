@@ -701,13 +701,22 @@ var app = new Vue({
           for ( var i in _this.list.data ){
             var v = _this.list.data[i]
 
+
             // console.log(v)
             total.consumeNum += v.consumeNum
             total.overflowNum += v.overflowNum
+
             total.mchDivideIntegral += v.mchDivideIntegral
+            v.mchDivideIntegral = v.mchDivideIntegral.toFixed(2)
+
             total.collectDivideIntegral += v.collectDivideIntegral
+            v.collectDivideIntegral = v.collectDivideIntegral.toFixed(2)
+
             total.salesDivideIntegral += v.salesDivideIntegral
+            v.salesDivideIntegral = v.salesDivideIntegral.toFixed(2)
+
             total.agent1ProfitIntegral += v.agent1ProfitIntegral
+            v.agent1ProfitIntegral = v.agent1ProfitIntegral.toFixed(2)
           }
 
           total.consumeNum = total.consumeNum.toFixed(2)
