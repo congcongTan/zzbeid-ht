@@ -707,24 +707,24 @@ var app = new Vue({
             total.overflowNum += v.overflowNum
 
             total.mchDivideIntegral += v.mchDivideIntegral
-            v.mchDivideIntegral = v.mchDivideIntegral.toFixed(2)
+            // v.mchDivideIntegral = v.mchDivideIntegral * 100
 
             total.collectDivideIntegral += v.collectDivideIntegral
-            v.collectDivideIntegral = v.collectDivideIntegral.toFixed(2)
+            // v.collectDivideIntegral = v.collectDivideIntegral.toFixed(2)
 
             total.salesDivideIntegral += v.salesDivideIntegral
-            v.salesDivideIntegral = v.salesDivideIntegral.toFixed(2)
+            // v.salesDivideIntegral = v.salesDivideIntegral.toFixed(2)
 
             total.agent1ProfitIntegral += v.agent1ProfitIntegral
-            v.agent1ProfitIntegral = v.agent1ProfitIntegral.toFixed(2)
+            v.agent1ProfitIntegral = (parseInt(v.agent1ProfitIntegral * 100 ) / 100).toFixed(2)
           }
 
           total.consumeNum = total.consumeNum.toFixed(2)
           total.overflowNum = total.overflowNum.toFixed(2)
-          total.mchDivideIntegral = total.mchDivideIntegral.toFixed(2)
-          total.collectDivideIntegral = total.collectDivideIntegral.toFixed(2)
-          total.salesDivideIntegral = total.salesDivideIntegral.toFixed(2)
-          total.agent1ProfitIntegral = total.agent1ProfitIntegral.toFixed(2)
+          total.mchDivideIntegral = (parseInt(total.mchDivideIntegral * 100 ) / 100).toFixed(2)
+          total.collectDivideIntegral = (parseInt(total.collectDivideIntegral * 100 ) / 100).toFixed(2)
+          total.salesDivideIntegral = (parseInt(total.salesDivideIntegral * 100 ) / 100).toFixed(2)
+          total.agent1ProfitIntegral = (parseInt(total.agent1ProfitIntegral * 100 ) / 100).toFixed(2)
 
           _this.list.data.push(total)
 
