@@ -648,6 +648,29 @@
                 </div>
               </div>
 
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">银联支付商户编号</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.unionPayMerchantCode">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">AppId</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.unionPayAppid">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">AppKey</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.unionPayAppkey">
+                </div>
+              </div>
+
             </form>
 
           </div>
@@ -990,6 +1013,23 @@ var app = new Vue({
 
 	分成模式: {
 		1:'阶梯式累计分成'
+	},
+
+	支付模式: {
+		0:'全部',
+		1:'电子现金',
+		2:'声波',
+		3:'NFC',
+		4:'扫码',
+		5:'手输',
+	},
+
+	支付状态: {
+		0:'未生成',
+		1:'已提交担保',
+		2:'担保完成',
+		3:'担保撤销',
+		4:'担保冲正'
 	},
 
 
