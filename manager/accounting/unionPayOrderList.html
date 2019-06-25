@@ -202,11 +202,21 @@
                   </div>
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">支付模式</label>
+                    <label class="col-sm-2 control-label">支付方式</label>
                     <div class="col-sm-3">
                       <select class="form-control" v-model="list.post.payModeNo">
                         <!-- <option value="">--请选择--</option> -->
-                        <option :value="`${i}`" v-for="(v, i) in 支付模式">{{v}}</option>
+                        <option :value="`${i}`" v-for="(v, i) in 支付方式">{{v}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">交易模式</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.dealMode">
+                        <option value="">--请选择--</option>
+                        <option :value="`${i}`" v-for="(v, i) in 交易模式">{{v}}</option>
                       </select>
                     </div>
                   </div>
@@ -267,6 +277,7 @@
                     <th>银联订单号</th>
                     <th>交易金额</th>
                     <th>实际支付金额</th>
+                    <th>交易模式</th>
                     <th>支付状态</th>
                     <th>发生时间</th>
                   </tr>
@@ -281,6 +292,7 @@
                     <td>{{v.orderId}}</td>
                     <td>{{v.transactionAmount/100}}</td>
                     <td>{{v.amount/100}}</td>
+                    <td>{{交易模式[v.dealMode]}}</td>
                     <td>{{支付状态[v.guaranteeStatus]}}</td>
                     <td>{{v.lastCompleteTime}}</td>
                   </tr>
@@ -583,7 +595,7 @@ var app = new Vue({
 		1:'阶梯式累计分成'
 	},
 
-	支付模式: {
+	支付方式: {
 		0:'全部',
 		1:'电子现金',
 		2:'声波',
@@ -592,12 +604,22 @@ var app = new Vue({
 		5:'手输',
 	},
 
+	交易模式: {
+		// 0:		'全部',
+		10001:	'担保',
+		10002:	'消费',
+	},
+
 	支付状态: {
 		0:'未生成',
 		1:'已提交担保',
 		2:'担保完成',
 		3:'担保撤销',
-		4:'担保冲正'
+		4:'担保冲正',
+		101:'支付',
+		102:'支付冲正',
+		103:'支付撤销',
+		104:'支付退款'
 	},
 
 
@@ -605,6 +627,7 @@ var app = new Vue({
       data: [],
       post: {
         payModeNo: 4,
+        dealMode: '',
         pageNum: 1,
         pageSize: 10,
         payType: 1
