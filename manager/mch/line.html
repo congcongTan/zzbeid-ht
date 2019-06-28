@@ -1223,6 +1223,11 @@ var app = new Vue({
 
     批量绑定商户: function(){
 
+      if(this.list.checkbox.checked.length == 0){
+        alert('至少勾选一条记录')
+        return
+      }
+
       //清除上次搜索条件
       this.list2.data = []
       this.list2.post = {
