@@ -174,7 +174,13 @@
               <div class="tab-pane active" id="操作">
 
                 <a class="btn btn-sm btn-primary" v-if="权限.indexOf('add') != -1" @click="getView(-1)">新增</a>
-                <a class="btn btn-sm btn-primary" v-if="权限.indexOf('add') != -1" @click="批量绑定商户()">批量绑定商户</a>
+
+                <a class="btn btn-sm btn-default" v-if="权限.indexOf('add') != -1" @click="批量绑定商户()">批量绑定商户</a>
+
+                <a class="btn btn-sm btn-default" onclick="app.批量下载充电二维码(this)">
+                  批量下载充电二维码
+                  <i class="fa fa-spinner fa-spin" style="display: none"></i>
+                </a>
 
               </div>
               <div class="tab-pane" id="搜索">
@@ -1351,6 +1357,47 @@ var app = new Vue({
           }
 
         },
+      })
+
+    },
+
+    批量下载充电二维码: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/downloadLineQrcodeZip/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        complete: function(){
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != 1){
+            alert(re.rspHead.retMsg)
+          }else{
+            location.href = re.rspBody.file
+          }
+
+        }
       })
 
     },
