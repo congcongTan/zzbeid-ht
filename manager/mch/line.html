@@ -226,7 +226,7 @@
                     <label class="col-sm-2 control-label">硬件厂商</label>
                     <div class="col-sm-3">
                       <select class="form-control" v-model="list.post.lineMode">
-                        <option value="">--请选择--</option>
+                        <option value="">--请选择--</option>                                                                                                                                                                               
                         <option :value="`${i}`" v-for="(v, i) in 硬件厂商">{{v}}</option>
                       </select>
                     </div>
@@ -1161,7 +1161,15 @@ var app = new Vue({
           }else if(i2 == 'val'){
 
             // 丢掉空的
-            if(key == '')continue;
+            if(key == '' && v2 != ''){
+              alert('第' + (Number(i) + 1) + '行充电时长不能为空')
+              return
+            }
+            if(key != '' && (v2 == '' || v2 == null || v2 == undefined) ){
+              alert('第' + (Number(i) + 1) + '行支付积分不能为空')
+              return
+            }
+            // console.log(key, v2)
 
             var push = {}
             push[key] = v2
@@ -1170,7 +1178,8 @@ var app = new Vue({
 
         }
       }
-      // console.log(priceJson);
+      // console.log(priceJson)
+      // return
 
       this.view.priceJson = JSON.stringify(priceJson)
 
