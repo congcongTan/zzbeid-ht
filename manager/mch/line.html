@@ -1161,6 +1161,7 @@ var app = new Vue({
           }else if(i2 == 'val'){
 
             // 丢掉空的
+            if(key == '' && v2 == '')continue
             if(key == '' && v2 != ''){
               alert('第' + (Number(i) + 1) + '行充电时长不能为空')
               return
