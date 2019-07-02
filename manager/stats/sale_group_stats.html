@@ -483,6 +483,7 @@ var app = new Vue({
 	},
 
 	行业软件: {
+		0:'无软件',
 		1:'佳星',
 		2:'万象',
 		3:'湖南万象(斯雨)',
@@ -736,13 +737,13 @@ var app = new Vue({
             total.overflowNum += v.overflowNum
 
             total.mchDivideIntegral += v.mchDivideIntegral
-            // v.mchDivideIntegral = v.mchDivideIntegral * 100
+            v.mchDivideIntegral = (parseInt(v.mchDivideIntegral * 100 ) / 100).toFixed(2)
 
             total.collectDivideIntegral += v.collectDivideIntegral
-            // v.collectDivideIntegral = v.collectDivideIntegral.toFixed(2)
+            v.collectDivideIntegral = (parseInt(v.collectDivideIntegral * 100 ) / 100).toFixed(2)
 
             total.salesDivideIntegral += v.salesDivideIntegral
-            // v.salesDivideIntegral = v.salesDivideIntegral.toFixed(2)
+            v.salesDivideIntegral = (parseInt(v.salesDivideIntegral * 100 ) / 100).toFixed(2)
 
             total.agent1ProfitIntegral += v.agent1ProfitIntegral
             v.agent1ProfitIntegral = (parseInt(v.agent1ProfitIntegral * 100 ) / 100).toFixed(2)
