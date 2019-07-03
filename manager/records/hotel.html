@@ -184,6 +184,22 @@
 
                 <div class="form-horizontal">
                   <div class="form-group">
+                    <label class="col-sm-2 control-label">统计日期</label>
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control datepicker2" id="startTime">
+                        </div>
+                        <div class="fl w20 mt8 tc">
+                          ~
+                        </div>
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control datepicker2" id="endTime">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
                     <label class="col-sm-2 control-label">商户</label>
                     <div class="col-sm-3">
                       <input type="text" class="form-control" v-model="list.post.title">
@@ -231,6 +247,8 @@
                     <th>民族</th>
                     <th>酒店</th>
                     <th>房号</th>
+                    <th>房型</th>
+                    <th>房价</th>
                     <th>当前状态</th>
                     <th>入住时间</th>
                     <th>退房时间</th>
@@ -247,6 +265,8 @@
                     <td>{{v.ethnic}}</td>
                     <td>{{v.title}}</td>
                     <td>{{v.roomNumber}}</td>
+                    <td>{{v.roomType}}</td>
+                    <td>{{v.roomPrice}}</td>
                     <td>{{房间状态[v.roomStats]}}</td>
                     <td>{{v.checkTime}}</td>
                     <td>{{v.outTime}}</td>
@@ -447,6 +467,9 @@
 
 <link rel="stylesheet" href="../../plugins/fancybox/fancybox.css">
 <script src="../../plugins/fancybox/fancybox.js"></script>
+
+<link rel="stylesheet" href="../../plugins/datepicker/datepicker.css">
+<script src="../../plugins/datepicker/datepicker.js"></script>
 
 <script>
 var app = new Vue({
@@ -912,11 +935,14 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    var date = new Date()
-    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
+    $('.datepicker2').datepicker({
+      format: "yyyy-mm-dd",
+    })
 
-    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01 00:00')
-    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date + ' 23:59')
+    var date = new Date()
+
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate())
+    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate())
 
     this.getList()
 
