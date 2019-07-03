@@ -265,13 +265,13 @@
                     <td>{{v.cardNo}}</td>
                     <td>{{性别[v.gender]}}</td>
                     <td>{{v.ethnic}}</td>
-                    <td>{{v.cardType}}</td>
+                    <td>{{证件类型[v.cardType]}}</td>
                     <td>{{v.title}}</td>
                     <td>{{v.roomNumber}}</td>
                     <td>{{v.roomType}}</td>
                     <td>{{v.roomPrice}}</td>
                     <td>{{房间状态[v.roomStats]}}</td>
-                    <td>{{v.source}}</td>
+                    <td>{{来源[v.source]}}</td>
                     <td>{{v.checkTime}}</td>
                     <td>{{v.outTime}}</td>
                   </tr>
@@ -634,6 +634,17 @@ var app = new Vue({
       3: '续房',
       4: '换房',
     },
+
+    来源:{
+      0:'未知',
+      1:'中证宝酒店端',
+      2:'中冠PMS',
+    },
+
+    证件类型:{
+      1:'中证宝',
+      2:'二代证'
+    }
 
   },
   methods: {
