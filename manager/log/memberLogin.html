@@ -911,10 +911,10 @@ var app = new Vue({
 
 
     var date = new Date()
-    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
+    // var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
 
-    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01 00:00')
-    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date + ' 23:59')
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' 00:00')
+    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' 23:59')
 
     $(".datetimepicker").datetimepicker();
 
