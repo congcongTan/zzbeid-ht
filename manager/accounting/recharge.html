@@ -249,6 +249,7 @@
                     <th>订单号</th>
                     <th>会员名称</th>
                     <th>商品名称</th>
+                    <th>商品数量</th>
                     <th>实付金额</th>
                     <th>获得积分</th>
                     <th>支付方式</th>
@@ -262,6 +263,7 @@
                     <td :title="`${v.orderNo}`">{{v.orderNo.substr(0, 4)}}****{{v.orderNo.substr(-4, 4)}}</td>
                     <td>{{v.memberName}}</td>
                     <td>{{v.goodTitle}}</td>
+                    <td>{{v.goodNumber}}</td>
                     <td>￥{{v.totalPrice}}</td>
                     <td>{{v.totalIntegral}}</td>
                     <td>{{v.payTypeName}}</td>
