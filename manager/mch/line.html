@@ -391,17 +391,21 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr>
-                    <th width="50%">充电时长（小时）</th>
-                    <th>支付积分</th>
+                    <th>充电时长（小时）</th>
+                    <th width="33.3%">中证宝支付积分</th>
+                    <th width="33.3%">H5支付金额</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="i in 4">
+                  <tr v-for="(v,i) in price">
                     <td>
-                      <input class="form-control" v-model="price[i-1]['key']">
+                      <input class="form-control" v-model="price[i]['longTime']">
                     </td>
                     <td>
-                      <input class="form-control" v-model="price[i-1]['val']">
+                      <input class="form-control" v-model="price[i]['zzb']">
+                    </td>
+                    <td>
+                      <input class="form-control" v-model="price[i]['other']">
                     </td>
                   </tr>
                 </tbody>
@@ -803,7 +807,13 @@ var app = new Vue({
     },
 
     view: {},
-    price: [{key:'1',val:''},{key:'',val:''},{key:'',val:''},{key:'',val:''}],
+    price: [],
+    price_default: [
+      {longTime:'',zzb:'',other:''},
+      {longTime:'',zzb:'',other:''},
+      {longTime:'',zzb:'',other:''},
+      {longTime:'',zzb:'',other:''}
+    ],
 
     //待添加
     list2: {
@@ -1101,7 +1111,11 @@ var app = new Vue({
       this.view = {}
 
       if(id == -1){
-        this.price = [{key:'',val:''},{key:'',val:''},{key:'',val:''},{key:'',val:''}]
+        this.view = {
+          lineMode: '',
+          status: 1
+        }
+        this.price = this.price_default
         $('#view').modal('show')
         return
       }
@@ -1131,20 +1145,7 @@ var app = new Vue({
 
           _this.view = re.rspBody
 
-          var priceJson = JSON.parse(re.rspBody.priceJson)
-          var price = [{key:'',val:''},{key:'',val:''},{key:'',val:''},{key:'',val:''}]
-          for(var i in priceJson){
-            var v = priceJson[i]
-
-            for(var i2 in v){
-              var v2 = v[i2]
-
-              price[i] = {key: i2, val: v2}
-            }
-
-          }
-          // console.log(price)
-          _this.price = price
+          _this.price = JSON.parse(re.rspBody.priceJson)
 
           $('#view').modal('show')
 
@@ -1155,41 +1156,7 @@ var app = new Vue({
 
     saveView: function(){
 
-      var priceJson = []
-      for(var i in this.price){
-        var v = this.price[i]
-
-        var key = ''
-        for(var i2 in v){
-          var v2 = v[i2]
-
-          if(i2 == 'key'){
-            key = v2
-          }else if(i2 == 'val'){
-
-            // 丢掉空的
-            if(key == '' && v2 == '')continue
-            if(key == '' && v2 != ''){
-              alert('第' + (Number(i) + 1) + '行充电时长不能为空')
-              return
-            }
-            if(key != '' && (v2 == '' || v2 == null || v2 == undefined) ){
-              alert('第' + (Number(i) + 1) + '行支付积分不能为空')
-              return
-            }
-            // console.log(key, v2)
-
-            var push = {}
-            push[key] = v2
-            priceJson.push(push)
-          }
-
-        }
-      }
-      // console.log(priceJson)
-      // return
-
-      this.view.priceJson = JSON.stringify(priceJson)
+      this.view.priceJson = JSON.stringify(this.price)
 
       var data = {
         "reqHead":
