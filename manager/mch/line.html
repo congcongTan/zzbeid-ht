@@ -397,15 +397,15 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(v,i) in price">
+                  <tr v-for="i in 4">
                     <td>
-                      <input class="form-control" v-model="price[i]['longTime']">
+                      <input class="form-control" v-model="price[i-1]['longTime']">
                     </td>
                     <td>
-                      <input class="form-control" v-model="price[i]['zzb']">
+                      <input class="form-control" v-model="price[i-1]['zzb']">
                     </td>
                     <td>
-                      <input class="form-control" v-model="price[i]['other']">
+                      <input class="form-control" v-model="price[i-1]['other']">
                     </td>
                   </tr>
                 </tbody>
@@ -808,8 +808,7 @@ var app = new Vue({
     },
 
     view: {},
-    price: [],
-    price_default: [
+    price: [
       {longTime:'',zzb:'',other:''},
       {longTime:'',zzb:'',other:''},
       {longTime:'',zzb:'',other:''},
@@ -1110,13 +1109,18 @@ var app = new Vue({
       var _this = this
 
       this.view = {}
+      this.price = [
+        {longTime:'',zzb:'',other:''},
+        {longTime:'',zzb:'',other:''},
+        {longTime:'',zzb:'',other:''},
+        {longTime:'',zzb:'',other:''}
+      ]
 
       if(id == -1){
         this.view = {
           lineMode: '',
           status: 1
         }
-        this.price = this.price_default
         $('#view').modal('show')
         return
       }
@@ -1146,7 +1150,22 @@ var app = new Vue({
 
           _this.view = re.rspBody
 
-          _this.price = JSON.parse(re.rspBody.priceJson)
+          var tmp = JSON.parse(re.rspBody.priceJson)
+          console.log('整理前的价表', tmp)
+
+          for( var i = 0; i<4; i++ ){
+
+            if(tmp[i] == undefined)
+              break
+
+            if( tmp[i].longTime != undefined)
+              _this.price[i].longTime = tmp[i].longTime
+            if( tmp[i].zzb != undefined)
+              _this.price[i].zzb      = tmp[i].zzb
+            if( tmp[i].other != undefined)
+              _this.price[i].other    = tmp[i].other
+          }
+          // console.log('整理后的价表', _this.price)
 
           $('#view').modal('show')
 
@@ -1157,7 +1176,26 @@ var app = new Vue({
 
     saveView: function(){
 
-      this.view.priceJson = JSON.stringify(this.price)
+      var price = []
+      for(var i in this.price){
+        var v = this.price[i]
+
+        if(v.longTime != '' && v.zzb != '' && v.other != ''){
+          price.push(v)
+        }
+        else if(v.longTime == '' && v.zzb == '' && v.other == ''){
+          continue
+        }
+        else{
+          alert('第' + (Number(i) + 1) + '行请填写完整')
+          return
+        }
+
+      }
+      // console.log(price)
+      // return
+
+      this.view.priceJson = JSON.stringify(price)
 
       var data = {
         "reqHead":
@@ -1169,7 +1207,6 @@ var app = new Vue({
         },
         reqBody: this.view
       }
-
       // console.log(data)
 
       var add_or_edit = this.view.id == undefined ? 'add':'update'
