@@ -232,7 +232,7 @@
                     <label class="col-sm-2 control-label">硬件厂商</label>
                     <div class="col-sm-3">
                       <select class="form-control" v-model="list.post.lineMode">
-                        <option value="">--请选择--</option>                                                                                                                                                                               
+                        <option value="">--请选择--</option>
                         <option :value="`${i}`" v-for="(v, i) in 硬件厂商">{{v}}</option>
                       </select>
                     </div>
@@ -352,10 +352,20 @@
                 </div>
               </div>
 
-              <div class="form-group">
+              <div class="form-group" v-if="view.id != undefined">
                 <label class="col-sm-3 control-label">充电线编号</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="view.sn">
+                </div>
+              </div>
+
+              <div class="form-group" v-if="view.id == undefined">
+                <label class="col-sm-3 control-label">充电线编号</label>
+                <div class="col-sm-4">
+                  <textarea class="form-control" rows="5" v-model="view.sn2"></textarea>
+                </div>
+                <div class="col-sm-5 text-danger mt6">
+                  * 每行一条，支持最多 5000 条
                 </div>
               </div>
 
@@ -413,9 +423,41 @@
 
             </form>
 
+            <div class="mt30 mb30" v-if="报告.成功 != 0 || 报告.失败 != 0">
+
+
+            </div>
+
           </div>
           <div class="modal-footer">
-            <a class="btn btn-primary" @click="saveView">确定</a>
+            <a class="btn btn-primary" @click="saveView">{{view.id == undefined ? '批量添加':'保存'}}</a>
+            <a class="btn btn-default" @click="close_view" v-if="view.id == undefined">关闭</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="view_log">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              批量添加结果
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            本次上架：成功 {{报告.成功}}条，失败 {{报告.失败}}条<br>
+            失败原因见下方表格：
+            <div class="mt5 mb5 oys h100" v-html="报告.记录" id="log">
+
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="close_view_log()">复制并关闭</a>
           </div>
         </div>
       </div>
@@ -659,6 +701,7 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
+<script src="../../js/clipboard.min.js"></script>
 <script>
 var app = new Vue({
   el: '#app',
@@ -815,6 +858,12 @@ var app = new Vue({
       {longTime:'',zzb:'',other:''},
       {longTime:'',zzb:'',other:''}
     ],
+
+    报告: {
+      '成功': 0,
+      '失败': 0,
+      '记录': ''
+    },
 
     //待添加
     list2: {
@@ -1152,7 +1201,7 @@ var app = new Vue({
           _this.view = re.rspBody
 
           var tmp = JSON.parse(re.rspBody.priceJson)
-          console.log('整理前的价表', tmp)
+          // console.log('整理前的价表', tmp)
 
           for( var i = 0; i<4; i++ ){
 
@@ -1177,6 +1226,8 @@ var app = new Vue({
 
     saveView: function(){
 
+      var _this = this
+
       var price = []
       for(var i in this.price){
         var v = this.price[i]
@@ -1198,40 +1249,115 @@ var app = new Vue({
 
       this.view.priceJson = JSON.stringify(price)
 
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: this.view
-      }
-      // console.log(data)
+      //添加
+      if(this.view.id == undefined){
 
-      var add_or_edit = this.view.id == undefined ? 'add':'update'
+        this.报告 = {
+          '成功': 0,
+          '失败': 0,
+          '记录': ''
+        }
 
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/' + add_or_edit + 'Line/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
+        //拆开sn
+        var sn2 = this.view.sn2.split(/[\s\n]/)
 
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-            $('#view').modal('hide')
-          }else{
-            alert(re.rspHead.retMsg)
+        //循环添加
+        for(var i in sn2){
+
+          let view = JSON.parse(JSON.stringify(_this.view))
+          view.sn = sn2[i]
+
+          var data = {
+            "reqHead":
+            {
+              clientType: 1,
+              format: "json",
+              version: "1.0",
+              sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+            },
+            reqBody: view
           }
 
-        },
-      })
+          $.ajax({
+            type: 'POST',
+            url: manager_api + 'manager/addLine/interface',
+            data: JSON.stringify(data),
+            dataType: 'json',
+            beforeSend: function(request){
+              request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+            },
+            success: function(re){
 
+              if(re.rspHead.retCode == '1'){
+
+                _this.报告.成功++
+
+              }else{
+
+                _this.报告.失败++
+                _this.报告.记录 += '编号' + view.sn + '：' + re.rspHead.retMsg + '<br/>\r'
+
+              }
+
+              $('#view').modal('hide')
+              $('#view_log').modal('show')
+
+            }
+          })
+
+        }
+
+      }
+      //编辑
+      else{
+
+        var data = {
+          "reqHead":
+          {
+            clientType: 1,
+            format: "json",
+            version: "1.0",
+            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          },
+          reqBody: this.view
+        }
+        // console.log(data)
+
+        $.ajax({
+          type: 'POST',
+          url: manager_api + 'manager/updateLine/interface',
+          data: JSON.stringify(data),
+          dataType: 'json',
+          beforeSend: function(request){
+            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+          },
+          success: function(re){
+
+            if(re.rspHead.retCode == '1'){
+              _this.getList()
+              $('#view').modal('hide')
+            }else{
+              alert(re.rspHead.retMsg)
+            }
+
+          }
+        })
+
+      }
+      // console.log(sn2)
+      // return
+
+    },
+
+    close_view: function(){
+      $('#view').modal('hide')
+    },
+
+    close_view_log: function(){
+
+      cp('log')
+
+      setTimeout("$('#view_log').modal('hide')", 500)
     },
 
     批量绑定商户: function(){
@@ -1702,6 +1828,26 @@ var app = new Vue({
 
   }
 })
+
+function selectText(id){
+  var x = document.getElementById(id)
+  if(document.selection){
+    var range = document.body.createTextRange()//ie
+    range.moveToElementText(x)
+    range.select()
+  }else if(window.getSelection){
+    var selection = window.getSelection()
+    var range = document.createRange()
+    selection.removeAllRanges()
+    range.selectNodeContents(x)
+    selection.addRange(range)
+  }
+}
+function cp(id){
+  selectText(id)
+  document.execCommand('copy')
+  // alert('复制成功')
+}
 </script>
 </body>
 </html>
