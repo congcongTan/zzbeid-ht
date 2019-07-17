@@ -362,10 +362,10 @@
               <div class="form-group" v-if="view.id == undefined">
                 <label class="col-sm-3 control-label">充电线编号</label>
                 <div class="col-sm-4">
-                  <textarea class="form-control" rows="5" v-model="view.sn2"></textarea>
+                  <textarea class="form-control" rows="5" v-model="view.sn2" onkeyup="app.sn2_keyup()"></textarea>
                 </div>
                 <div class="col-sm-5 text-danger mt6">
-                  * 每行一条，支持最多 5000 条
+                  * 每行一条，目前列表 {{add_count}} 条
                 </div>
               </div>
 
@@ -439,10 +439,9 @@
 
 
     <div class="modal fade" id="view_log">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
               批量添加结果
             </h4>
@@ -451,13 +450,13 @@
 
             本次上架：成功 {{报告.成功}}条，失败 {{报告.失败}}条<br>
             失败原因见下方表格：
-            <div class="mt5 mb5 oys h100" v-html="报告.记录" id="log">
+            <div class="mt5 mb5 oys" style="height: 400px" v-html="报告.记录" id="log">
 
             </div>
 
           </div>
           <div class="modal-footer">
-            <a class="btn btn-primary" @click="close_view_log()">复制并关闭</a>
+            <a class="btn btn-primary" @click="close_view_log()" v-if="add_company == 1">复制并关闭</a>
           </div>
         </div>
       </div>
@@ -701,7 +700,6 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
-<script src="../../js/clipboard.min.js"></script>
 <script>
 var app = new Vue({
   el: '#app',
@@ -858,6 +856,9 @@ var app = new Vue({
       {longTime:'',zzb:'',other:''},
       {longTime:'',zzb:'',other:''}
     ],
+
+    add_count: 0,
+    add_company: 0,
 
     报告: {
       '成功': 0,
@@ -1260,6 +1261,10 @@ var app = new Vue({
 
         //拆开sn
         var sn2 = this.view.sn2.split(/[\s\n]/)
+        var sn2_count = sn2.length
+
+        //添加完成 = 0
+        this.add_company = 0
 
         //循环添加
         for(var i in sn2){
@@ -1299,13 +1304,17 @@ var app = new Vue({
 
               }
 
-              $('#view').modal('hide')
-              $('#view_log').modal('show')
+              if( (_this.报告.成功 + _this.报告.失败) == sn2_count ){
+                _this.add_company = 1
+              }
 
             }
           })
 
         }
+
+        $('#view').modal('hide')
+        $('#view_log').modal('show')
 
       }
       //编辑
@@ -1349,11 +1358,21 @@ var app = new Vue({
 
     },
 
+    sn2_keyup: function(){
+
+      if(this.view.sn2 != undefined && this.view.sn2 != ''){
+        this.add_count = this.view.sn2.split(/[\s\n]/).length
+      }
+
+    },
+
     close_view: function(){
       $('#view').modal('hide')
     },
 
     close_view_log: function(){
+
+      _this.getList()
 
       cp('log')
 
