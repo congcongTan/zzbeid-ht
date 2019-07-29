@@ -795,6 +795,10 @@ var app = new Vue({
             total.zfbAmount += v.zfbAmount
           }
 
+          total.wxAmount = (parseInt(total.wxAmount * 100 ) / 100).toFixed(2)
+          total.zfbAmount = (parseInt(total.zfbAmount * 100 ) / 100).toFixed(2)
+          
+
           _this.list.data.push(total)
 
 
