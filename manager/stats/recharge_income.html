@@ -249,7 +249,7 @@
                     <td>{{v.zfbNum}}</td>
                     <td>{{v.zfbAmount}}</td>
                     <td>{{v.wxNum + v.zfbNum}}</td>
-                    <td>{{v.wxAmount + v.zfbAmount}}</td>
+                    <td>{{v.wxzfbAmount}}</td>
 <!--                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
                       <a class="btn btn-xs btn-danger" @click="del(v.goodId)">锁定</a><br>
@@ -782,7 +782,8 @@ var app = new Vue({
             wxNum: 0,
             wxAmount: 0,
             zfbNum: 0,
-            zfbAmount: 0
+            zfbAmount: 0,
+            wxzfbAmount: 0
           }
 
           for ( var i in _this.list.data ){
@@ -793,11 +794,13 @@ var app = new Vue({
             total.wxAmount += v.wxAmount
             total.zfbNum += v.zfbNum
             total.zfbAmount += v.zfbAmount
+            total.wxzfbAmount += v.wxAmount + v.zfbAmount
           }
 
           total.wxAmount = (parseInt(total.wxAmount * 100 ) / 100).toFixed(2)
           total.zfbAmount = (parseInt(total.zfbAmount * 100 ) / 100).toFixed(2)
-          
+          total.wxzfbAmount = (parseInt(total.wxzfbAmount * 100 ) / 100).toFixed(2)
+
 
           _this.list.data.push(total)
 
