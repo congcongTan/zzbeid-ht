@@ -228,7 +228,7 @@
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td>{{行业[v.industryId]}}</td>
-                    <td>{{v.mobile}}</td>
+                    <td>{{行业软件[v.softwareVersion]}}</td>
                     <td>{{v.title}}</td>
                     <td>{{v.identifier}}</td>
                     <td>{{v.linkman}}</td>
@@ -642,7 +642,7 @@ var app = new Vue({
 		7:'充电'
 	},
 
-/*	行业软件: {
+	行业软件: {
 		0:'无软件',
 		1:'佳星',
 		2:'万象',
@@ -655,7 +655,7 @@ var app = new Vue({
 		10002:'千里马酒店',
 		10003:'锦江酒店',
 		20000:'佛山曇京'
-	},*/
+	},
 
 	旅馆行业: {
 		0:'无软件',
