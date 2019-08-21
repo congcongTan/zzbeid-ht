@@ -450,7 +450,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">所属行业</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.industryId">
+                  <select class="form-control" v-model="view.industryId" @change="view.softwareVersion = ''">
                     <option value="">--请选择--</option>
                     <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
                   </select>
@@ -465,7 +465,13 @@
                 <div class="col-sm-4">
                   <select class="form-control" v-model="view.softwareVersion">
                     <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业软件">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 旅馆行业" v-if="view.industryId == 1">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 网吧行业" v-if="view.industryId == 2">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 汽车站行业" v-if="view.industryId == 3">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 机场行业" v-if="view.industryId == 4">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 旅行社行业" v-if="view.industryId == 5">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 访客行业" v-if="view.industryId == 6">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 充电行业" v-if="view.industryId == 7">{{v}}</option>
                   </select>
                 </div>
               </div>
