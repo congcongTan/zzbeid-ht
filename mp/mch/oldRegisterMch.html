@@ -167,7 +167,7 @@
 
                 <!-- <a class="btn btn-sm btn-danger"  @click="del()">删除</a> -->
 
-                <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
+                <a class="btn btn-sm btn-primary" @click="getView(-1)" v-if="admin.roleFlag == 2">新增</a>
 
               </div>
               <div class="tab-pane" id="搜索">
@@ -224,7 +224,7 @@
                     <th>客户端版本号</th>
                     <th>商户地址</th>
                     <th>状态</th>
-                    <th width="1%">操作</th>
+                    <th width="1%" v-if="admin.roleFlag == 2">操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -241,7 +241,7 @@
                     <td>{{v.appVersion}}</td>
                     <td>{{v.address}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
-                    <td class="text-nowrap operation">
+                    <td class="text-nowrap operation" v-if="admin.roleFlag == 2">
                       <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">查看</a><br>
                       <a class="btn btn-xs btn-primary" @click="激活码(v.mchId)">激活码</a><br>
                     </td>
@@ -323,7 +323,7 @@
                   <input type="text" class="form-control input-sm" v-model="view.identifier" disabled>
                 </div>
                 <div class="col-sm-5 text-danger mt5">
-                  * 营业执照经营编号
+                  * 特种行业经营编号
                 </div>
               </div>
 
@@ -347,7 +347,13 @@
                 <div class="col-sm-4">
                   <select class="form-control" v-model="view.softwareVersion" disabled>
                     <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业软件">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 旅馆行业" v-if="view.industryId == 1">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 网吧行业" v-if="view.industryId == 2">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 汽车站行业" v-if="view.industryId == 3">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 机场行业" v-if="view.industryId == 4">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 旅行社行业" v-if="view.industryId == 5">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 访客行业" v-if="view.industryId == 6">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 充电行业" v-if="view.industryId == 7">{{v}}</option>
                   </select>
                 </div>
                 <div class="col-sm-5 text-danger mt5">
@@ -674,16 +680,6 @@ var app = new Vue({
 
 	view: {},
 
-	行业:{
-		1:'旅馆',
-		2:'网吧',
-		3:'汽车站',
-		4:'机场',
-		5:'旅行社',
-		6:'访客',
-		7:'充电'
-	},
-
 	软件版本:{
 		1:'佳星',
 		2:'万象',
@@ -704,7 +700,17 @@ var app = new Vue({
 		2:'简化版'
 	},
 
-	行业软件: {
+	行业:{
+		1:'旅馆',
+		2:'网吧',
+		3:'汽车站',
+		4:'机场',
+		5:'旅行社',
+		6:'访客',
+		7:'充电'
+	},
+
+/*	行业软件: {
 		0:'无软件',
 		1:'佳星',
 		2:'万象',
@@ -717,6 +723,46 @@ var app = new Vue({
 		10002:'千里马酒店',
 		10003:'锦江酒店',
 		20000:'佛山曇京'
+	},*/
+
+	旅馆行业: {
+		0:'无软件',
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家',
+		6:'恒邦'
+	},
+
+	网吧行业: {
+		0:'无软件',
+		10000:'中证宝酒店',
+		10001:'中冠PMS',
+		10002:'千里马酒店',
+		10003:'锦江酒店',
+		20000:'佛山曇京'
+	},
+
+	汽车站行业:{
+		0:'无软件'
+	},
+
+	机场行业:{
+		0:'无软件'
+	},
+
+	旅行社行业:{
+		0:'无软件'
+	},
+
+	访客行业:{
+		0:'无软件',
+		20000:'佛山曇京'
+	},
+
+	充电行业:{
+		0:'无软件'
 	},
 
 	状态: {

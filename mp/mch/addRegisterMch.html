@@ -316,7 +316,7 @@
                   <input type="text" class="form-control input-sm" v-model="view.identifier">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
-                  * 营业执照经营编号
+                  * 特种行业经营编号
                 </div>
               </div>
 
@@ -325,7 +325,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">所属行业</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.industryId">
+                  <select class="form-control" v-model="view.industryId" @change="view.softwareVersion = ''">
                     <option value="">--请选择--</option>
                     <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
                   </select>
@@ -340,7 +340,13 @@
                 <div class="col-sm-4">
                   <select class="form-control" v-model="view.softwareVersion">
                     <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业软件">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 旅馆行业" v-if="view.industryId == 1">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 网吧行业" v-if="view.industryId == 2">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 汽车站行业" v-if="view.industryId == 3">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 机场行业" v-if="view.industryId == 4">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 旅行社行业" v-if="view.industryId == 5">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 访客行业" v-if="view.industryId == 6">{{v}}</option>
+                    <option :value="`${i}`" v-for="(v, i) in 充电行业" v-if="view.industryId == 7">{{v}}</option>
                   </select>
                 </div>
                 <div class="col-sm-5 text-danger mt5">
@@ -606,16 +612,6 @@ var app = new Vue({
 
 	view: {},
 
-	行业:{
-		1:'旅馆',
-		2:'网吧',
-		3:'汽车站',
-		4:'机场',
-		5:'旅行社',
-		6:'访客',
-		7:'充电'
-	},
-
 	软件版本:{
 		1:'佳星',
 		2:'万象',
@@ -636,7 +632,17 @@ var app = new Vue({
 		2:'简化版'
 	},
 
-	行业软件: {
+	行业:{
+		1:'旅馆',
+		2:'网吧',
+		3:'汽车站',
+		4:'机场',
+		5:'旅行社',
+		6:'访客',
+		7:'充电'
+	},
+
+/*	行业软件: {
 		0:'无软件',
 		1:'佳星',
 		2:'万象',
@@ -649,6 +655,46 @@ var app = new Vue({
 		10002:'千里马酒店',
 		10003:'锦江酒店',
 		20000:'佛山曇京'
+	},*/
+
+	旅馆行业: {
+		0:'无软件',
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家',
+		6:'恒邦'
+	},
+
+	网吧行业: {
+		0:'无软件',
+		10000:'中证宝酒店',
+		10001:'中冠PMS',
+		10002:'千里马酒店',
+		10003:'锦江酒店',
+		20000:'佛山曇京'
+	},
+
+	汽车站行业:{
+		0:'无软件'
+	},
+
+	机场行业:{
+		0:'无软件'
+	},
+
+	旅行社行业:{
+		0:'无软件'
+	},
+
+	访客行业:{
+		0:'无软件',
+		20000:'佛山曇京'
+	},
+
+	充电行业:{
+		0:'无软件'
 	},
 
 	状态: {
@@ -681,10 +727,7 @@ var app = new Vue({
       data: [],
       post: {
         pageNum: 1,
-        pageSize: 10,
-        chooseDay: 0,
-        industryId: 0,
-        queryAgentId: ''
+        pageSize: 10
       },
       info: {},
       page: {},
