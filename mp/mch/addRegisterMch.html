@@ -167,7 +167,7 @@
 
                 <!-- <a class="btn btn-sm btn-danger"  @click="del()">删除</a> -->
 
-                <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
+                <a class="btn btn-sm btn-primary" @click="getView(-1)" v-if="admin.roleFlag == 2">新增</a>
 
               </div>
               <div class="tab-pane" id="搜索">
@@ -221,7 +221,7 @@
                     <th>负责人手机</th>
                     <th>商户地址</th>
                     <th>状态</th>
-                    <th width="1%">操作</th>
+                    <th width="1%" v-if="admin.roleFlag == 2">操作</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -235,7 +235,7 @@
                     <td>{{v.mobile}}</td>
                     <td>{{v.address}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{验证状态[v.verifyStatus]}}</td>
-                    <td class="text-nowrap operation">
+                    <td class="text-nowrap operation" v-if="admin.roleFlag == 2">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">修改</a><br>
                     </td>
                   </tr>
@@ -659,21 +659,21 @@ var app = new Vue({
 
 	旅馆行业: {
 		0:'无软件',
+		10000:'中证宝酒店',
+		10001:'中冠PMS',
+		10002:'千里马酒店',
+		10003:'锦江酒店',
+		20000:'佛山曇京'
+	},
+
+	网吧行业: {
+		0:'无软件',
 		1:'佳星',
 		2:'万象',
 		3:'湖南万象(斯雨)',
 		4:'云辰',
 		5:'龙管家',
 		6:'恒邦'
-	},
-
-	网吧行业: {
-		0:'无软件',
-		10000:'中证宝酒店',
-		10001:'中冠PMS',
-		10002:'千里马酒店',
-		10003:'锦江酒店',
-		20000:'佛山曇京'
 	},
 
 	汽车站行业:{
