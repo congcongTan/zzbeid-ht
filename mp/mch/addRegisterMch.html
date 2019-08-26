@@ -1115,6 +1115,11 @@ var app = new Vue({
 
     saveView: function(){
 
+      if( Number(this.view.resourceNumber) % 1 !== 0 ){
+        alert('资源数量需为整型');
+        return
+      }
+
       var data = {
         "reqHead":
         {

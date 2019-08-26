@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>商户审核</title>
+    <title>中冠酒店管理</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -150,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        商户审核
+        中冠酒店管理
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>商户审核</li>
-        <li class="active">商户审核</li>
+        <li>商户管理</li>
+        <li class="active">中冠酒店管理</li>
       </ol>
     </section>
 
@@ -166,34 +166,20 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <!-- <li class=""><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
-              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
+              <li class=""><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane" id="操作">
+              <div class="tab-pane active" id="操作">
+
+                <!-- <a class="btn btn-sm btn-primary" v-if="权限.indexOf('add') != -1" @click="getView(-1)">新增</a> -->
 
               </div>
-              <div class="tab-pane active" id="搜索">
+              <div class="tab-pane" id="搜索">
+
 
                 <div class="form-horizontal">
-
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">代理商</label>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.agent1Id" onchange="app.getLV2(this.value, 1)">
-                        <option value="">--请选择--</option>
-                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
-                      </select>
-                    </div>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.agent2Id">
-                        <option value="">--请选择--</option>
-                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
-                      </select>
-                    </div>
-                  </div>
-
                   <div class="form-group">
                     <label class="col-sm-2 control-label">商户名称</label>
                     <div class="col-sm-3">
@@ -208,11 +194,7 @@
                   </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
-                        查找
-                        <i class="fa fa-spinner fa-spin" v-if="list.loading == 1"></i>
-                      </button>
-
+                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
                     </div>
                   </div>
                 </div>
@@ -226,16 +208,10 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>ID</th>
-                    <th>一级代理</th>
-                    <th>二级代理</th>
-                    <th>行业</th>
-                    <th>行业软件</th>
                     <th>商户名称</th>
                     <th>商户编号</th>
-                    <th>负责人</th>
-                    <th>负责人手机</th>
-                    <th>商户地址</th>
+                    <th>主数据库IP</th>
+                    <th>主数据库端口</th>
                     <th>状态</th>
                     <th width="1%">操作</th>
                   </tr>
@@ -243,19 +219,13 @@
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.id}}</td>
-                    <td>{{v.agentName}}</td>
-                    <td>{{v.agentName}}</td>
-                    <td>{{行业[v.industryId]}}</td>
-                    <td>{{行业软件[v.softwareVersion]}}</td>
                     <td>{{v.title}}</td>
                     <td>{{v.identifier}}</td>
-                    <td>{{v.linkman}}</td>
-                    <td>{{v.mobile}}</td>
-                    <td>{{v.address}}</td>
-                    <td :class="{'text-danger': v.status == 0}">{{审核状态[v.verifyStatus]}}</td>
+                    <td>{{v.mainHost}}</td>
+                    <td>{{v.mainPort}}</td>
+                    <td :class="{'text-danger': v.status == 0}">{{v.statusTitle}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)" v-if="v.verifyStatus == 1">审核</a><br>
+                      <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="getView(v.mchId, v.title, v.identifier)">编辑</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -312,7 +282,7 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
-              商户审核
+              编辑
             </h4>
           </div>
           <div class="modal-body">
@@ -320,51 +290,26 @@
             <form class="form-horizontal">
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">上级代理商</label>
-                <div class="col-sm-4">
-                  <select class="form-control" v-model="view.superiorAgentId" onchange="app.getLV2(this.value, 1)">
-                    <option value="">--请选择--</option>
-                    <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
-                  </select>
-                </div>
-                <div class="col-sm-4">
-                  <select class="form-control" v-model="view.agentId">
-                    <option value="">--请选择--</option>
-                    <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="col-sm-offset-3 col-sm-9 mb20 pl10 text-danger mt5">
-                不设置代理商，代理分成将无效
-              </div>
-
-              <hr>
-
-              <div class="form-group">
                 <label class="col-sm-3 control-label">商户名称</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.title">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
+                  <input type="text" class="form-control input-sm" v-model="view.title" readonly>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-3 control-label">商户编号</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.identifier">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 首次设置后，不可修改
+                  <input type="text" class="form-control input-sm" v-model="view.identifier" readonly>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">商户密码</label>
+                <label class="col-sm-3 control-label">状态</label>
                 <div class="col-sm-4">
-                  <input type="password" class="form-control input-sm" id="password">
+                  <select class="form-control input-sm" v-model="view.status">
+                    <option value="1">可用</option>
+                    <option value="0">不可用</option>
+                  </select>
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -374,22 +319,9 @@
               <hr>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">支付积分</label>
+                <label class="col-sm-3 control-label">主数据库IP</label>
                 <div class="col-sm-4">
-                  <input type="number" class="form-control input-sm" placeholder="设置用户授权需支付金额" v-model="view.payIntegral">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 免费输入0
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">APP二次验证</label>
-                <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.appSecondVerify">
-                    <option value="1">开启</option>
-                    <option value="0">关闭</option>
-                  </select>
+                  <input type="text" class="form-control input-sm" v-model="mainJson.host">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -397,45 +329,9 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">APP类型</label>
+                <label class="col-sm-3 control-label">主数据库端口</label>
                 <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.clientType">
-                    <option value="1">中证宝APP</option>
-                    <option value="2">旺宝APP</option>
-                  </select>
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 影响商户码的下载地址
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">资源数量</label>
-                <div class="col-sm-4">
-                  <input type="number" class="form-control input-sm" v-model="view.resourceNumber">
-                </div>
-                <div class="col-sm-5 mt5">
-                  如网吧-机器数量；旅业-房间数量
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">渗透率</label>
-                <div class="col-sm-4">
-                  <input type="number" class="form-control input-sm" v-model="view.permeability">
-                </div>
-                <div class="col-sm-5 mt5">
-                  月保底量 = 资源数量 * 渗透率 *每月天数
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">所属行业</label>
-                <div class="col-sm-4">
-                  <select class="form-control" v-model="view.industryId">
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业">{{v}}</option>
-                  </select>
+                  <input type="text" class="form-control input-sm" v-model="mainJson.port">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   *
@@ -443,118 +339,19 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">行业软件</label>
+                <label class="col-sm-3 control-label">主数据库名称</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.softwareVersion">
-                    <option value="">--请选择--</option>
-                    <option :value="`${i}`" v-for="(v, i) in 行业软件">{{v}}</option>
-                  </select>
+                  <input type="text" class="form-control input-sm" v-model="mainJson.datebase">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
                 </div>
               </div>
 
-              <span v-if="view.industryId == 2">
-
-                <hr>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">是否加密</label>
-                  <div class="col-sm-4">
-                    <select class="form-control" v-model="view.isEncrypt">
-                      <option value="">--请选择--</option>
-                      <option :value="`${i}`" v-for="(v, i) in 是否加密">{{v}}</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-5 text-danger mt5">
-                    万象云辰必须加密，佳星按版本选择
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">恒邦IP</label>
-                  <div class="col-sm-4">
-                    <input type="text" class="form-control input-sm" v-model="view.hengbangIp">
-                  </div>
-                </div>
-
-              </span>
-
-              <span v-if="view.industryId == 1">
-
-                <hr>
-
-                <div class="form-group">
-                  <label class="col-sm-3 control-label">酒店行业同步模式</label>
-                  <div class="col-sm-4">
-                    <select class="form-control" v-model="view.syncType">
-                      <option value="">--请选择--</option>
-                      <option :value="`${i}`" v-for="(v, i) in 同步模式">{{v}}</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-5 text-danger mt5">
-                    非酒店行业请忽略
-                  </div>
-                </div>
-
-                <span v-if="view.syncType == 3">
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">酒店注册码</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control input-sm" v-model="view.registerCode">
-                    </div>
-                    <div class="col-sm-5 text-danger mt5">
-                      非酒店行业请忽略
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">外部接口编号</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control input-sm" v-model="view.interfaceCode">
-                    </div>
-                    <div class="col-sm-5 text-danger mt5">
-                      * 
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">同步IP或计算机名称</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control input-sm" v-model="view.databaseIp">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">数据库端口</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control input-sm" v-model="view.databasePort">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">数据库账号</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control input-sm" v-model="view.databaseAccount">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-3 control-label">数据库密码</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control input-sm" v-model="view.databasePassword">
-                    </div>
-                  </div>
-
-                </span>
-
-              </span>
-
-              <hr>
-
               <div class="form-group">
-                <label class="col-sm-3 control-label">商户负责人</label>
+                <label class="col-sm-3 control-label">主数据库账号</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.linkman">
+                  <input type="text" class="form-control input-sm" v-model="mainJson.account">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   * 
@@ -562,9 +359,51 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">负责人手机</label>
+                <label class="col-sm-3 control-label">主数据库密码</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.mobile">
+                  <input type="text" class="form-control input-sm" v-model="mainJson.password">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">副数据库IP</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="standbyJson.host">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">副数据库端口</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="standbyJson.port">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">副数据库名称</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="standbyJson.datebase">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">副数据库账号</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="standbyJson.account">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   * 
@@ -572,53 +411,12 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">商户地址</label>
-                <div class="col-sm-3">
-                  <select class="form-control" v-model="view.province" onchange="app.getC('view', this.value)">
-                    <option value="" selected>--请选择--</option>
-                    <option :value="`${v.code}`" v-for="(v, i) in view_pca.p">{{v.name}}</option>
-                  </select>
-                </div>
-                <div class="col-sm-3">
-                  <select class="form-control" v-model="view.city" onchange="app.getA('view', this.value)">
-                    <option value="" selected>--请选择--</option>
-                    <option :value="`${v.code}`" v-for="(v, i) in view_pca.c">{{v.name}}</option>
-                  </select>
-                </div>
-                <div class="col-sm-3">
-                  <select class="form-control" v-model="view.area">
-                    <option value="" selected>--请选择--</option>
-                    <option :value="`${v.code}`" v-for="(v, i) in view_pca.a">{{v.name}}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-9">
-                  <input type="text" class="form-control input-sm" v-model="view.detailedAddress">
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">银联支付商户编号</label>
+                <label class="col-sm-3 control-label">副数据库密码</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.unionPayMerchantCode">
+                  <input type="text" class="form-control input-sm" v-model="standbyJson.password">
                 </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">AppId</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.unionPayAppid">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">AppKey</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.unionPayAppkey">
+                <div class="col-sm-5 text-danger mt5">
+                  * 
                 </div>
               </div>
 
@@ -925,33 +723,20 @@ var app = new Vue({
       data: [],
       post: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
       },
       info: {},
       page: {},
-      loading: 0,
       checkbox: {
         all: [],
         checked: [],
       },
     },
 
-    search_pca: {
-      p: {},
-      c: {},
-      a: {},
-    },
+    view: {},
 
-    view_pca:{
-      p: {},
-      c: {},
-      a: {},
-    },
-
-    上级代理商:{
-      lv1: {},
-      lv2: {},
-    },
+    mainJson: {},
+    standbyJson: {},
 
   },
   methods: {
@@ -1071,8 +856,6 @@ var app = new Vue({
         alert('没有搜索权限')
       }
 
-      this.list.loading = 1
-
       _this = this
 
       if(key == 'page'){
@@ -1101,26 +884,23 @@ var app = new Vue({
           clientType: 1,
           format: "json",
           version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
         },
         reqBody: this.list.post
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getRegisterMchList/interface',
+        url: manager_api + 'manager/getYousuHotelInfoList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
-        complete: function(){
-          _this.list.loading = 0
-        },
         success: function(re){
 
-          _this.list.data = re.rspBody.mchListInfo
-          delete re.rspBody.mchListInfo
+          _this.list.data = re.rspBody.hotelInfoList
+          delete re.rspBody.hotelInfoList
 
           _this.list.info = re.rspBody          
 
@@ -1150,31 +930,26 @@ var app = new Vue({
 
     },
 
-    getView: function(id){
+    getView: function(id, title, identifier){
 
       this.view = {}
-
-      if(id == -1){
-        $('#view').modal('show')
-        return
-      }
 
       var data = {
         "reqHead":
         {
-          clientType: 1,
+          clientType: 6,
           format: "json",
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          id: id
+          mchId: id
         }
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getRegisterMchInfo/interface',
+        url: manager_api + 'manager/getMiddleCrownMchInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1183,13 +958,25 @@ var app = new Vue({
         success: function(re){
 
           _this.view = re.rspBody
+          _this.view.id = id
+          _this.view.title = title
+          _this.view.identifier = identifier
 
-          _this.view.appSecondVerify = 0
+          if(_this.view.status == null){
+            _this.view.status = 1
+          }
 
-          _this.getLV2(_this.view.superiorAgentId)
+          if(re.rspBody.mainJson != null){
+            _this.mainJson = JSON.parse(re.rspBody.mainJson)
+          }else{
+            _this.mainJson = {}
+          }
 
-          _this.getC('view', _this.view.province)
-          _this.getA('view', _this.view.city)
+          if(re.rspBody.standbyJson != null){
+            _this.standbyJson = JSON.parse(re.rspBody.standbyJson)
+          }else{
+            _this.standbyJson = {}
+          }
 
           $('#view').modal('show')
 
@@ -1200,19 +987,6 @@ var app = new Vue({
 
     saveView: function(){
 
-      if($('#password').val() != ''){
-        this.view.password = $('#password').val()
-      }else{
-        delete this.view.password
-      }
-
-      if( Number(this.view.resourceNumber) % 1 !== 0 ){
-        alert('资源数量需为整型');
-        return
-      }
-
-      this.view.flag = true
-
       var data = {
         "reqHead":
         {
@@ -1221,19 +995,19 @@ var app = new Vue({
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
-        reqBody: this.view
+        reqBody: {
+          mchId: this.view.id,
+          status: this.view.status,
+          mainJson: this.mainJson,
+          standbyJson: this.standbyJson
+        }
       }
 
-      if ( data.reqBody.superiorAgentId != '' && data.reqBody.agentId == '' ){
-
-        data.reqBody.agentId = data.reqBody.superiorAgentId
-        delete data.reqBody.superiorAgentId
-
-      }
+      console.log(data)
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/addMch/interface',
+        url: manager_api + 'manager/saveMiddleCrownMchInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1250,155 +1024,6 @@ var app = new Vue({
 
         },
       })
-
-    },
-
-    getLV2: function(fid, clean_lv2){
-
-      // console.log(this.view.一级代理)
-
-      if ( clean_lv2 != undefined ){
-        this.view.agentId = ''
-      }
-
-      //上级代理商
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: {
-          agentId: fid
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/getSecondAgent/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.上级代理商.lv2 = re.rspBody.secondAgentList
-
-        }
-      })
-
-    },
-
-    getP: function(){
-
-      // console.log('getP')
-      // return
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: {}
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/allProvince/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.search_pca.p = re.rspBody.areaRspDTOList
-          _this.view_pca.p = re.rspBody.areaRspDTOList
-
-        }
-      })
-
-    },
-
-    getC: function(who, pid){
-
-      // console.log('getC', pid)
-
-      var _this = this
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: {
-          parentId: pid
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/allCity/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this[who + '_pca'].c = re.rspBody.allCityResponseDTOList
-          _this[who + '_pca'].a = {}
-
-        }
-      })
-
-    },
-
-    getA: function(who, pid){
-
-      // console.log('getA', pid)
-      // return
-
-      var _this = this
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: {
-          parentId: pid
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/allRegion/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this[who + '_pca'].a = re.rspBody.allCityResponseDTOList
-
-        }
-      })
-
-      // console.log(who, parent)
 
     },
 
@@ -1511,34 +1136,6 @@ var app = new Vue({
     // console.log(this.mca)
 
     $('[data-toggle="tooltip"]').tooltip()
-
-
-    //上级代理商
-    var data = {
-      "reqHead":
-      {
-        clientType: 1,
-        format: "json",
-        version: "1.0",
-        sign: "30C7398578F1F7C995BAF67D18F89B33"
-      },
-      reqBody: {}
-    }
-
-    $.ajax({
-      type: 'POST',
-      url: manager_api + 'manager/getFirstAgentAll/interface',
-      data: JSON.stringify(data),
-      dataType: 'json',
-      beforeSend: function(request){
-        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-      },
-      success: function(re){
-
-        _this.上级代理商.lv1 = re.rspBody.firstAgentList
-
-      }
-    })
 
 
     this.getList()
