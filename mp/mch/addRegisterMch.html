@@ -1138,7 +1138,7 @@ var app = new Vue({
 
       }
 
-      var add_or_edit = this.view.mchId == undefined ? 'add':'edit'
+      var add_or_edit = this.view.id == undefined ? 'add':'edit'
 
       $.ajax({
         type: 'POST',
