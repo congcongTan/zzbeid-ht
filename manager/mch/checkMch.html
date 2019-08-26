@@ -1206,6 +1206,9 @@ var app = new Vue({
         delete this.view.password
       }
 
+      this.view.agentId = this.view.agent2Id
+      delete this.view.agent2Id
+
       if( Number(this.view.resourceNumber) % 1 !== 0 ){
         alert('资源数量需为整型');
         return
