@@ -176,7 +176,7 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">代理商</label>
                     <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.queryAgentId">
+                      <select class="form-control" v-model="list.post.agentId">
                         <option value="">--请选择--</option>
                         <option :value="`${v.agentId}`" v-for="(v, i) in 我的代理">{{v.title}}</option>
                       </select>
@@ -236,7 +236,7 @@
                     <td>{{v.address}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{验证状态[v.verifyStatus]}}</td>
                     <td class="text-nowrap operation" v-if="admin.roleFlag == 2">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">修改</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)" v-if="v.verifyStatus == 1">修改</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
