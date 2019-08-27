@@ -239,7 +239,7 @@
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation" v-if="admin.roleFlag == 2">
                       <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">查看</a><br>
-                      <a class="btn btn-xs btn-primary" @click="激活码(v.mchId)">激活码</a><br>
+                      <a class="btn btn-xs btn-primary" @click="激活码(v.mchId)" v-if="v.softwareVersion == 10001">激活码</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
