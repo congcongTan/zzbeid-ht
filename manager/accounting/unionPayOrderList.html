@@ -277,6 +277,7 @@
                     <th>银联订单号</th>
                     <th>交易金额</th>
                     <th>实际支付金额</th>
+                    <th>来源</th>
                     <th>交易模式</th>
                     <th>支付状态</th>
                     <th>发生时间</th>
@@ -292,6 +293,7 @@
                     <td>{{v.orderId}}</td>
                     <td>{{v.transactionAmount/100}}</td>
                     <td>{{v.amount/100}}</td>
+                    <td>{{{1:'中冠PMS'}[v.source]}}</td>
                     <td>{{交易模式[v.dealMode]}}</td>
                     <td>{{支付状态[v.guaranteeStatus]}}</td>
                     <td>{{v.lastCompleteTime}}</td>
