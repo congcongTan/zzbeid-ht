@@ -196,6 +196,10 @@
                         查找
                         <i class="fa fa-spinner fa-spin" v-if="list.loading == 1"></i>
                       </button>
+                      <a class="btn btn-default" onclick="app.批量下载商户二维码(this)">
+                        批量下载商户二维码
+                        <i class="fa fa-spinner fa-spin" style="display: none"></i>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -239,7 +243,10 @@
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation" v-if="admin.roleFlag == 2">
                       <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">查看</a><br>
-                      <a class="btn btn-xs btn-primary" @click="激活码(v.mchId)" v-if="v.softwareVersion == 10001">激活码</a><br>
+                      <div v-if="v.softwareVersion == 10001">
+                        <a class="btn btn-xs btn-primary" @click="激活码(v.mchId)">激活码</a>
+                      </div>
+                      <a class="btn btn-xs btn-primary" @click="商户二维码(v.mchId)">商户二维码</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -1453,9 +1460,80 @@ var app = new Vue({
         }
       })
 
-      // console.log(who, parent)
+    },
 
-    }
+    商户二维码: function(mchId){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        reqBody: {
+          mchId: mchId
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/downloadMchQrcode/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          location.href = re.rspBody.file
+        }
+      })
+
+    },
+
+    批量下载商户二维码: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
+
+      this.list.post.queryAgentId = this.admin.id
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/downloadMchQrcodeZip/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        complete: function(){
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != 1){
+            alert(re.rspHead.retMsg)
+          }else{
+            location.href = re.rspBody.file
+          }
+        }
+      })
+
+    },
 
   },
   mounted() {
