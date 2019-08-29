@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>中冠酒店管理</title>
+    <title>中冠PMS管理</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -150,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        中冠酒店管理
+        中冠PMS管理
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
         <li>中冠酒店</li>
-        <li class="active">中冠酒店管理</li>
+        <li class="active">中冠PMS管理</li>
       </ol>
     </section>
 
@@ -166,20 +166,36 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
-              <li class=""><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <li class=""><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
+              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane active" id="操作">
+              <div class="tab-pane" id="操作">
 
                 <!-- <a class="btn btn-sm btn-primary" v-if="权限.indexOf('add') != -1" @click="getView(-1)">新增</a> -->
 
               </div>
-              <div class="tab-pane" id="搜索">
-
+              <div class="tab-pane active" id="搜索">
 
                 <div class="form-horizontal">
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">代理商</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.agent1Id" onchange="app.getLV2(this.value, 1)">
+                        <option value="">--请选择--</option>
+                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.agent2Id">
+                        <option value="">--请选择--</option>
+                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div class="form-group">
                     <label class="col-sm-2 control-label">商户名称</label>
                     <div class="col-sm-3">
@@ -194,7 +210,10 @@
                   </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
+                        查找
+                        <i class="fa fa-spinner fa-spin" v-if="list.loading == 1"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -208,24 +227,30 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
+                    <th>一级代理</th>
+                    <th>二级代理</th>
                     <th>商户名称</th>
                     <th>商户编号</th>
-                    <th>主数据库IP</th>
-                    <th>主数据库端口</th>
-                    <th>状态</th>
+                    <th>负责人</th>
+                    <th>负责人手机</th>
+                    <th>商户地址</th>
+                    <th>授权有效期</th>
                     <th width="1%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
+                    <td>无</td>
+                    <td>无</td>
                     <td>{{v.title}}</td>
                     <td>{{v.identifier}}</td>
-                    <td>{{v.mainHost}}</td>
-                    <td>{{v.mainPort}}</td>
-                    <td :class="{'text-danger': v.status == 0}">{{v.statusTitle}}</td>
+                    <td>{{v.linkman}}</td>
+                    <td>{{v.mobile}}</td>
+                    <td>{{v.address}}</td>
+                    <td>无</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="getView(v.mchId, v.title, v.identifier)">编辑</a><br>
+                      <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="getView(i)">修改</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -282,7 +307,7 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
-              编辑
+              商户管理
             </h4>
           </div>
           <div class="modal-body">
@@ -292,133 +317,55 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">商户名称</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.title" readonly>
+                  <input type="text" class="form-control input-sm" v-model="view.title" disabled>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-3 control-label">商户编号</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.identifier" readonly>
+                  <input type="text" class="form-control input-sm" v-model="view.identifier" disabled>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">状态</label>
+                <label class="col-sm-3 control-label">商户负责人</label>
                 <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.status">
-                    <option value="1">可用</option>
-                    <option value="0">不可用</option>
-                  </select>
+                  <input type="text" class="form-control input-sm" v-model="view.linkman" disabled>
                 </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">负责人手机</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.mobile" disabled>
                 </div>
               </div>
 
               <hr>
 
-              <div class="form-group">
-                <label class="col-sm-3 control-label">主数据库IP</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="mainJson.host">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
+              <div class="pull-right">授权有效期： 2018.01.01-2019.12.31　<button class="btn btn-sm btn-primary">修改</button></div>
 
-              <div class="form-group">
-                <label class="col-sm-3 control-label">主数据库端口</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="mainJson.port">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
+              激活码总数： {{激活码.length}}　<a class="btn btn-sm btn-primary" href="javascript:app.激活码add()">新增</a>
 
-              <div class="form-group">
-                <label class="col-sm-3 control-label">主数据库名称</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="mainJson.datebase">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">主数据库账号</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="mainJson.account">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">主数据库密码</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="mainJson.password">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">副数据库IP</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="standbyJson.host">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">副数据库端口</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="standbyJson.port">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">副数据库名称</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="standbyJson.datebase">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">副数据库账号</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="standbyJson.account">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">副数据库密码</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="standbyJson.password">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 
-                </div>
-              </div>
+              <table class="table table-bordered mt10">
+                <thead>
+                  <tr>
+                    <th>激活码</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(v,i) in 激活码">
+                    <td><span :id="`激活码${i}`">{{v.activationCode}}</span> <a :href="`javascript:app.激活码copy(${i})`">[复制]</a></td>
+                    <td>{{{1:'未使用', 2:'已使用'}[v.status]}}</td>
+                    <td>
+                      <a :href="`javascript:app.激活码del(${i})`">[删除]</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
 
             </form>
 
@@ -577,6 +524,8 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
+<script src="../../js/md5.js"></script>
+
 <script>
 var app = new Vue({
   el: '#app',
@@ -724,19 +673,35 @@ var app = new Vue({
       post: {
         pageNum: 1,
         pageSize: 10,
+        softwareVersion: 10001
       },
       info: {},
       page: {},
+      loading: 0,
       checkbox: {
         all: [],
         checked: [],
       },
     },
 
-    view: {},
+    激活码: [],
 
-    mainJson: {},
-    standbyJson: {},
+    search_pca: {
+      p: {},
+      c: {},
+      a: {},
+    },
+
+    view_pca:{
+      p: {},
+      c: {},
+      a: {},
+    },
+
+    上级代理商:{
+      lv1: {},
+      lv2: {},
+    },
 
   },
   methods: {
@@ -856,6 +821,8 @@ var app = new Vue({
         alert('没有搜索权限')
       }
 
+      this.list.loading = 1
+
       _this = this
 
       if(key == 'page'){
@@ -884,23 +851,26 @@ var app = new Vue({
           clientType: 1,
           format: "json",
           version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
         },
         reqBody: this.list.post
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getYousuHotelInfoList/interface',
+        url: manager_api + 'manager/getMchList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
+        complete: function(){
+          _this.list.loading = 0
+        },
         success: function(re){
 
-          _this.list.data = re.rspBody.hotelInfoList
-          delete re.rspBody.hotelInfoList
+          _this.list.data = re.rspBody.mchPageList
+          delete re.rspBody.mchPageList
 
           _this.list.info = re.rspBody          
 
@@ -930,62 +900,16 @@ var app = new Vue({
 
     },
 
-    getView: function(id, title, identifier){
+    getView: function(i){
 
-      this.view = {}
+      // this.view = {}
+      this.view = this.list.data[i]
 
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          mchId: id
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/getMiddleCrownMchInfo/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.view = re.rspBody
-          _this.view.id = id
-          _this.view.title = title
-          _this.view.identifier = identifier
-
-          if(_this.view.status == null){
-            _this.view.status = 1
-          }
-
-          if(re.rspBody.mainJson != null){
-            _this.mainJson = JSON.parse(re.rspBody.mainJson)
-          }else{
-            _this.mainJson = {}
-          }
-
-          if(re.rspBody.standbyJson != null){
-            _this.standbyJson = JSON.parse(re.rspBody.standbyJson)
-          }else{
-            _this.standbyJson = {}
-          }
-
-          $('#view').modal('show')
-
-        }
-      })
+      this.激活码get()
 
     },
 
-    saveView: function(){
+    激活码get: function(){
 
       var data = {
         "reqHead":
@@ -996,18 +920,140 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          mchId: this.view.id,
-          status: this.view.status,
-          mainJson: this.mainJson,
-          standbyJson: this.standbyJson
+          mchId: this.view.mchId
         }
       }
 
-      console.log(data)
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getMchActivationCodeList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.激活码 = re.rspBody.List
+
+          $('#view').modal('show')
+
+        }
+      })
+
+    },
+    激活码add: function(){
+
+      var tmp = md5(new Date().getTime()).toUpperCase()
+      var code = tmp.substr(0,5) + '-' + tmp.substr(5,5) + '-' + tmp.substr(10,5) + '-' + tmp.substr(15,5)
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: this.view.mchId,
+          activationCode: code
+        }
+      }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/saveMiddleCrownMchInfo/interface',
+        url: manager_api + 'manager/addMchActivationCode/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode==1){
+            _this.激活码get()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        }
+      })
+
+    },
+    激活码copy: function(i){
+      selectText('激活码' + i)
+      document.execCommand('copy')
+      alert('复制成功')
+    },
+    激活码del: function(i){
+
+      if(!confirm('确定要删除激活码：' + this.激活码[i].activationCode))return
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: this.激活码[i].id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/delMchActivationCode/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode==1){
+            _this.激活码get()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        }
+      })
+
+    },
+    saveView: function(){
+
+      if($('#password').val() != ''){
+        this.view.password = $('#password').val()
+      }else{
+        delete this.view.password
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.view
+      }
+
+      if ( data.reqBody.superiorAgentId != '' && data.reqBody.agentId == '' ){
+
+        data.reqBody.agentId = data.reqBody.superiorAgentId
+        delete data.reqBody.superiorAgentId
+
+      }
+
+      var add_or_edit = this.view.mchId == undefined ? 'add':'edit'
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/' + add_or_edit + 'Mch/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1024,6 +1070,216 @@ var app = new Vue({
 
         },
       })
+
+    },
+
+    del: function(id){
+
+      if(!confirm('确认删除？')){
+        return
+      }
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.list.checkbox.checked.length == 0){
+        alert('一个都没有选中')
+        return
+      }else{
+
+        var ids = this.list.checkbox.checked
+      }
+
+      // console.log(ids)
+
+      for( var i in ids ){
+        var id = ids[i]
+
+
+        var data = {
+          "reqHead":
+          {
+            clientType: 1,
+            format: "json",
+            version: "1.0",
+            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          },
+          reqBody: {
+            id: id
+          }
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: manager_api + 'manager/deleteMch/interface',
+          data: JSON.stringify(data),
+          dataType: 'json',
+          beforeSend: function(request){
+            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+          },
+          success: function(re){
+
+            if(re.rspHead.retCode != '1'){
+              alert(re.rspHead.retMsg)
+            }else{
+              _this.getList()
+            }
+
+          }
+        })
+
+      }
+
+    },
+
+    getLV2: function(fid, clean_lv2){
+
+      // console.log(this.view.一级代理)
+
+      if ( clean_lv2 != undefined ){
+        this.view.agentId = ''
+      }
+
+      //上级代理商
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {
+          agentId: fid
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getSecondAgent/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.上级代理商.lv2 = re.rspBody.secondAgentList
+
+        }
+      })
+
+    },
+
+    getP: function(){
+
+      // console.log('getP')
+      // return
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {}
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/allProvince/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.search_pca.p = re.rspBody.areaRspDTOList
+          _this.view_pca.p = re.rspBody.areaRspDTOList
+
+        }
+      })
+
+    },
+
+    getC: function(who, pid){
+
+      // console.log('getC', pid)
+
+      var _this = this
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {
+          parentId: pid
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/allCity/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this[who + '_pca'].c = re.rspBody.allCityResponseDTOList
+          _this[who + '_pca'].a = {}
+
+        }
+      })
+
+    },
+
+    getA: function(who, pid){
+
+      // console.log('getA', pid)
+      // return
+
+      var _this = this
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {
+          parentId: pid
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/allRegion/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this[who + '_pca'].a = re.rspBody.allCityResponseDTOList
+
+        }
+      })
+
+      // console.log(who, parent)
 
     },
 
@@ -1138,10 +1394,55 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
+    this.getP()
+
+    //上级代理商
+    var data = {
+      "reqHead":
+      {
+        clientType: 1,
+        format: "json",
+        version: "1.0",
+        sign: "30C7398578F1F7C995BAF67D18F89B33"
+      },
+      reqBody: {}
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: manager_api + 'manager/getFirstAgentAll/interface',
+      data: JSON.stringify(data),
+      dataType: 'json',
+      beforeSend: function(request){
+        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+      },
+      success: function(re){
+
+        _this.上级代理商.lv1 = re.rspBody.firstAgentList
+
+      }
+    })
+
+
     this.getList()
 
   }
 })
+
+function selectText(id){
+  var x = document.getElementById(id)
+  if(document.selection){
+    var range = document.body.createTextRange()//ie
+    range.moveToElementText(x)
+    range.select()
+  }else if(window.getSelection){
+    var selection = window.getSelection()
+    var range = document.createRange()
+    selection.removeAllRanges()
+    range.selectNodeContents(x)
+    selection.addRange(range)
+  }
+}
 </script>
 </body>
 </html>
