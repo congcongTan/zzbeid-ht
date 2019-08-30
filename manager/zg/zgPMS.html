@@ -20,6 +20,11 @@
 
     <title>中冠PMS管理</title>
 
+<style>
+.datepicker{
+  z-index: 99999999;
+}
+</style>
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
 
@@ -181,22 +186,6 @@
                 <div class="form-horizontal">
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">代理商</label>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.agent1Id" onchange="app.getLV2(this.value, 1)">
-                        <option value="">--请选择--</option>
-                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
-                      </select>
-                    </div>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.agent2Id">
-                        <option value="">--请选择--</option>
-                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
                     <label class="col-sm-2 control-label">商户名称</label>
                     <div class="col-sm-3">
                       <input type="text" class="form-control" v-model="list.post.title">
@@ -227,8 +216,6 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>一级代理</th>
-                    <th>二级代理</th>
                     <th>商户名称</th>
                     <th>商户编号</th>
                     <th>负责人</th>
@@ -241,16 +228,14 @@
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
-                    <td>无</td>
-                    <td>无</td>
                     <td>{{v.title}}</td>
                     <td>{{v.identifier}}</td>
                     <td>{{v.linkman}}</td>
                     <td>{{v.mobile}}</td>
                     <td>{{v.address}}</td>
-                    <td>无</td>
+                    <td>{{v.effectiveStartTime.split(' ')[0]}}<br>~ {{v.effectiveEndTime.split(' ')[0]}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="getView(i)">修改</a><br>
+                      <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="getView(v.mchId)">修改</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -342,9 +327,27 @@
                 </div>
               </div>
 
-              <hr>
+              <div class="form-group">
+                <label class="col-sm-3 control-label">PMS自动更新</label>
+                <div class="col-sm-4">
+                  <select class="form-control input-sm" v-model="view.pmsIsAutoupdate">
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                  </select>
+                </div>
+              </div>
 
-              <div class="pull-right">授权有效期： 2018.01.01-2019.12.31　<button class="btn btn-sm btn-primary">修改</button></div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label">授权有效期</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm datetimepicker" v-model="view.effectiveStartTime">
+                </div>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm datetimepicker" v-model="view.effectiveEndTime">
+                </div>
+              </div>
+
+              <hr>
 
               激活码总数： {{激活码.length}}　<a class="btn btn-sm btn-primary" href="javascript:app.激活码add()">新增</a>
 
@@ -371,7 +374,9 @@
 
           </div>
           <div class="modal-footer">
-            <a class="btn btn-primary" @click="saveView">确定</a>
+            <a class="btn btn-primary" @click="有效期自动更新_save()">保存</a>
+            <!-- <a class="btn btn-primary" @click="saveView">确定</a> -->
+            <a class="btn btn-default" @click="closeView">关闭</a>
           </div>
         </div>
       </div>
@@ -523,6 +528,9 @@
 <script src="../../plugins/adminLTE/js/adminlte.min.js"></script>
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
+
+<link rel="stylesheet" href="../../plugins/datetimepicker/datetimepicker.css">
+<script src="../../plugins/datetimepicker/datetimepicker.js"></script>
 
 <script src="../../js/md5.js"></script>
 
@@ -900,12 +908,46 @@ var app = new Vue({
 
     },
 
-    getView: function(i){
+    getView: function(id){
 
-      // this.view = {}
-      this.view = this.list.data[i]
+      this.view = {}
 
-      this.激活码get()
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getMchInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view = re.rspBody
+
+          _this.激活码get()
+
+          $('#view').modal('show')
+
+          $(".datetimepicker").datetimepicker({
+            format: "Y-m-d H:i:s",
+          })
+
+        }
+      })
+
 
     },
 
@@ -935,8 +977,6 @@ var app = new Vue({
         success: function(re){
 
           _this.激活码 = re.rspBody.List
-
-          $('#view').modal('show')
 
         }
       })
@@ -1072,7 +1112,50 @@ var app = new Vue({
       })
 
     },
+    有效期自动更新_save: function(){
 
+      console.log(123321)
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: this.view.mchId,
+          effectiveStartTime: this.view.effectiveStartTime,
+          effectiveEndTime: this.view.effectiveEndTime,
+          pmsIsAutoupdate: this.view.pmsIsAutoupdate
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/editMchValidTime/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+    closeView: function(){
+      $('#view').modal('hide')
+    },
     del: function(id){
 
       if(!confirm('确认删除？')){
