@@ -244,7 +244,7 @@
                     <td class="text-nowrap operation" v-if="admin.roleFlag == 2">
                       <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">查看</a><br>
                       <div v-if="v.softwareVersion == 10001">
-                        <a class="btn btn-xs btn-primary" @click="激活码(v.mchId)">激活码</a>
+                        <a class="btn btn-xs btn-primary" @click="激活码show(v.mchId)">激活码</a>
                       </div>
                       <a class="btn btn-xs btn-primary" @click="商户二维码(v.mchId)">商户二维码</a><br>
                     </td>
@@ -479,20 +479,31 @@
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="view.title" disabled>
                 </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 
+                </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-3 control-label">商户编号</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.title" disabled>
+                  <input type="text" class="form-control input-sm" v-model="view.identifier" disabled>
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 营业执照经营编号
                 </div>
               </div>
 
               <hr>
 
-              激活码总数：4 &nbsp;&nbsp;&nbsp;&nbsp; 授权有效期：2018.01.01-2019.12.31
+              <div class="pull-right">
+                授权有效期：
+                {{view.effectiveStartTime.split(' ')[0]}} ~ {{view.effectiveEndTime.split(' ')[0]}}
+              </div>
 
-              <table class="table table-bordered">
+              激活码总数： {{激活码.length}}
+
+              <table class="table table-bordered mt10">
                 <thead>
                   <tr>
                     <th>激活码</th>
@@ -501,11 +512,11 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="i in 5">
-                    <td>W2F97-F3C67-JFHYH-YK7TW <a href="#">[复制]</a></td>
-                    <td>未使用</td>
+                  <tr v-for="(v,i) in 激活码">
+                    <td><span :id="`激活码${i}`">{{v.activationCode}}</span> <a :href="`javascript:app.激活码copy(${i})`">[复制]</a></td>
+                    <td>{{{1:'未使用', 2:'已使用'}[v.status]}}</td>
                     <td>
-                      <a href="#">[删除]</a>
+                      <a :href="`javascript:app.激活码del(${i})`">[删除]</a>
                     </td>
                   </tr>
                 </tbody>
@@ -813,7 +824,14 @@ var app = new Vue({
       agent: [],
     },
 
+    view:{
+      effectiveStartTime: '0000-00-00 00:00:00',
+      effectiveEndTime: '0000-00-00 00:00:00'
+    },
+
     我的代理: {},
+
+    激活码: [],
 
     search_pca: {
       p: {},
@@ -1234,18 +1252,8 @@ var app = new Vue({
 
     },
 
-    激活码: function(id, title){
 
-      this.view = {
-        title: title, 
-        rules: []
-      }
-
-      if(id == -1){
-        this.add_rules()
-        $('#激活码').modal('show')
-        return
-      }
+    激活码show: function(id){
 
       var data = {
         "reqHead":
@@ -1262,7 +1270,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getMchProfitRule/interface',
+        url: mp_api + 'mp/getMchInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1270,34 +1278,9 @@ var app = new Vue({
         },
         success: function(re){
 
-          //换变量名
-          re.rspBody.rules = re.rspBody.ruleList
-          delete re.rspBody.ruleList
-
-          //防空
-          if ( re.rspBody['rules'] == undefined ){
-            re.rspBody['rules'] = []
-          }
-
-          //提取
-          if(re.rspBody['rules'][0] != undefined){
-            re.rspBody.radix = re.rspBody['rules'][0].radix
-            re.rspBody.mode = re.rspBody['rules'][0].mode
-            re.rspBody.poundage = re.rspBody['rules'][0].poundage
-          }
-
-          //清除
-          for(var i in re.rspBody['rules']){
-            delete re.rspBody['rules'][i]['mchId']
-            delete re.rspBody['rules'][i]['radix']
-            delete re.rspBody['rules'][i]['mode']
-            delete re.rspBody['rules'][i]['poundage']
-          }
-
           _this.view = re.rspBody
-          _this.view.mchId = id
-          _this.view.title = title
 
+          _this.激活码get()
 
           $('#激活码').modal('show')
 
@@ -1305,7 +1288,118 @@ var app = new Vue({
       })
 
     },
+    激活码get: function(){
 
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: this.view.mchId
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getMchActivationCodeList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.激活码 = re.rspBody.List
+
+        }
+      })
+
+    },
+    激活码add: function(){
+
+      var tmp = md5(new Date().getTime()).toUpperCase()
+      var code = tmp.substr(0,5) + '-' + tmp.substr(5,5) + '-' + tmp.substr(10,5) + '-' + tmp.substr(15,5)
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: this.view.mchId,
+          activationCode: code
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/addMchActivationCode/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode==1){
+            _this.激活码get()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        }
+      })
+
+    },
+    激活码copy: function(i){
+      selectText('激活码' + i)
+      document.execCommand('copy')
+      alert('复制成功')
+    },
+    激活码del: function(i){
+
+      if(!confirm('确定要删除激活码：' + this.激活码[i].activationCode))return
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: this.激活码[i].id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/delMchActivationCode/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode==1){
+            _this.激活码get()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        }
+      })
+
+    },
 
     getLV2: function(fid, clean_lv2){
 
