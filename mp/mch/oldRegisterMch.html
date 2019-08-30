@@ -508,16 +508,12 @@
                   <tr>
                     <th>激活码</th>
                     <th>状态</th>
-                    <th>操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v,i) in 激活码">
                     <td><span :id="`激活码${i}`">{{v.activationCode}}</span> <a :href="`javascript:app.激活码copy(${i})`">[复制]</a></td>
                     <td>{{{1:'未使用', 2:'已使用'}[v.status]}}</td>
-                    <td>
-                      <a :href="`javascript:app.激活码del(${i})`">[删除]</a>
-                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -1319,86 +1315,11 @@ var app = new Vue({
       })
 
     },
-    激活码add: function(){
 
-      var tmp = md5(new Date().getTime()).toUpperCase()
-      var code = tmp.substr(0,5) + '-' + tmp.substr(5,5) + '-' + tmp.substr(10,5) + '-' + tmp.substr(15,5)
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          mchId: this.view.mchId,
-          activationCode: code
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/addMchActivationCode/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode==1){
-            _this.激活码get()
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        }
-      })
-
-    },
     激活码copy: function(i){
       selectText('激活码' + i)
       document.execCommand('copy')
       alert('复制成功')
-    },
-    激活码del: function(i){
-
-      if(!confirm('确定要删除激活码：' + this.激活码[i].activationCode))return
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          id: this.激活码[i].id
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/delMchActivationCode/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode==1){
-            _this.激活码get()
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        }
-      })
-
     },
 
     getLV2: function(fid, clean_lv2){
@@ -1759,6 +1680,21 @@ var app = new Vue({
 
   }
 })
+
+function selectText(id){
+  var x = document.getElementById(id)
+  if(document.selection){
+    var range = document.body.createTextRange()//ie
+    range.moveToElementText(x)
+    range.select()
+  }else if(window.getSelection){
+    var selection = window.getSelection()
+    var range = document.createRange()
+    selection.removeAllRanges()
+    range.selectNodeContents(x)
+    selection.addRange(range)
+  }
+}
 </script>
 </body>
 </html>
