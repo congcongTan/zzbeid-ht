@@ -340,10 +340,10 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">授权有效期</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm datetimepicker" v-model="view.effectiveStartTime">
+                  <input type="text" class="form-control input-sm datetimepicker" id="startTime">
                 </div>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm datetimepicker" v-model="view.effectiveEndTime">
+                  <input type="text" class="form-control input-sm datetimepicker" id="endTime">
                 </div>
               </div>
 
@@ -375,7 +375,6 @@
           </div>
           <div class="modal-footer">
             <a class="btn btn-primary" @click="有效期自动更新_save()">保存</a>
-            <!-- <a class="btn btn-primary" @click="saveView">确定</a> -->
             <a class="btn btn-default" @click="closeView">关闭</a>
           </div>
         </div>
@@ -937,6 +936,9 @@ var app = new Vue({
 
           _this.view = re.rspBody
 
+          $('#startTime').val(_this.view.effectiveStartTime)
+          $('#endTime').val(_this.view.effectiveEndTime)
+
           _this.激活码get()
 
           $('#view').modal('show')
@@ -1063,55 +1065,6 @@ var app = new Vue({
       })
 
     },
-    saveView: function(){
-
-      if($('#password').val() != ''){
-        this.view.password = $('#password').val()
-      }else{
-        delete this.view.password
-      }
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: this.view
-      }
-
-      if ( data.reqBody.superiorAgentId != '' && data.reqBody.agentId == '' ){
-
-        data.reqBody.agentId = data.reqBody.superiorAgentId
-        delete data.reqBody.superiorAgentId
-
-      }
-
-      var add_or_edit = this.view.mchId == undefined ? 'add':'edit'
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/' + add_or_edit + 'Mch/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-            $('#view').modal('hide')
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
-      })
-
-    },
     有效期自动更新_save: function(){
 
       var data = {
@@ -1124,8 +1077,8 @@ var app = new Vue({
         },
         reqBody: {
           mchId: this.view.mchId,
-          effectiveStartTime: this.view.effectiveStartTime,
-          effectiveEndTime: this.view.effectiveEndTime,
+          effectiveStartTime: $('#startTime').val(),
+          effectiveEndTime: $('#endTime').val(),
           pmsIsAutoupdate: this.view.pmsIsAutoupdate
         }
       }
