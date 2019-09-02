@@ -1214,8 +1214,6 @@ var app = new Vue({
         return
       }
 
-      this.view.flag = true
-
       var data = {
         "reqHead":
         {
@@ -1236,7 +1234,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/addMch/interface',
+        url: manager_api + 'manager/mchCheck/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
