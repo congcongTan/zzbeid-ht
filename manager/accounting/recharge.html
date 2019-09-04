@@ -254,6 +254,7 @@
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
                     <th>订单号</th>
                     <th>会员名称</th>
+                    <th>手机号码</th>
                     <th>商品名称</th>
                     <th>商品数量</th>
                     <th>实付金额</th>
@@ -268,6 +269,7 @@
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td :title="`${v.orderNo}`">{{v.orderNo.substr(0, 4)}}****{{v.orderNo.substr(-4, 4)}}</td>
                     <td>{{v.memberName}}</td>
+                    <td>{{v.mobile}}</td>
                     <td>{{v.goodTitle}}</td>
                     <td>{{v.goodNumber}}</td>
                     <td>￥{{v.totalPrice}}</td>
