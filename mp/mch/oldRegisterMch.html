@@ -496,23 +496,20 @@
 
               <hr>
 
-              <div class="pull-right">
-                授权有效期：
-                {{view.effectiveStartTime.split(' ')[0]}} ~ {{view.effectiveEndTime.split(' ')[0]}}
-              </div>
-
               激活码总数： {{激活码.length}}
 
               <table class="table table-bordered mt10">
                 <thead>
                   <tr>
                     <th>激活码</th>
+                    <th>有效期</th>
                     <th>状态</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v,i) in 激活码">
                     <td><span :id="`激活码${i}`">{{v.activationCode}}</span> <a :href="`javascript:app.激活码copy(${i})`">[复制]</a></td>
+                    <td>{{v.effectiveStartTime}}~{{v.effectiveEndTime}}</td>
                     <td>{{{1:'未使用', 2:'已使用'}[v.status]}}</td>
                   </tr>
                 </tbody>
