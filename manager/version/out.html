@@ -218,8 +218,8 @@
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td>{{v.name}}</td>
                     <td>{{v.poundage}}</td>
-                    <td>{{v.typeTitle}}</td>
-                    <td>{{v.versionTitle}}</td>
+                    <td>{{接口类型[v.type]}}</td>
+                    <td>{{接口版本[v.version]}}</td>
                     <td>{{v.priority}}</td>
                     <td>{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
