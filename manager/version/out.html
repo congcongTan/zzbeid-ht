@@ -219,7 +219,7 @@
                     <td>{{v.name}}</td>
                     <td>{{v.poundage}}</td>
                     <td>{{v.typeTitle}}</td>
-                    <td></td>
+                    <td>{{v.versionTitle}}</td>
                     <td>{{v.priority}}</td>
                     <td>{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
@@ -643,23 +643,6 @@ var app = new Vue({
         all: [],
         checked: [],
       },
-    },
-
-    接口类型: {
-      1: '公安部',
-      2: '海鑫',
-      3: '国政通',
-      4: '上海爱金'
-    },
-
-    接口版本: {
-      1: '标准版',
-      2: '简化版'
-    },
-
-    状态: {
-      1: '可用',
-      2: '不可用'
     },
 
   },
