@@ -462,7 +462,7 @@
 
 
     <div class="modal fade" id="激活码">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -496,21 +496,25 @@
 
               <hr>
 
-              激活码总数： {{激活码.length}}
+              激活码总数： {{激活码.length}}　<a class="btn btn-sm btn-primary" href="javascript:app.激活码add()">新增</a>
 
               <table class="table table-bordered mt10">
                 <thead>
                   <tr>
                     <th>激活码</th>
-                    <th>有效期</th>
+                    <th>有效时间</th>
                     <th>状态</th>
+                    <th>操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v,i) in 激活码">
                     <td><span :id="`激活码${i}`">{{v.activationCode}}</span> <a :href="`javascript:app.激活码copy(${i})`">[复制]</a></td>
-                    <td>{{v.effectiveStartTime}}~{{v.effectiveEndTime}}</td>
+                    <td><input type="date" class="k w130 tc" v-model="v.effectiveStartTime"> ~ <input type="date" class="k w130 tc" v-model="v.effectiveEndTime"></td>
                     <td>{{{1:'未使用', 2:'已使用'}[v.status]}}</td>
+                    <td>
+                      <a :href="`javascript:app.激活码save(${i})`">[保存]</a>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -671,6 +675,8 @@
 <script src="../../plugins/adminLTE/js/adminlte.min.js"></script>
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
+
+<script src="../../js/md5.js"></script>
 
 <script>
 var app = new Vue({
@@ -1307,6 +1313,84 @@ var app = new Vue({
         success: function(re){
 
           _this.激活码 = re.rspBody.List
+
+        }
+      })
+
+    },
+
+    激活码add: function(){
+
+      var tmp = md5(new Date().getTime()).toUpperCase()
+      var code = tmp.substr(0,5) + '-' + tmp.substr(5,5) + '-' + tmp.substr(10,5) + '-' + tmp.substr(15,5)
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: this.view.mchId,
+          activationCode: code
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/addMchActivationCode/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode==1){
+            _this.激活码get()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        }
+      })
+
+    },
+
+    激活码save: function(i){
+
+      // console.log(this.激活码[i])
+      // return
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.激活码[i]
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/editMchActivationCode/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode==1){
+            alert('保存成功')
+            // _this.激活码get()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
 
         }
       })
