@@ -347,9 +347,22 @@
                 </div>
               </div>
 
+              <div class="form-group">
+                <label class="col-sm-3 control-label">激活码上限数</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.activationCodeLimit">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-sm-offset-3 col-sm-4">
+                  <a class="btn btn-primary" @click="有效期自动更新_save()">保存</a>
+                </div>
+              </div>
+
               <hr>
 
-              激活码总数： {{激活码.length}}　<a class="btn btn-sm btn-primary" href="javascript:app.激活码add()">新增</a>
+              <a class="btn btn-sm btn-primary" href="javascript:app.激活码add()">新增</a>
 
               <table class="table table-bordered mt10">
                 <thead>
@@ -377,7 +390,6 @@
 
           </div>
           <div class="modal-footer">
-            <a class="btn btn-primary" @click="有效期自动更新_save()">保存</a>
             <a class="btn btn-default" @click="closeView">关闭</a>
           </div>
         </div>
@@ -1129,7 +1141,8 @@ var app = new Vue({
           mchId: this.view.mchId,
           effectiveStartTime: $('#startTime').val(),
           effectiveEndTime: $('#endTime').val(),
-          pmsIsAutoupdate: this.view.pmsIsAutoupdate
+          pmsIsAutoupdate: this.view.pmsIsAutoupdate,
+          activationCodeLimit: this.view.activationCodeLimit
         }
       }
 
