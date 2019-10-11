@@ -509,6 +509,8 @@
                 <thead>
                   <tr>
                     <th>激活码</th>
+                    <th>创建来源</th>
+                    <th>创建人</th>
                     <th>有效时间</th>
                     <th>状态</th>
                     <th>操作</th>
@@ -517,6 +519,8 @@
                 <tbody>
                   <tr v-for="(v,i) in 激活码">
                     <td><span :id="`激活码${i}`">{{v.activationCode}}</span> <a :href="`javascript:app.激活码copy(${i})`">[复制]</a></td>
+                    <td>{{{1:'管理后台',2:'商户后台'}[v.createSource]}}</td>
+                    <td>{{v.creator}}</td>
                     <td><input type="date" class="k w130 tc" v-model="v.effectiveStartTime"> ~ <input type="date" class="k w130 tc" v-model="v.effectiveEndTime"></td>
                     <td>{{{1:'未使用', 2:'已使用'}[v.status]}}</td>
                     <td>
@@ -738,6 +742,7 @@ var app = new Vue({
 		4:'云辰',
 		5:'龙管家',
 		6:'恒邦',
+		7:'鼎泰云计费',
 		10000:'中证宝酒店',
 		10001:'中冠PMS',
 		10002:'千里马酒店',
@@ -1341,7 +1346,8 @@ var app = new Vue({
         },
         reqBody: {
           mchId: this.view.mchId,
-          activationCode: code
+          activationCode: code,
+          creator: this.admin.user
         }
       }
 
