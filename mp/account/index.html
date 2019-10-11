@@ -205,8 +205,8 @@ var app = new Vue({
 
 
     account: {
-      // account: "6104040759",
-      // password: "123456",
+      // account: "",
+      // password: "",
       // type: 2,
     },
 
@@ -536,6 +536,7 @@ var app = new Vue({
       var admin = data
       admin.id = admin.primaryAccountId
       admin.user = admin.account
+      admin.realname = admin.realname
       admin.type = admin.roleFlag
 
       if(data2 != undefined){

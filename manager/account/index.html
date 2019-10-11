@@ -367,6 +367,7 @@ var app = new Vue({
             var admin = {}
             admin.id = re.rspBody.managerRspDTO.id
             admin.user = re.rspBody.managerRspDTO.account
+            admin.realname = re.rspBody.managerRspDTO.realname
             admin.token = re.rspBody.token
             admin.expire = new Date().getTime() + (180 * 60 * 1000)
             LS.admin = JSON.stringify(admin)
