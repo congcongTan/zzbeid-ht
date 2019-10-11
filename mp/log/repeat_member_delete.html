@@ -214,7 +214,7 @@
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td>{{v.id}}</td>
-                    <td>{{v.realname}}</td>
+                    <td>{{v.realName}}</td>
                     <td>{{v.mobile}}</td>
                     <td>{{['否','是'][v.isAuthentication]}}</td>
                     <td :class="`${v.isLock == 1 ? 'text-danger':''}`">{{['否','是'][v.isLock]}}</td>
@@ -496,7 +496,8 @@ var app = new Vue({
 		3:'湖南万象(斯雨)',
 		4:'云辰',
 		5:'龙管家',
-		6:'恒邦'
+		6:'恒邦',
+		7:'鼎泰云计费',
 	},
 
 	汽车站行业:{
@@ -790,6 +791,15 @@ var app = new Vue({
     },
 
     getList: function(key, val){
+
+      console.log(this.list.post.realName, this.list.post.mobile)
+      if(
+        (this.list.post.realName == undefined || this.list.post.realName == '')
+        && (this.list.post.mobile == undefined || this.list.post.mobile == '')
+        ){
+        alert('真实姓名 或 手机号 必需填一个才能搜索')
+        return
+      }
 
       _this = this
 
