@@ -276,6 +276,7 @@
                     <th>房型名称</th>
                     <th>房间数量</th>
                     <th>入住天数</th>
+                    <th>预付实付金额</th>
                     <th>订单状态</th>
                     <th>订单类型</th>
                     <th>来源</th>
@@ -294,6 +295,7 @@
                     <td>{{v.roomTypeName}}</td>
                     <td>{{v.roomNum}}</td>
                     <td>{{v.checkInDay}}</td>
+                    <td>{{v.actualamount}}</td>
                     <td>{{订单状态[v.orderStatus]}}</td>
                     <td>{{订单类型[v.orderType]}}</td>
                     <td>{{来源[v.source]}}</td>
@@ -1014,16 +1016,15 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    var date = new Date()
-    var now_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+    var d1 = new Date()
+    var d2 = new Date(d1.getTime() + (86400000 * 7))//加7天
 
-    $('#startTime').val(now_date + ' 00:00:00')
-    $('#endTime').val(now_date + ' 23:59:59')
+    $('#startTime').val(d1.getFullYear() + '-' + (d1.getMonth() + 1) + '-' + d1.getDate() + ' 00:00:00')
+    $('#endTime'  ).val(d2.getFullYear() + '-' + (d2.getMonth() + 1) + '-' + d2.getDate() + ' 23:59:59')
 
     $(".datepicker2").datetimepicker({
       format: 'Y-m-d H:i:s',
     })
-
 
     this.getList()
 
