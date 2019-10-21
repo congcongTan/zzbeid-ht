@@ -674,8 +674,7 @@ var app = new Vue({
         payModeNo: 4,
         dealMode: '',
         pageNum: 1,
-        pageSize: 10,
-        payType: 1
+        pageSize: 10
       },
       info: {},
       page: {},
@@ -820,7 +819,7 @@ var app = new Vue({
       this.list.post.guaranteeStartTime = $('#startTime2').val()
       this.list.post.guaranteeEndTime = $('#endTime2').val()
 
-      this.list.post.isExport = false
+      delete(this.list.post.isExport)
 
       if(key == 'page'){
 
@@ -920,7 +919,7 @@ var app = new Vue({
       this.list.post.guaranteeStartTime = $('#startTime2').val()
       this.list.post.guaranteeEndTime = $('#endTime2').val()
 
-      this.list.post.isExport = true
+      this.list.post.isExport = 'true'
 
       var data = {
         "reqHead":
