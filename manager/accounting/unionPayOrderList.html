@@ -185,7 +185,7 @@
                 <div class="form-horizontal">
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">发生时间</label>
+                    <label class="col-sm-2 control-label">担保提交时间</label>
                     <div class="col-sm-10">
                       <div class="row">
                         <div class="col-xs-5 col-sm-3">
@@ -196,6 +196,23 @@
                         </div>
                         <div class="col-xs-5 col-sm-3">
                           <input type="text" class="form-control datepicker2" id="endTime">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">最后操作时间</label>
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control datepicker2" id="startTime2">
+                        </div>
+                        <div class="fl w20 mt8 tc">
+                          ~
+                        </div>
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control datepicker2" id="endTime2">
                         </div>
                       </div>
                     </div>
@@ -257,6 +274,11 @@
                         查找
                         <i class="fa fa-spinner fa-pulse" v-if="list.loading == 1"></i>
                       </button>
+
+                      <button class="btn btn-default" onclick="app.导出(this)">
+                        导出
+                        <i class="fa fa-spinner fa-spin" style="display: none"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -280,7 +302,8 @@
                     <th>来源</th>
                     <th>交易模式</th>
                     <th>支付状态</th>
-                    <th>发生时间</th>
+                    <th>担保提交时间</th>
+                    <th>最后操作时间</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -297,6 +320,7 @@
                     <td>{{交易模式[v.dealMode]}}</td>
                     <td>{{支付状态[v.guaranteeStatus]}}</td>
                     <td>{{v.lastCompleteTime}}</td>
+                    <td>{{v.guaranteeTime}}</td>
                   </tr>
                   <tr v-if="list.data.length == 0">
                     <td colspan="99">没有数据</td>
@@ -793,6 +817,10 @@ var app = new Vue({
       this.list.post.lastCompleteStartTime = $('#startTime').val()
       this.list.post.lastCompleteEndTime = $('#endTime').val()
 
+      this.list.post.guaranteeStartTime = $('#startTime2').val()
+      this.list.post.guaranteeEndTime = $('#endTime2').val()
+
+      this.list.post.isExport = false
 
       if(key == 'page'){
 
@@ -871,6 +899,57 @@ var app = new Vue({
               _this.list.page.next.push(i)
             }
 
+          }
+
+        }
+      })
+
+    },
+
+    导出: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
+
+      var _this = this
+
+      //这里用v-model会有大坑
+      this.list.post.lastCompleteStartTime = $('#startTime').val()
+      this.list.post.lastCompleteEndTime = $('#endTime').val()
+
+      this.list.post.guaranteeStartTime = $('#startTime2').val()
+      this.list.post.guaranteeEndTime = $('#endTime2').val()
+
+      this.list.post.isExport = true
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getUnionPayOrderList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+
+          if(re.rspHead.retCode == 1){
+            location.href = re.rspBody.file
+          }else{
+            alert(re.rspHead.retMsg)
           }
 
         }
@@ -992,8 +1071,12 @@ var app = new Vue({
     var date = new Date()
     var now_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 
-    $('#startTime').val(now_date + ' 00:00')
-    $('#endTime').val(now_date + ' 23:59')
+    // $('#startTime').val(now_date + ' 00:00')
+    // $('#endTime').val(now_date + ' 23:59')
+
+    // $('#startTime2').val(now_date + ' 00:00')
+    // $('#endTime2').val(now_date + ' 23:59')
+
 
     $(".datepicker2").datetimepicker()
 
