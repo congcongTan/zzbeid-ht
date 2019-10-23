@@ -296,6 +296,7 @@
                     <th>客户端版本号</th>
                     <th>二次验证</th>
                     <th>支付积分</th>
+                    <th>剩余积分</th>
                     <th>状态</th>
                     <th width="1%">操作</th>
                   </tr>
@@ -314,6 +315,7 @@
                     <td>{{v.appVersion}}</td>
                     <td>{{['关闭','开启'][v.appSecondVerify]}}</td>
                     <td>{{v.payIntegral}}</td>
+                    <td>{{v.mchIntegral}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="getView(v.mchId)">编辑</a><br>
@@ -442,9 +444,19 @@
               <hr>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">支付积分</label>
+                <label class="col-sm-3 control-label">用户支付积分</label>
                 <div class="col-sm-4">
-                  <input type="number" class="form-control input-sm" placeholder="设置用户授权需支付金额" v-model="view.payIntegral">
+                  <input type="number" class="form-control input-sm" v-model="view.payIntegral">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 免费输入0
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户支付积分</label>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control input-sm" v-model="view.mchPayIntegral">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   * 免费输入0
@@ -968,7 +980,8 @@ var app = new Vue({
 	上架渠道:{
 		1:'中证宝',
 		2:'旺宝',
-		3:'充电h5'
+		3:'充电h5',
+		4:'中证宝商户端'
 	},
 
 	行业:{

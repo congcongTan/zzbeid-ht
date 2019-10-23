@@ -274,8 +274,8 @@
                     <th>会员名称</th>
                     <th>手机号</th>
                     <th>消费商户</th>
-                    <th>消费积分</th>
-                    <th>支付方式</th>
+                    <th>用户消费积分</th>
+                    <th>商户消费积分</th>
                     <th>变更类型</th>
                     <th>消费商品</th>
                     <th>发生时间</th>
@@ -286,15 +286,15 @@
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td>{{v.memberName}}</td>
-                    <td>{{v.mobile}}</td>
+                    <td>{{v.memberMobile}}</td>
                     <td>{{v.mchName}}</td>
-                    <td>{{v.changeIntegral}}</td>
-                    <td>{{支付方式[v.payType]}}</td>
+                    <td>{{v.memberChangeIntegral}}</td>
+                    <td>{{v.mchChangeIntegral}}</td>
                     <td>{{v.changeTitle}}</td>
                     <td>{{v.goodId}}</td>
                     <td>{{v.createTime}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-danger" v-if="v.payStatus == 1" @click="退积分(v.id, v.memberId)">退积分</a><br>
+                      <a class="btn btn-xs btn-danger" v-if="v.payStatus == 1" @click="退积分(v.id)">退积分</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.data.length == 0">
@@ -523,7 +523,8 @@ var app = new Vue({
 	上架渠道:{
 		1:'中证宝',
 		2:'旺宝',
-		3:'充电h5'
+		3:'充电h5',
+		4:'中证宝商户端'
 	},
 
 	行业:{
@@ -888,7 +889,7 @@ var app = new Vue({
 
     },
 
-    退积分: function(id, memberId){
+    退积分: function(id){
 
       if(!confirm('确认退积分')){
         return
@@ -903,8 +904,7 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          id: id,
-          memberId: memberId,
+          id: id
         }
       }
 
