@@ -201,6 +201,7 @@
                     <label class="col-sm-2 control-label">支付方式</label>
                     <div class="col-sm-3">
                       <select class="form-control" v-model="list.post.payType">
+                        <option value="0"></option>
                         <option :value="`${i}`" v-for="(v, i) in 支付方式">{{v}}</option>
                       </select>
                     </div>
@@ -209,6 +210,7 @@
                     <label class="col-sm-2 control-label">支付状态</label>
                     <div class="col-sm-3">
                       <select class="form-control" v-model="list.post.status">
+                        <option value="100"></option>
                         <option :value="`${i}`" v-for="(v, i) in 支付状态">{{v}}</option>
                       </select>
                     </div>
@@ -217,7 +219,7 @@
                     <label class="col-sm-2 control-label">APP类型</label>
                     <div class="col-sm-3">
                       <select class="form-control" v-model="list.post.channel">
-                        <option value=""></option>
+                        <option value="0"></option>
                         <option :value="`${i}`" v-for="(v, i) in 上架渠道">{{v}}</option>
                       </select>
                     </div>
@@ -226,7 +228,7 @@
                     <label class="col-sm-2 control-label">用户类型</label>
                     <div class="col-sm-3">
                       <select class="form-control" v-model="list.post.userType">
-                        <option value=""></option>
+                        <option value="0"></option>
                         <option :value="`${i}`" v-for="(v, i) in 用户类型">{{v}}</option>
                       </select>
                     </div>
@@ -639,7 +641,11 @@ var app = new Vue({
       data: [],
       post: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        payType: 0,
+        status: 100,
+        channel: 0,
+        userType: 0,
       },
       info: {},
       page: {},
