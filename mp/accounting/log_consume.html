@@ -247,9 +247,8 @@
                     <th>手机号</th>
                     <th>消费商户</th>
                     <th>消费商品</th>
-                    <th>用户消费积分</th>
-                    <th>商户消费积分</th>
-                    <th>变更类型</th>
+                    <th>用户消费</th>
+                    <th>商户消费</th>
                     <th>支付状态</th>
                     <th>发生时间</th>
                     <th width="1%" v-if="admin.type == 2">操作</th>
@@ -264,7 +263,6 @@
                     <td>{{v.goodId}}</td>
                     <td>{{v.memberChangeIntegral}}</td>
                     <td>{{v.mchChangeIntegral}}</td>
-                    <td>{{v.changeTitle}}</td>
                     <td>{{v.payStatusTitle}}</td>
                     <td>{{v.createTime}}</td>
                     <td class="text-nowrap operation" v-if="admin.type == 2">
