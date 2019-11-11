@@ -540,6 +540,24 @@
       </div>
     </div>
 
+    <div class="modal fade" id="二维码">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              商户二维码
+            </h4>
+          </div>
+          <div class="modal-body tc">
+
+            <img id="qrcode" width="100%">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <footer class="main-footer">
@@ -1134,8 +1152,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.mchListByAgentInfoList
-          delete re.rspBody.mchListByAgentInfoList
+          _this.list.data = re.rspBody.mchListByAgentInfoListVO
+          delete re.rspBody.mchListByAgentInfoListVO
 
           _this.list.info = re.rspBody
 
@@ -1596,7 +1614,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          location.href = re.rspBody.file
+          $('#qrcode').attr('src', re.rspBody.file)
+          $('#二维码').modal('show')
         }
       })
 
