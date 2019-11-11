@@ -223,6 +223,7 @@
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
                     <th>会员名称</th>
                     <th>消费积分</th>
+                    <th>消费赠送积分</th>
                     <th>更换结果</th>
                     <th>发生时间</th>
                   </tr>
@@ -232,6 +233,7 @@
                     <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
                     <td>{{v.memberName}}</td>
                     <td>{{v.changeIntegral}}</td>
+                    <td>{{v.changePresentIntegral}}</td>
                     <td>{{v.remark}}</td>
                     <td>{{v.createTime}}</td>
                   </tr>

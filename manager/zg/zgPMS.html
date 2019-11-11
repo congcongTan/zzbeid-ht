@@ -904,8 +904,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.mchPageList
-          delete re.rspBody.mchPageList
+          _this.list.data = re.rspBody.mchPageListVO
+          delete re.rspBody.mchPageListVO
 
           _this.list.info = re.rspBody          
 
