@@ -209,6 +209,7 @@
                     <th>商品名称</th>
                     <th>销售价</th>
                     <th>可获得积分</th>
+                    <th>赠送积分</th>
                     <th>APP类型</th>
                     <th>使用行业限制</th>
                     <th>使用区域限制</th>
@@ -224,6 +225,7 @@
                     <td>{{v.title}}</td>
                     <td>￥{{v.price}}</td>
                     <td>{{v.integral}}</td>
+                    <td>{{v.presentIntegral}}</td>
                     <td>{{上架渠道[v.channel]}}</td>
                     <td>{{v.industryIdTitle}}</td>
                     <td>{{v.province}}</td>
@@ -342,6 +344,16 @@
                 <label class="col-sm-3 control-label">可获得积分</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="view.integral">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  * 月卡无须录入
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">赠送积分</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.presentIntegral">
                 </div>
                 <div class="col-sm-5 text-danger mt5">
                   * 月卡无须录入

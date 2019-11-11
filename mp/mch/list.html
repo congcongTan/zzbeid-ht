@@ -260,9 +260,9 @@
                     <th>上次登录时间</th>
                     <th>离线时长</th>
                     <th>客户端版本号</th>
-                    <th>二次验证</th>
                     <th>支付积分</th>
                     <th>剩余积分</th>
+                    <th>赠送积分</th>
                     <th>状态</th>
                     <th width="1%">操作</th>
                   </tr>
@@ -279,9 +279,9 @@
                     <td>{{v.lastLoginTime}}</td>
                     <td :class="{'text-danger': v.offLineTimeRed == 1}">{{v.offLineTime}}</td>
                     <td>{{v.appVersion}}</td>
-                    <td>{{['关闭','开启'][v.appSecondVerify]}}</td>
                     <td>{{v.payIntegral}}</td>
                     <td>{{v.mchIntegral}}</td>
+                    <td>{{v.mchPresentIntegral}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{状态[v.status]}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br>
