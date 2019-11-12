@@ -18,14 +18,8 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>商户首页</title>
+    <title>OTA订单明细</title>
 
-<style>
-.bigNum{
-  font-size: 20px;
-  color: #DD4B39;
-}
-</style>
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
 
@@ -148,129 +142,206 @@
 
     <section class="content-header">
       <h1>
-        商户首页
-        <small>统计</small>
+        OTA订单明细
       </h1>
       <ol class="breadcrumb">
-        <li><a href="{:url('/')}"><i class="fa fa-dashboard"></i> 首页</a></li>
-        <li class="active">商户首页</li>
+        <li><i class="fa fa-home"></i> 首页</li>
+        <li>计费管理</li>
+        <li class="active">OTA订单明细</li>
       </ol>
     </section>
 
-    <!-- Main content -->
     <section class="content">
-      <!-- Small boxes (Stat box) -->
       <div class="row">
-        <div class="col-sm-4 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-aqua">
-            <div class="inner">
-              <h3>{{view.LowestCount}}</h3>
-              <p>月保底笔数</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-bag"></i>
-            </div>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-sm-4 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-green">
-            <div class="inner">
-              <h3>￥{{view.thisMonthConsumeNum}}</h3>
-              <p>本月消费总笔数</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-stats-bars"></i>
-            </div>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-sm-4 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-yellow">
-            <div class="inner">
-              <h3>￥{{view.thisMonthPredictIncome}}</h3>
-              <p>本月预计收入(预计)</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-person-add"></i>
-            </div>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-sm-4 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-teal">
-            <div class="inner">
-              <h3>{{view.todayConsumeCount}}</h3>
-              <p>当天消费笔数</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-pie-graph"></i>
-            </div>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-sm-4 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-maroon">
-            <div class="inner">
-              <h3>￥{{view.thisYearIncome}}</h3>
-              <p>本年积分收入(截止上月)</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-pie-graph"></i>
-            </div>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-sm-4 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-blue">
-            <div class="inner">
-              <h3>{{view.lastMonthIncome}}</h3>
-              <p>上月积分收入</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-pie-graph"></i>
-            </div>
-          </div>
-        </div>
-        <!-- ./col -->
-      </div>
-      <!-- /.row -->
+        <div class="col-xs-12">
 
+          <div class="nav-tabs-custom">
 
-      <div class="row">
+            <ul class="nav nav-tabs">
+              <!-- <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
+              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+            </ul>
 
-        <div class="col-sm-12">
-          <div class="box box-primary">
-            <div class="box-header ui-sortable-handle" style="cursor: move;">
-              <h3 class="box-title">店长收银员统计</h3>
-            </div>
+            <div class="tab-content">
+              <div class="tab-pane" id="操作">
 
-            <div class="row p10 tc">
-              <div class="col-xs-6 mb10">
-                <div class="bigNum">{{view.thisMonthCollectPredictIncome}}</div>
-                本月分成金额(预计)
+                <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
+
+                <!-- <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a> -->
+
+                <!-- <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a> -->
+
               </div>
-              <div class="col-xs-6 mb10">
-                <div class="bigNum">{{view.lastMonthCollectIncome}}</div>
-                上月分成金额
+              <div class="tab-pane active" id="搜索">
+
+                <div class="form-horizontal">
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">预抵日期</label>
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control datepicker2" id="startTime">
+                        </div>
+                        <div class="fl w20 mt8 tc">
+                          ~
+                        </div>
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control datepicker2" id="endTime">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">商户名称</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.mchTitle">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">商户编号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.mchIdentifier">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">订单号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.orderNo">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">预定人姓名</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.reserveName">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">预定人电话</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.reserveMobile">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">订单类型</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.orderType">
+                        <option value="">全部</option>
+                        <option :value="`${i}`" v-for="(v, i) in 订单类型">{{v}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">订单来源</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.source">
+                        <option value="0">全部</option>
+                        <option :value="`${i}`" v-for="(v, i) in 来源">{{v}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
+                        查找
+                        <i class="fa fa-spinner fa-pulse" v-if="list.loading == 1"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
+
+            <div class="clearfix p10 pt0">
+
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr class="text-nowrap">
+                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
+                    <th>商户名称</th>
+                    <th>商户编号</th>
+                    <th>订单号</th>
+                    <th>预定人姓名</th>
+                    <th>预定人电话</th>
+                    <th>房型</th>
+                    <th>房量</th>
+                    <th>入住天数</th>
+                    <th>实付金额</th>
+                    <th>订单状态</th>
+                    <th>订单类型</th>
+                    <th>来源</th>
+                    <th>PMS同步</th>
+                    <th>预抵日期</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(v, i) in list.data">
+                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
+                    <td>{{v.mchTitle}}</td>
+                    <td>{{v.mchIdentifier}}</td>
+                    <td>{{v.orderNo}}</td>
+                    <td>{{v.reserveName}}</td>
+                    <td>{{v.reserveMobile}}</td>
+                    <td>{{v.roomTypeName}}</td>
+                    <td>{{v.roomNum}}</td>
+                    <td>{{v.checkInDay}}</td>
+                    <td>{{v.actualamount}}</td>
+                    <td>{{订单状态[v.orderStatus]}}</td>
+                    <td>{{订单类型[v.orderType]}}</td>
+                    <td>{{来源[v.source]}}</td>
+                    <td>{{['否','是'][v.pmsIsSync]}}</td>
+                    <td>{{v.arriveTime}}</td>
+                  </tr>
+                  <tr v-if="list.data.length == 0">
+                    <td colspan="99">没有数据</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="pull-left mt15">
+                <label>
+                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
+                    <option value="2">每页 2 条</option>
+                    <option value="10">每页 10 条</option>
+                    <option value="25">每页 25 条</option>
+                    <option value="50">每页 50 条</option>
+                    <option value="100">每页 100 条</option>
+                  </select>
+                </label>
+
+                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
+              </div>
+
+              <div class="pull-right" v-if="list.info.pages > 1">
+                <ul class="pagination pagination-sm">
+
+                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
+
+                  <li class="paginate_button" v-for="i in list.page.prev"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+
+                  <li class="paginate_button active"><a href="#">{{list.post.pageNum}}</a></li>
+
+                  <li class="paginate_button" v-for="i in list.page.next"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+
+                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
+                  </li>
+
+                </ul>
+              </div>
+
+            </div>
+
           </div>
+
         </div>
 
       </div>
-
 
     </section>
-    <!-- /.content -->
+
   </div>
-  <!-- /.content-wrapper -->
 
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
@@ -417,6 +488,8 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
+<link rel="stylesheet" href="../../plugins/datetimepicker/datetimepicker.css">
+<script src="../../plugins/datetimepicker/datetimepicker.js"></script>
 <script>
 var app = new Vue({
   el: '#app',
@@ -576,6 +649,46 @@ var app = new Vue({
 		2: '二代证',
 	},
 
+    list: {
+      data: [],
+      post: {
+        pageNum: 1,
+        pageSize: 10,
+        orderType: '',
+        source: 0,
+      },
+      info: {},
+      page: {},
+      checkbox: {
+        all: [],
+        checked: [],
+      },
+      loading: 0
+    },
+
+    支付方式:{
+      1: '现金',
+      2: '微信',
+      3: '支付宝'
+    },
+    订单状态:{
+      1: '未付款',
+      2: '已付款',
+      3: '取消',
+      4: '已完成',
+      5: '已入住',
+      6: '申请退款',
+      7: '同意退款',
+      8: '拒绝退款',
+      9: '拒绝入住'
+    },
+    订单类型:{
+      501: '预付',
+      16:  '现付'
+    },
+    来源:{
+      1: '微途居'
+    },
 
   },
   methods: {
@@ -799,6 +912,109 @@ var app = new Vue({
 
     },
 
+    getList: function(key, val){
+
+      _this = this
+
+      if(this.list.loading == 1){
+        return
+      }
+
+      //清空列表
+      this.list.data = []
+
+      //loading
+      this.list.loading = 1
+
+
+      //这里用v-model会有大坑
+      this.list.post.arriveTimeStart = $('#startTime').val()
+      this.list.post.arriveTimeEnd = $('#endTime').val()
+
+
+      if(key == 'page'){
+
+        if(val == '+1'){
+          if( this.list.post.pageNum < this.list.info.pages ){
+            this.list.post.pageNum++
+          }else{
+            return
+          }
+        }
+
+        if(val == '-1'){
+          if( this.list.post.pageNum > 1 ){
+            this.list.post.pageNum--
+          }else{
+            return
+          }
+        }
+
+      }
+
+      //去空格
+      for(var i in this.list.post){
+        this.list.post[i] = $.trim(this.list.post[i])
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getOTAHotelOrderList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        complete: function(){
+          _this.list.loading = 0
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == 1){
+
+            _this.list.data = re.rspBody.microPlatformOrderList
+            delete re.rspBody.microPlatformOrderList
+
+            _this.list.info = re.rspBody
+
+
+            //id
+            for( var i in _this.list.data ){
+              var v = _this.list.data[i]
+
+              _this.list.checkbox.all.push(v.id)
+            }
+
+            //分页
+            _this.list.page.prev = []
+            for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
+              if(i <= 0)continue;
+              _this.list.page.prev.push(i)
+            }
+
+            _this.list.page.next = []
+            for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
+              if(i > _this.list.info.pages)break;
+              _this.list.page.next.push(i)
+            }
+
+          }
+
+        }
+      })
+
+    },
 
   },
   mounted() {
@@ -892,37 +1108,20 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    var data = {
-      "reqHead":
-      {
-        clientType: 1,
-        format: "json",
-        version: "1.0",
-        sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-      },
-      reqBody: {
+    var d1 = new Date()
+    var d2 = new Date(d1.getTime() + (86400000 * 7))//加7天
 
-      }
-    }
+    $('#startTime').val(d1.getFullYear() + '-' + (d1.getMonth() + 1) + '-' + d1.getDate() + ' 00:00:00')
+    $('#endTime'  ).val(d2.getFullYear() + '-' + (d2.getMonth() + 1) + '-' + d2.getDate() + ' 23:59:59')
 
-    $.ajax({
-      type: 'POST',
-      url: mp_api + 'mp/mchHomePage/interface',
-      data: JSON.stringify(data),
-      dataType: 'json',
-      beforeSend: function(request){
-        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-      },
-      success: function(re){
-
-        _this.view = re.rspBody
-
-      }
+    $(".datepicker2").datetimepicker({
+      format: 'Y-m-d H:i:s',
     })
 
-  }
-});
-</script>
+    this.getList()
 
+  }
+})
+</script>
 </body>
 </html>
