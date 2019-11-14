@@ -1274,6 +1274,43 @@ var app = new Vue({
 
     },
 
+    导出excel: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/exportMchList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        complete: function(){
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+        },
+        success: function(re){
+
+          location.href = re.rspBody.file
+
+        }
+      })
+
+    },
+
     getView: function(id){
 
       this.view = {}
