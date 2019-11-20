@@ -283,9 +283,9 @@
                     <td class="text-nowrap operation" v-if="admin.roleFlag == 2">
                       <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">查看</a><br>
                       <div v-if="v.softwareVersion == 10001">
-                        <a class="btn btn-xs btn-primary" @click="激活码show(v.mchId)">激活码</a>
+                        <a class="btn btn-xs btn-primary" @click="激活码show(v.mchId)">激活码</a><br>
+                        <a class="btn btn-xs btn-primary" @click="短信次数(v.mchId)">短信次数</a>
                       </div>
-                      <a class="btn btn-xs btn-primary" @click="短信次数(v.mchId)">短信次数</a><br>
                       <a class="btn btn-xs btn-primary" @click="商户二维码(v.mchId)">商户二维码</a><br>
                     </td>
                   </tr>
