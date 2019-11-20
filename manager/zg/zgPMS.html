@@ -236,6 +236,8 @@
                     <td>{{v.effectiveStartTime.split(' ')[0]}}<br>~ {{v.effectiveEndTime.split(' ')[0]}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="getView(v.mchId)">修改</a><br>
+
+                      <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="短信次数(v.mchId)">短信次数</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -394,7 +396,138 @@
 
           </div>
           <div class="modal-footer">
-            <a class="btn btn-default" @click="closeView">关闭</a>
+            <a class="btn btn-default" @click="closeView('view')">关闭</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="短信次数">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              短信次数
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户名称</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.title" disabled>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户编号</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.identifier" disabled>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户负责人</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.linkman" disabled>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">负责人手机</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.mobile" disabled>
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">剩余短信次数</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.smsLimit" disabled>
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="mb10">
+                <a class="btn btn-sm btn-primary" href="javascript:;" @click="短信次数加减('加次数')">加次数</a>
+                <a class="btn btn-sm btn-primary" href="javascript:;" @click="短信次数加减('减次数')">减次数</a>
+              </div>
+
+              <div style="max-height:250px;overflow-y:scroll;">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>操作类型</th>
+                      <th>增减次数</th>
+                      <th>增减原因</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(v, i) in 短信次数list">
+                      <td>{{v.title}}</td>
+                      <td>{{v.changeNo}}</td>
+                      <td>{{v.remark}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-default" @click="closeView('短信次数')">关闭</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="短信次数加减">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              短信次数
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">操作类型</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="短信次数加减a.type" disabled>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">本次增减</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="短信次数加减a.changeCount">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">本次增减</label>
+                <div class="col-sm-4">
+                  <textarea type="text" class="form-control" v-model="短信次数加减a.remark"></textarea>
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="短信次数加减save()">确定</a>
           </div>
         </div>
       </div>
@@ -729,6 +862,9 @@ var app = new Vue({
 
     激活码: [],
 
+    短信次数list: [],
+    短信次数加减a: {},
+
     search_pca: {
       p: {},
       c: {},
@@ -986,7 +1122,6 @@ var app = new Vue({
         }
       })
 
-
     },
 
     激活码get: function(){
@@ -1181,9 +1316,138 @@ var app = new Vue({
       })
 
     },
-    closeView: function(){
-      $('#view').modal('hide')
+
+    closeView: function(id){
+      $('#' + id).modal('hide')
     },
+
+    短信次数: function(id){
+
+      this.view = {}
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getMchInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view = re.rspBody
+
+          _this.短信次数get()
+
+          $('#短信次数').modal('show')
+
+        }
+      })
+    },
+
+    短信次数get: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: this.view.mchId
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getEditMchSmsLimitList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view.smsLimit = re.rspBody.smsLimit
+          _this.短信次数list = re.rspBody.editMchMessageLimitVOList
+
+        }
+      })
+
+    },
+
+    短信次数加减: function(type){
+
+      this.短信次数加减a = {}
+
+      // this.短信次数加减a.mchId = this.view.mchId
+      this.短信次数加减a.type = type
+
+      $('#短信次数加减').modal('show')
+    },
+    短信次数加减save: function(){
+
+      var _this = this
+
+      if(this.短信次数加减a.type == '加次数'){
+        var changeCount = this.短信次数加减a.changeCount
+      }else{
+        var changeCount = -this.短信次数加减a.changeCount
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: this.view.mchId,
+          changeCount: changeCount,
+          remark: this.短信次数加减a.remark
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/editMchSmsLimit/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode==1){
+            _this.短信次数get()
+            _this.closeView('短信次数加减')
+            // alert('保存成功')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        }
+      })
+    },
+
+
     del: function(id){
 
       if(!confirm('确认删除？')){
