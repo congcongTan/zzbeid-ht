@@ -188,25 +188,9 @@
                   </div>
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">代理商</label>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.agent1Id" onchange="app.getLV2(this.value, 1)">
-                        <option value="">--请选择--</option>
-                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
-                      </select>
-                    </div>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.agent2Id">
-                        <option value="">--请选择--</option>
-                        <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
                     <label class="col-sm-2 control-label">商户名称</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.mchName">
+                      <input type="text" class="form-control" v-model="list.post.mchTitle">
                     </div>
                   </div>
 
@@ -1086,7 +1070,7 @@ var app = new Vue({
       reqBody: {}
     }
 
-    $.ajax({
+/*    $.ajax({
       type: 'POST',
       url: mp_api + 'mp/getFirstAgentAll/interface',
       data: JSON.stringify(data),
@@ -1099,7 +1083,7 @@ var app = new Vue({
         _this.上级代理商.lv1 = re.rspBody.firstAgentList
 
       }
-    })
+    })*/
 
     this.getList()
 
