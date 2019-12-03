@@ -331,13 +331,13 @@
                     <td>{{v.consumeNum}}</td>
                     <td>{{v.consumeIntegral}}</td>
                     <td>{{v.consumeMemberIntegral}}</td>
-                    <td>{{v.consumeMemberPresentIntegra}}</td>
+                    <td>{{v.consumeMemberPresentIntegral}}</td>
                     <td>{{v.consumeMchIntegral}}</td>
                     <td>{{v.consumeMchPresentIntegral}}</td>
                     <td>{{v.refundNum}}</td>
                     <td>{{v.refundIntegral}}</td>
                     <td>{{v.refundMemberIntegral}}</td>
-                    <td>{{v.refundMemberPresentIntegra}}</td>
+                    <td>{{v.refundMemberPresentIntegral}}</td>
                     <td>{{v.refundMchIntegral}}</td>
                     <td>{{v.refundMchPresentIntegral}}</td>
                     <td>{{v.provinceName}}</td>
@@ -874,8 +874,16 @@ var app = new Vue({
             mchName: '总计',
             consumeNum: 0,
             consumeIntegral: 0,
+            consumeMemberIntegral: 0,
+            consumeMemberPresentIntegral: 0,
+            consumeMchIntegral: 0,
+            consumeMchPresentIntegral: 0,
             refundNum: 0,
             refundIntegral: 0,
+            refundMemberIntegral: 0,
+            refundMemberPresentIntegral: 0,
+            refundMchIntegral: 0,
+            refundMchPresentIntegral: 0,
             provinceName: '-',
             cityName: '-',
             areaName: '-',
@@ -888,8 +896,16 @@ var app = new Vue({
             // console.log(v)
             total.consumeNum += v.consumeNum
             total.consumeIntegral += v.consumeIntegral
+            total.consumeMemberIntegral += v.consumeMemberIntegral
+            total.consumeMemberPresentIntegral += v.consumeMemberPresentIntegral
+            total.consumeMchIntegral += v.consumeMchIntegral
+            total.consumeMchPresentIntegral += v.consumeMchPresentIntegral
             total.refundNum += v.refundNum
             total.refundIntegral += v.refundIntegral
+            total.refundMemberIntegral += v.refundMemberIntegral
+            total.refundMemberPresentIntegral += v.refundMemberPresentIntegral
+            total.refundMchIntegral += v.refundMchIntegral
+            total.refundMchPresentIntegral += v.refundMchPresentIntegral
           }
 
           _this.list.data.push(total)
