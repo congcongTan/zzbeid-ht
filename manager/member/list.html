@@ -216,11 +216,11 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>ID</th>
-                    <th>头像</th>
+<!--                     <th>ID</th>
+                    <th>头像</th> -->
                     <th>真实姓名</th>
                     <th>手机号</th>
-                    <th>身份证号</th>
+<!--                     <th>身份证号</th>
                     <th>籍贯</th>
                     <th>民族</th>
                     <th>积分</th>
@@ -228,18 +228,18 @@
                     <th>imei</th>
                     <th>认证状态</th>
                     <th>来源</th>
-                    <th>账号锁定</th>
+                    <th>账号锁定</th> -->
                     <th width="1%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.id}}</td>
-                    <td><a :href="`${v.headimgUrl}`" data-fancybox="gallery"><img :src="`${v.headimgUrl}`" width="64" height="64"></a></td>
+<!--                     <td>{{v.id}}</td>
+                    <td><a :href="`${v.headimgUrl}`" data-fancybox="gallery"><img :src="`${v.headimgUrl}`" width="64" height="64"></a></td> -->
                     <td>{{v.realName}}</td>
                     <td>{{v.mobile}}</td>
-                    <td>{{v.identityCard.substr(0,4)}}****{{v.identityCard.substr(-4)}}</td>
+<!--                     <td>{{v.identityCard.substr(0,4)}}****{{v.identityCard.substr(-4)}}</td>
                     <td>{{v.address}}</td>
                     <td>{{v.nation}}</td>
                     <td>{{v.integral}}</td>
@@ -247,7 +247,7 @@
                     <td>{{v.mobileMact.substr(0,4)}}***</td>
                     <td>{{认证状态[v.isAuthentication]}}</td>
                     <td>{{v.source}}</td>
-                    <td>{{账号锁定[v.isLock]}}</td>
+                    <td>{{账号锁定[v.isLock]}}</td> -->
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" :href="`integral.html?id=${v.memberId}`" v-if="权限.indexOf('edit') != -1">积分明细</a><br>
 
