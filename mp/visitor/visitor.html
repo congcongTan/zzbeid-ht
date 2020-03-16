@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>银联支付明细</title>
+    <title>访客管理</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -142,12 +142,12 @@
 
     <section class="content-header">
       <h1>
-        银联支付明细
+        访客管理
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>计费管理</li>
-        <li class="active">银联支付明细</li>
+        <li>访客管理</li>
+        <li class="active">访客管理</li>
       </ol>
     </section>
 
@@ -158,18 +158,18 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <!-- <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
+              <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
               <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
               <div class="tab-pane" id="操作">
 
-                <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
+                <!-- <a class="btn btn-sm btn-danger"  @click="del()">删除</a> -->
 
-                <!-- <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a> -->
+                <a class="btn btn-sm btn-primary" @click="getView(-1)">新增员工</a>
 
-                <!-- <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a> -->
+                <a class="btn btn-sm btn-primary" @click="中证宝快速录入员工()">中证宝快速录入员工</a>
 
               </div>
               <div class="tab-pane active" id="搜索">
@@ -177,99 +177,32 @@
                 <div class="form-horizontal">
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">最后操作时间</label>
-                    <div class="col-sm-10">
-                      <div class="row">
-                        <div class="col-xs-5 col-sm-3">
-                          <input type="text" class="form-control datepicker2" id="startTime">
-                        </div>
-                        <div class="fl w20 mt8 tc">
-                          ~
-                        </div>
-                        <div class="col-xs-5 col-sm-3">
-                          <input type="text" class="form-control datepicker2" id="endTime">
-                        </div>
-                      </div>
+                    <label class="col-sm-2 control-label">员工姓名</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" v-model="list.post.appVersion">
                     </div>
                   </div>
-
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">担保提交时间</label>
-                    <div class="col-sm-10">
-                      <div class="row">
-                        <div class="col-xs-5 col-sm-3">
-                          <input type="text" class="form-control datepicker2" id="startTime2">
-                        </div>
-                        <div class="fl w20 mt8 tc">
-                          ~
-                        </div>
-                        <div class="col-xs-5 col-sm-3">
-                          <input type="text" class="form-control datepicker2" id="endTime2">
-                        </div>
-                      </div>
+                    <label class="col-sm-2 control-label">身份证号</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" v-model="list.post.title">
                     </div>
                   </div>
-
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">支付方式</label>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.payModeNo">
-                        <!-- <option value="">--请选择--</option> -->
-                        <option :value="`${i}`" v-for="(v, i) in 支付方式">{{v}}</option>
+                    <label class="col-sm-2 control-label">组织架构</label>
+                    <div class="col-sm-5">
+                      <select class="form-control" v-model="list.post.industryId">
+                        <option value="0">--请选择--</option>
+                        <option :value="`${i}`" v-for="(v, i) in 性别">{{v}}</option>
                       </select>
                     </div>
                   </div>
 
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">交易模式</label>
-                    <div class="col-sm-3">
-                      <select class="form-control" v-model="list.post.dealMode">
-                        <option value="">--请选择--</option>
-                        <option :value="`${i}`" v-for="(v, i) in 交易模式">{{v}}</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">商户名称</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.mchTitle">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">商户编号</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.identifier">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">银联商户编号</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.merchantCode">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">商户终端号</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.terminalCode">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">银联订单号</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.orderId">
-                    </div>
-                  </div>
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
                         查找
-                        <i class="fa fa-spinner fa-pulse" v-if="list.loading == 1"></i>
-                      </button>
-
-                      <button class="btn btn-default" onclick="app.导出(this)">
-                        导出
-                        <i class="fa fa-spinner fa-spin" style="display: none"></i>
+                        <i class="fa fa-spinner fa-spin" v-if="list.loading == 1"></i>
                       </button>
                     </div>
                   </div>
@@ -283,40 +216,37 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr class="text-nowrap">
-                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>商户名称</th>
-                    <th>商户编号</th>
-                    <th>银联商户编号</th>
-                    <th>商户终端号</th>
-                    <th>商户订单号</th>
-                    <th>银联订单号</th>
-                    <th>交易金额</th>
-                    <th>实际支付金额</th>
-                    <th>来源</th>
-                    <th>交易模式</th>
-                    <th>支付状态</th>
-                    <th>担保提交时间</th>
-                    <th>最后操作时间</th>
+                    <th>头像</th>
+                    <th>访客编号</th>
+                    <th>访客姓名</th>
+                    <th>身份证号</th>
+                    <th>性别</th>
+                    <th>通行设备</th>
+                    <th>被访部门</th>
+                    <th>被访人员</th>
+                    <th>携带物品</th>
+                    <th>可通行时间</th>
+                    <th>审核状态</th>
+                    <th width="1%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.mchTitle}}</td>
-                    <td>{{v.identifier}}</td>
-                    <td>{{v.merchantCode}}</td>
-                    <td>{{v.terminalCode}}</td>
-                    <td>{{v.merchantOrderId}}</td>
-                    <td>{{v.orderId}}</td>
-                    <td>{{v.transactionAmount/100}}</td>
-                    <td>{{v.amount/100}}</td>
-                    <td>{{{1:'中冠PMS'}[v.source]}}</td>
-                    <td>{{交易模式[v.dealMode]}}</td>
-                    <td>{{支付状态[v.guaranteeStatus]}}</td>
-                    <td>{{v.guaranteeTime}}</td>
-                    <td>{{v.lastCompleteTime}}</td>
+                    <td>{{v.id}}</td>
+                    <td>{{v.title}}</td>
+                    <td>{{v.mobile}}</td>
+                    <td>{{v.mobile}}</td>
+                    <td>{{v.mobile}}</td>
+                    <td>{{v.mobile}}</td>
+                    <td>{{v.mobile}}</td>
+                    <td>{{v.mobile}}</td>
+                    <td>{{v.mobile}}</td>
+                    <td>{{v.mobile}}</td>
+                    <td class="text-nowrap operation">
+                      <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">审核</a><br>
+                    </td>
                   </tr>
-                  <tr v-if="list.data.length == 0">
+                  <tr v-if="list.length == 0">
                     <td colspan="99">没有数据</td>
                   </tr>
                 </tbody>
@@ -362,6 +292,156 @@
       </div>
 
     </section>
+
+
+    <div class="modal fade" id="view">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              审核访客
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="row">
+
+                <div class="col-sm-6">
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">员工姓名</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.title">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">身份证号</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.identifier">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">性别</label>
+  <div class="col-sm-7">
+    <select class="form-control" v-model="list.post.industryId">
+      <option value="0">--请选择--</option>
+      <option :value="`${i}`" v-for="(v, i) in 性别">{{v}}</option>
+    </select>
+  </div>
+</div>
+
+<hr>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">被访部门</label>
+  <div class="col-sm-7">
+    <select class="form-control" v-model="list.post.industryId">
+      <option value="0">--请选择--</option>
+      <option :value="`${i}`" v-for="(v, i) in 性别">{{v}}</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">被访人员</label>
+  <div class="col-sm-7">
+    <select class="form-control" v-model="list.post.industryId">
+      <option value="0">--请选择--</option>
+      <option :value="`${i}`" v-for="(v, i) in 性别">{{v}}</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">携带物品</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.identifier">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">可通行时间</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.identifier">
+    <div class="mt8 mb8">至</div>
+    <input type="text" class="form-control input-sm" v-model="view.identifier"><br>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">通行设备</label>
+  <div class="col-sm-7">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox"> 全选
+      </label>
+    </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="通行设备"> 1号闸机
+      </label>
+    </div>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="通行设备"> 2号闸机
+      </label>
+    </div>
+  </div>
+</div>
+
+                </div>
+                <div class="col-sm-6 tc">
+
+                  <label>
+                    <img src="../../img/no-img.gif" width="80%">
+                    <input type="file" accept="image/*" style="display: none">
+                  </label>
+
+                  照片(点击拍照)
+
+                </div>
+
+              </div>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="saveView">审核通过</a>
+            <a class="btn btn-danger" @click="saveView">审核不通过</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="中证宝快速录入员工">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              中证宝快速录入员工
+            </h4>
+          </div>
+          <div class="modal-body">
+            <center>
+• 使用中证宝APP扫码可快速导入身份信息<br>
+• 扫码后，可刷新列表查找员工信息<br>
+<br>
+<img src="../../img/no-img.gif" width="150">
+
+            </center>
+          </div>
+
+        </div>
+      </div>
+    </div>
 
   </div>
 
@@ -510,8 +590,6 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
-<link rel="stylesheet" href="../../plugins/datetimepicker/datetimepicker.css">
-<script src="../../plugins/datetimepicker/datetimepicker.js"></script>
 <script>
 var app = new Vue({
   el: '#app',
@@ -698,19 +776,18 @@ var app = new Vue({
     list: {
       data: [],
       post: {
-        payModeNo: 4,
-        dealMode: '',
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
       },
       info: {},
       page: {},
+      loading: 0,
       checkbox: {
         all: [],
         checked: [],
       },
-      loading: 0
     },
+
 
   },
   methods: {
@@ -936,27 +1013,9 @@ var app = new Vue({
 
     getList: function(key, val){
 
-      _this = this
-
-      if(this.list.loading == 1){
-        return
-      }
-
-      //清空列表
-      this.list.data = []
-
-      //loading
       this.list.loading = 1
 
-
-      //这里用v-model会有大坑
-      this.list.post.lastCompleteStartTime = $('#startTime').val()
-      this.list.post.lastCompleteEndTime = $('#endTime').val()
-
-      this.list.post.guaranteeStartTime = $('#startTime2').val()
-      this.list.post.guaranteeEndTime = $('#endTime2').val()
-
-      delete(this.list.post.isExport)
+      _this = this
 
       if(key == 'page'){
 
@@ -978,25 +1037,20 @@ var app = new Vue({
 
       }
 
-      //去空格
-      for(var i in this.list.post){
-        this.list.post[i] = $.trim(this.list.post[i])
-      }
-
       var data = {
         "reqHead":
         {
           clientType: 1,
           format: "json",
           version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
         },
         reqBody: this.list.post
       }
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getUnionPayOrderList/interface',
+        url: mp_api + 'mp/getMchList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1007,34 +1061,44 @@ var app = new Vue({
         },
         success: function(re){
 
-          if(re.rspHead.retCode == 1){
+          _this.list.data = re.rspBody.mchListByAgentInfoListVO
+          delete re.rspBody.mchListByAgentInfoListVO
 
-            _this.list.data = re.rspBody.unionPayOrderList
-            delete re.rspBody.unionPayOrderList
+          _this.list.info = re.rspBody
 
-            _this.list.info = re.rspBody
+/*          _this.list.agent = []
+          _this.list.agent.push({
+            title: re.rspBody.firstAgentInfo.title,
+            value: re.rspBody.firstAgentInfo.agentId,
+          })*/
 
+/*          for( var i in re.rspBody.agentPlainInfoList){
+            var v = re.rspBody.agentPlainInfoList[i]
 
-            //id
-            for( var i in _this.list.data ){
-              var v = _this.list.data[i]
+            _this.list.agent.push({
+              title: '　' + v.title,
+              value: v.agentId,
+            })
+          }*/
 
-              _this.list.checkbox.all.push(v.id)
-            }
+          //id
+          for( var i in _this.list.data ){
+            var v = _this.list.data[i]
 
-            //分页
-            _this.list.page.prev = []
-            for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
-              if(i <= 0)continue;
-              _this.list.page.prev.push(i)
-            }
+            _this.list.checkbox.all.push(v.id)
+          }
 
-            _this.list.page.next = []
-            for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
-              if(i > _this.list.info.pages)break;
-              _this.list.page.next.push(i)
-            }
+          //分页
+          _this.list.page.prev = []
+          for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
+            if(i <= 0)continue;
+            _this.list.page.prev.push(i)
+          }
 
+          _this.list.page.next = []
+          for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
+            if(i > _this.list.info.pages)break;
+            _this.list.page.next.push(i)
           }
 
         }
@@ -1042,21 +1106,10 @@ var app = new Vue({
 
     },
 
-    导出: function(obj){
+    导出excel: function(obj){
 
       $(obj).prop('disabled', true)
       $(obj).children('i').show()
-
-      var _this = this
-
-      //这里用v-model会有大坑
-      this.list.post.lastCompleteStartTime = $('#startTime').val()
-      this.list.post.lastCompleteEndTime = $('#endTime').val()
-
-      this.list.post.guaranteeStartTime = $('#startTime2').val()
-      this.list.post.guaranteeEndTime = $('#endTime2').val()
-
-      this.list.post.isExport = 'true'
 
       var data = {
         "reqHead":
@@ -1071,7 +1124,51 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getUnionPayOrderList/interface',
+        url: mp_api + 'mp/exportMchList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        complete: function(){
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+        },
+        success: function(re){
+
+          location.href = re.rspBody.file
+
+        }
+      })
+
+    },
+
+    getView: function(id){
+
+      this.view = {}
+
+      if(id == -1){
+        // this.getLV2(this.admin.id)
+        $('#view').modal('show')
+        return
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getMchInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1079,18 +1176,75 @@ var app = new Vue({
         },
         success: function(re){
 
-          $(obj).prop('disabled', false)
-          $(obj).children('i').hide()
+          _this.view = re.rspBody
 
-          if(re.rspHead.retCode == 1){
-            location.href = re.rspBody.file
-          }else{
-            alert(re.rspHead.retMsg)
-          }
+          _this.getLV2(_this.admin.id)
+
+          _this.getC('view', _this.view.province)
+          _this.getA('view', _this.view.city)
+
+          $('#view').modal('show')
 
         }
       })
 
+    },
+
+    saveView: function(){
+
+      if($('#password').val() != ''){
+        this.view.password = $('#password').val()
+      }else{
+        delete this.view.password
+      }
+
+      this.view.agent2Id = this.view.agentId
+      delete this.view.agentId
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.view
+      }
+
+      if ( data.reqBody.superiorAgentId != '' && data.reqBody.agentId == '' ){
+
+        data.reqBody.agentId = data.reqBody.superiorAgentId
+        delete data.reqBody.superiorAgentId
+
+      }
+
+      var add_or_edit = this.view.mchId == undefined ? 'add':'edit'
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/' + add_or_edit + 'Mch/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    中证宝快速录入员工: function(){
+      $('#中证宝快速录入员工').modal('show')
     },
 
   },
@@ -1185,17 +1339,8 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    var date = new Date()
-    var now_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
-
-    // $('#startTime').val(now_date + ' 00:00')
-    // $('#endTime').val(now_date + ' 23:59')
-
-    $('#startTime2').val(now_date + ' 00:00')
-    $('#endTime2').val(now_date + ' 23:59')
-
-
-    $(".datepicker2").datetimepicker()
+    this.list.post.userId = this.admin.userId
+    // this.list.post.type = this.admin.type
 
 
     this.getList()
