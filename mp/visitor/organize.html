@@ -159,13 +159,10 @@
 
             <ul class="nav nav-tabs">
               <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
-              <!-- <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li> -->
             </ul>
 
             <div class="tab-content">
               <div class="tab-pane active" id="操作">
-
-                <!-- <a class="btn btn-sm btn-danger"  @click="del()">删除</a> -->
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
@@ -213,11 +210,11 @@
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td>{{v.id}}</td>
                     <td>{{v.title}}</td>
-                    <td>{{v.mobile}}</td>
+                    <td>{{v.parTitle}}</td>
+                    <td>{{v.sort}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
 
                       <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
@@ -294,14 +291,17 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">上级部门</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.title">
+                  <select class="form-control" v-model="view.pid">
+                    <option value="0">--请选择--</option>
+                    <option :value="`${v.id}`" v-for="v in 组织架构">{{v.title}}</option>
+                  </select>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-3 control-label">排序</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.identifier">
+                  <input type="text" class="form-control input-sm" v-model="view.sort">
                 </div>
               </div>
 
@@ -660,6 +660,7 @@ var app = new Vue({
       },
     },
 
+    组织架构: [],
 
   },
   methods: {
@@ -922,7 +923,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getMchList/interface',
+        url: mp_api + 'mp/getHsDepartList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -933,25 +934,10 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.mchListByAgentInfoListVO
-          delete re.rspBody.mchListByAgentInfoListVO
+          _this.list.data = re.rspBody.hsDepartInfoList
+          delete re.rspBody.hsDepartInfoList
 
           _this.list.info = re.rspBody
-
-/*          _this.list.agent = []
-          _this.list.agent.push({
-            title: re.rspBody.firstAgentInfo.title,
-            value: re.rspBody.firstAgentInfo.agentId,
-          })*/
-
-/*          for( var i in re.rspBody.agentPlainInfoList){
-            var v = re.rspBody.agentPlainInfoList[i]
-
-            _this.list.agent.push({
-              title: '　' + v.title,
-              value: v.agentId,
-            })
-          }*/
 
           //id
           for( var i in _this.list.data ){
@@ -978,49 +964,11 @@ var app = new Vue({
 
     },
 
-    导出excel: function(obj){
-
-      $(obj).prop('disabled', true)
-      $(obj).children('i').show()
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: this.list.post
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/exportMchList/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        complete: function(){
-          $(obj).prop('disabled', false)
-          $(obj).children('i').hide()
-        },
-        success: function(re){
-
-          location.href = re.rspBody.file
-
-        }
-      })
-
-    },
-
     getView: function(id){
 
       this.view = {}
 
       if(id == -1){
-        this.getLV2(this.admin.id)
         $('#view').modal('show')
         return
       }
@@ -1034,13 +982,13 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          mchId: id
+          id: id
         }
       }
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getMchInfo/interface',
+        url: mp_api + 'mp/getHsDepartInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1050,11 +998,6 @@ var app = new Vue({
 
           _this.view = re.rspBody
 
-          _this.getLV2(_this.admin.id)
-
-          _this.getC('view', _this.view.province)
-          _this.getA('view', _this.view.city)
-
           $('#view').modal('show')
 
         }
@@ -1063,15 +1006,6 @@ var app = new Vue({
     },
 
     saveView: function(){
-
-      if($('#password').val() != ''){
-        this.view.password = $('#password').val()
-      }else{
-        delete this.view.password
-      }
-
-      this.view.agent2Id = this.view.agentId
-      delete this.view.agentId
 
       var data = {
         "reqHead":
@@ -1084,18 +1018,11 @@ var app = new Vue({
         reqBody: this.view
       }
 
-      if ( data.reqBody.superiorAgentId != '' && data.reqBody.agentId == '' ){
-
-        data.reqBody.agentId = data.reqBody.superiorAgentId
-        delete data.reqBody.superiorAgentId
-
-      }
-
-      var add_or_edit = this.view.mchId == undefined ? 'add':'edit'
+      var add_or_edit = this.view.id == undefined ? 'add':'edit'
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/' + add_or_edit + 'Mch/interface',
+        url: mp_api + 'mp/' + add_or_edit + 'HsDepart/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1106,6 +1033,42 @@ var app = new Vue({
           if(re.rspHead.retCode == '1'){
             _this.getList()
             $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    del: function(id){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/deleteHsDepart/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
           }else{
             alert(re.rspHead.retMsg)
           }
@@ -1142,7 +1105,10 @@ var app = new Vue({
     }
 
 
-    if(this.admin.type == 1 || this.admin.type == 2){
+    if(this.admin.softwareVersion == 60001){
+      var url = '../../db/menu-mp-visitor.json'
+    }
+    else if(this.admin.type == 1 || this.admin.type == 2){
       var url = '../../db/menu-mp-agent.json'
     }else if(this.admin.type == 4){
       var url = '../../db/menu-mp-sale-group.json'
@@ -1207,8 +1173,34 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    this.list.post.userId = this.admin.userId
-    // this.list.post.type = this.admin.type
+    var data = {
+      "reqHead":
+      {
+        clientType: 1,
+        format: "json",
+        version: "1.0",
+        sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+      },
+      "reqBody":{}
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: mp_api + 'mp/getHsDepartFrame/interface',
+      data: JSON.stringify(data),
+      dataType: 'json',
+      beforeSend: function(request){
+        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+      },
+      success: function(re){
+        if(re.rspHead.retCode == '1'){
+          _this.组织架构 = re.rspBody.hsDepartFrame
+        }else{
+          alert(re.rspHead.retMsg)
+        }
+        
+      }
+    })
 
 
     this.getList()

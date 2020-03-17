@@ -177,13 +177,13 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">设备名称</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.appVersion">
+                      <input type="text" class="form-control" v-model="list.post.title">
                     </div>
                   </div>
                   <div class="form-group">
                     <label class="col-sm-2 control-label">设备编号</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.title">
+                      <input type="text" class="form-control" v-model="list.post.sn">
                     </div>
                   </div>
 
@@ -213,11 +213,11 @@
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td>{{v.id}}</td>
                     <td>{{v.title}}</td>
-                    <td>{{v.mobile}}</td>
+                    <td>{{v.sn}}</td>
+                    <td>{{v.createTimeTitle}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.mchId)">编辑</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
 
                       <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
@@ -294,7 +294,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">设备编号</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.identifier">
+                  <input type="text" class="form-control input-sm" v-model="view.sn">
                 </div>
               </div>
 
@@ -915,7 +915,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getMchList/interface',
+        url: mp_api + 'mp/getHsDeviceList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -926,25 +926,10 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.mchListByAgentInfoListVO
-          delete re.rspBody.mchListByAgentInfoListVO
+          _this.list.data = re.rspBody.hsDeviceInfoList
+          delete re.rspBody.hsDeviceInfoList
 
           _this.list.info = re.rspBody
-
-/*          _this.list.agent = []
-          _this.list.agent.push({
-            title: re.rspBody.firstAgentInfo.title,
-            value: re.rspBody.firstAgentInfo.agentId,
-          })*/
-
-/*          for( var i in re.rspBody.agentPlainInfoList){
-            var v = re.rspBody.agentPlainInfoList[i]
-
-            _this.list.agent.push({
-              title: '　' + v.title,
-              value: v.agentId,
-            })
-          }*/
 
           //id
           for( var i in _this.list.data ){
@@ -971,49 +956,11 @@ var app = new Vue({
 
     },
 
-    导出excel: function(obj){
-
-      $(obj).prop('disabled', true)
-      $(obj).children('i').show()
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: this.list.post
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/exportMchList/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        complete: function(){
-          $(obj).prop('disabled', false)
-          $(obj).children('i').hide()
-        },
-        success: function(re){
-
-          location.href = re.rspBody.file
-
-        }
-      })
-
-    },
-
     getView: function(id){
 
       this.view = {}
 
       if(id == -1){
-        this.getLV2(this.admin.id)
         $('#view').modal('show')
         return
       }
@@ -1027,13 +974,13 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          mchId: id
+          id: id
         }
       }
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getMchInfo/interface',
+        url: mp_api + 'mp/getHsDeviceInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1041,14 +988,13 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.view = re.rspBody
-
-          _this.getLV2(_this.admin.id)
-
-          _this.getC('view', _this.view.province)
-          _this.getA('view', _this.view.city)
-
-          $('#view').modal('show')
+          if(re.rspHead.retCode == '0'){
+            alert(re.rspHead.retMsg)
+          }
+          else{
+            _this.view = re.rspBody
+            $('#view').modal('show')
+          }
 
         }
       })
@@ -1056,15 +1002,6 @@ var app = new Vue({
     },
 
     saveView: function(){
-
-      if($('#password').val() != ''){
-        this.view.password = $('#password').val()
-      }else{
-        delete this.view.password
-      }
-
-      this.view.agent2Id = this.view.agentId
-      delete this.view.agentId
 
       var data = {
         "reqHead":
@@ -1077,18 +1014,11 @@ var app = new Vue({
         reqBody: this.view
       }
 
-      if ( data.reqBody.superiorAgentId != '' && data.reqBody.agentId == '' ){
-
-        data.reqBody.agentId = data.reqBody.superiorAgentId
-        delete data.reqBody.superiorAgentId
-
-      }
-
-      var add_or_edit = this.view.mchId == undefined ? 'add':'edit'
+      var add_or_edit = this.view.id == undefined ? 'add':'edit'
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/' + add_or_edit + 'Mch/interface',
+        url: mp_api + 'mp/' + add_or_edit + 'HsDevice/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1099,6 +1029,42 @@ var app = new Vue({
           if(re.rspHead.retCode == '1'){
             _this.getList()
             $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    del: function(id){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/deleteHsDevice/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
           }else{
             alert(re.rspHead.retMsg)
           }
@@ -1135,7 +1101,10 @@ var app = new Vue({
     }
 
 
-    if(this.admin.type == 1 || this.admin.type == 2){
+    if(this.admin.softwareVersion == 60001){
+      var url = '../../db/menu-mp-visitor.json'
+    }
+    else if(this.admin.type == 1 || this.admin.type == 2){
       var url = '../../db/menu-mp-agent.json'
     }else if(this.admin.type == 4){
       var url = '../../db/menu-mp-sale-group.json'

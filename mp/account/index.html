@@ -48,23 +48,6 @@
         </div>
       </div>
 
-<!--       <div class="form-group">
-        <label class="col-sm-3 control-label">登录角色</label>
-        <div class="col-sm-9">
-          <label>
-            <input type="radio" value="2" v-model="account.type"> 代理商
-          </label>
-          &nbsp;&nbsp;&nbsp;
-          <label>
-            <input type="radio" value="1" v-model="account.type"> 商户
-          </label>
-          &nbsp;&nbsp;&nbsp;
-          <label>
-            <input type="radio" value="4" v-model="account.type"> 营销组
-          </label>
-        </div>
-      </div> -->
-
       <div class="form-group">
         <div class="col-sm-9 col-sm-offset-3">
           <a class="btn btn-primary btn-flat" @click="submit">登录</a>
@@ -606,16 +589,19 @@ var app = new Vue({
 
       // return
 
-      if(admin.type == 1){
+      if(admin.softwareVersion == 60001){
+        location.href = '../visitor/staff.html'
+      }
+      else if(admin.type == 1){
         location.href = '../index/agent.html'
       }
-      if(admin.type == 2){
+      else if(admin.type == 2){
         location.href = '../index/agent.html'
       }
-      if(admin.type == 3){
+      else if(admin.type == 3){
         location.href = '../index/index.html'
       }
-      if(admin.type == 4){
+      else if(admin.type == 4){
         location.href = '../stats/sale_group_stats.html'
       }
 

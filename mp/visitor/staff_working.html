@@ -174,17 +174,11 @@
 
                   <div class="form-group">
                     <label class="col-sm-2 control-label">考勤日期</label>
-                    <div class="col-sm-10">
-                      <div class="row">
-                        <div class="col-xs-5 col-sm-3">
-                          <input type="text" class="form-control datepicker2" id="startTime">
-                        </div>
-                        <div class="fl w20 mt8 tc">
-                          ~
-                        </div>
-                        <div class="col-xs-5 col-sm-3">
-                          <input type="text" class="form-control datepicker2" id="endTime">
-                        </div>
+                    <div class="col-sm-8">
+                      <div class="input-group input-daterange">
+                        <input autocomplete="off" type="text" name="日期start" value="" class="form-control datetimepicker" id="startTime">
+                        <div class="input-group-addon">~</div>
+                        <input autocomplete="off" type="text" name="日期ended" value="" class="form-control datetimepicker" id="endTime">
                       </div>
                     </div>
                   </div>
@@ -192,16 +186,16 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">员工姓名</label>
                     <div class="col-sm-5">
-                      <input type="text" class="form-control" v-model="list.post.appVersion">
+                      <input type="text" class="form-control" v-model="list.post.realName">
                     </div>
                   </div>
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">组织架构</label>
+                    <label class="col-sm-2 control-label">设备名称</label>
                     <div class="col-sm-5">
-                      <select class="form-control" v-model="list.post.industryId">
+                      <select class="form-control" v-model="list.post.deviceId">
                         <option value="0">--请选择--</option>
-                        <option :value="`${i}`" v-for="(v, i) in 性别">{{v}}</option>
+                        <option :value="`${v.id}`" v-for="v in 通行设备">{{v.title}}</option>
                       </select>
                     </div>
                   </div>
@@ -224,6 +218,7 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr class="text-nowrap">
+                    <th>头像</th>
                     <th>员工姓名</th>
                     <th>组织架构</th>
                     <th>考勤日期</th>
@@ -237,7 +232,9 @@
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td>{{v.id}}</td>
+                    <td><img :src="`http://image.zzb110.cn${v.headimgUrl}`" height="60"></td>
+                    <td>{{v.realName}}</td>
+                    <td>{{v.departTitle}}</td>
                     <td>{{v.title}}</td>
                     <td>{{v.mobile}}</td>
                     <td>{{v.mobile}}</td>
@@ -346,7 +343,7 @@
   <div class="col-sm-7">
     <select class="form-control" v-model="list.post.industryId">
       <option value="0">--请选择--</option>
-      <option :value="`${i}`" v-for="(v, i) in 性别">{{v}}</option>
+      <option :value="`${v.id}`" v-for="v in 通行设备">{{v.title}}</option>
     </select>
   </div>
 </div>
@@ -578,6 +575,12 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
+<link rel="stylesheet" href="../../plugins/fancybox/fancybox.css">
+<script src="../../plugins/fancybox/fancybox.js"></script>
+
+<link rel="stylesheet" href="../../plugins/datetimepicker/datetimepicker.css">
+<script src="../../plugins/datetimepicker/datetimepicker.js"></script>
+
 <script>
 var app = new Vue({
   el: '#app',
@@ -776,6 +779,7 @@ var app = new Vue({
       },
     },
 
+    通行设备: [],
 
   },
   methods: {
@@ -1003,8 +1007,6 @@ var app = new Vue({
 
       this.list.loading = 1
 
-      _this = this
-
       if(key == 'page'){
 
         if(val == '+1'){
@@ -1038,7 +1040,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getMchList/interface',
+        url: mp_api + 'mp/getHsVisitorLogList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1049,25 +1051,10 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.mchListByAgentInfoListVO
-          delete re.rspBody.mchListByAgentInfoListVO
+          _this.list.data = re.rspBody.hsVisitorLogList
+          delete re.rspBody.hsVisitorLogList
 
           _this.list.info = re.rspBody
-
-/*          _this.list.agent = []
-          _this.list.agent.push({
-            title: re.rspBody.firstAgentInfo.title,
-            value: re.rspBody.firstAgentInfo.agentId,
-          })*/
-
-/*          for( var i in re.rspBody.agentPlainInfoList){
-            var v = re.rspBody.agentPlainInfoList[i]
-
-            _this.list.agent.push({
-              title: '　' + v.title,
-              value: v.agentId,
-            })
-          }*/
 
           //id
           for( var i in _this.list.data ){
@@ -1088,43 +1075,6 @@ var app = new Vue({
             if(i > _this.list.info.pages)break;
             _this.list.page.next.push(i)
           }
-
-        }
-      })
-
-    },
-
-    导出excel: function(obj){
-
-      $(obj).prop('disabled', true)
-      $(obj).children('i').show()
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
-        },
-        reqBody: this.list.post
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/exportMchList/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        complete: function(){
-          $(obj).prop('disabled', false)
-          $(obj).children('i').hide()
-        },
-        success: function(re){
-
-          location.href = re.rspBody.file
 
         }
       })
@@ -1165,11 +1115,6 @@ var app = new Vue({
         success: function(re){
 
           _this.view = re.rspBody
-
-          _this.getLV2(_this.admin.id)
-
-          _this.getC('view', _this.view.province)
-          _this.getA('view', _this.view.city)
 
           $('#view').modal('show')
 
@@ -1233,6 +1178,38 @@ var app = new Vue({
 
     中证宝快速录入员工: function(){
       $('#中证宝快速录入员工').modal('show')
+    },
+
+    通行设备get: function(){
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        "reqBody":{
+          pageSize: 99999
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getHsDeviceList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+          if(re.rspHead.retCode == '1'){
+            _this.通行设备 = re.rspBody.hsDeviceInfoList
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+        }
+      })
     },
 
   },
@@ -1327,9 +1304,15 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    this.list.post.userId = this.admin.userId
-    // this.list.post.type = this.admin.type
+    var date = new Date()
+    var now_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 
+    $('#startTime').val(now_date + ' 00:00:00')
+    $('#endTime').val(now_date + ' 23:59:59')
+
+    $(".datetimepicker").datetimepicker({format: 'yy-m-d h:i:s'})
+
+    this.通行设备get()
 
     this.getList()
 
