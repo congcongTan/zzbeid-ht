@@ -1169,6 +1169,42 @@ var app = new Vue({
 
     },
 
+    del: function(id){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/deleteHsStaff/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
     中证宝快速录入员工: function(){
       $('#中证宝快速录入员工').modal('show')
     },
