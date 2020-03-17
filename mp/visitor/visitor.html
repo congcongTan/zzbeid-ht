@@ -243,6 +243,7 @@
                     <td>{{审核状态[v.auditStatus]}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">审核</a><br>
+                      <!-- v-if="v.auditStatus == 0"  -->
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -349,10 +350,7 @@
 <div class="form-group">
   <label class="col-sm-5 control-label">被访人员</label>
   <div class="col-sm-7">
-    <select class="form-control" v-model="view.departId">
-      <option value="0">--请选择--</option>
-      <option :value="`${v.id}`" v-for="v in 组织架构">{{v.title}}</option>
-    </select>
+    <input type="text" class="form-control input-sm" v-model="view.beVisited">
   </div>
 </div>
 
@@ -373,13 +371,9 @@
                 </div>
                 <div class="col-sm-6 tc">
 
-                  <label>
-                    <img src="../../img/no-img.gif" id="预览图片" width="80%">
-                    <input style="display:none" type="file" accept="image/*"
-                    id="upload_input" @change="选图()">
-                  </label>
+                  <img :src="`http://image.zzb110.cn${view.headimgUrl}`" id="预览图片" width="80%"><br>
 
-                  照片(点击拍照)
+                  照片
 
                 </div>
 
@@ -391,10 +385,10 @@
   <label class="col-sm-3 control-label mt6">每日通行时间</label>
   <div class="col-sm-9">
     <table class="table table-bordered">
-      <tr>
-        <td width="25%"><input class="form-control input-sm" type="text"></td>
+      <tr v-for="(v, i) in view.validCycle">
+        <td width="25%"><input class="form-control input-sm" type="text" v-model="v.start_time"></td>
         <td class="tc"><div class="mt6">至</div></td>
-        <td width="25%"><input class="form-control input-sm" type="text"></td>
+        <td width="25%"><input class="form-control input-sm" type="text" v-model="v.end_time"></td>
         <td>
           <div class="mt3">
             <a class="btn btn-xs btn-default" @click="order_rules(i, '-')"><i class="fa fa-arrow-up"></i></a>
@@ -431,7 +425,8 @@
 
           </div>
           <div class="modal-footer">
-            <a class="btn btn-primary" @click="saveView">确定</a>
+            <a class="btn btn-primary" @click="view.auditStatus = 1; saveView()">审核通过</a>
+            <a class="btn btn-danger" @click="view.auditStatus = 2; saveView()">审核不通过</a>
           </div>
         </div>
       </div>
@@ -1120,10 +1115,12 @@ var app = new Vue({
 
     getView: function(id){
 
-      this.view = {}
+      this.view = {
+        deviceId: []
+      }
 
       if(id == -1){
-        this.view.deviceId = []
+        this.add_rules()
         $('#view').modal('show')
         return
       }
@@ -1153,7 +1150,18 @@ var app = new Vue({
 
           if(re.rspHead.retCode == '1'){
 
-            // re.rspBody.deviceId = re.rspBody.deviceId.split(',')
+            try{
+              re.rspBody.deviceId = re.rspBody.deviceId.split(',')
+            }catch(e){
+              re.rspBody.deviceId = []
+            }
+
+            try{
+              re.rspBody.validCycle = JSON.parse(re.rspBody.validCycle)
+            }catch(e){
+              re.rspBody.validCycle = [{start_time:'',end_time:''}]
+            }
+
             _this.view = re.rspBody
 
             $('#view').modal('show')
@@ -1169,10 +1177,15 @@ var app = new Vue({
 
     saveView: function(){
 
-      var body2 = this.view
+      var body2 = JSON.parse(JSON.stringify(this.view))
 
       // 合翻埋设备id
       body2.deviceId = body2.deviceId.join(',')
+
+      body2.validCycle = JSON.stringify(body2.validCycle)
+
+      body2.visitorManageId = body2.id
+      delete body2.id
 
       // 头像
       delete body2.headimgUrl
@@ -1188,11 +1201,9 @@ var app = new Vue({
         reqBody: body2
       }
 
-      var add_or_edit = this.view.id == undefined ? 'add':'edit'
-
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/' + add_or_edit + 'HsStaff/interface',
+        url: mp_api + 'mp/hsExamine/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1219,10 +1230,9 @@ var app = new Vue({
 
     add_rules: function(){
 
-      this.view['rules'].push({
-        beginAmount: '',
-        endAmount: '',
-        selftRoyalty: '',
+      this.view['validCycle'].push({
+        start_time: '',
+        end_time: '',
       })
 
     },
@@ -1233,13 +1243,13 @@ var app = new Vue({
         return
       }
 
-      this.view['rules'].splice(i, 1)
+      this.view['validCycle'].splice(i, 1)
 
     },
 
     order_rules: function(i, way){
 
-      var tmp = this.view['rules'][i]
+      var tmp = this.view['validCycle'][i]
 
       if(way == '-'){
 
@@ -1252,7 +1262,7 @@ var app = new Vue({
 
       }else{
 
-        if( i == this.view['rules'].length - 1 ){
+        if( i == this.view['validCycle'].length - 1 ){
           console.log('不能下移')
           return
         }
@@ -1260,8 +1270,8 @@ var app = new Vue({
         var new_i = i + 1
       }
 
-      this.view['rules'].splice(i, 1)
-      this.view['rules'].splice(new_i, 0, tmp)
+      this.view['validCycle'].splice(i, 1)
+      this.view['validCycle'].splice(new_i, 0, tmp)
 
     },
 

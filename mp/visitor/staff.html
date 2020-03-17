@@ -1077,10 +1077,11 @@ var app = new Vue({
 
     getView: function(id){
 
-      this.view = {}
+      this.view = {
+        deviceId: []
+      }
 
       if(id == -1){
-        this.view.deviceId = []
         $('#view').modal('show')
         return
       }
@@ -1110,7 +1111,11 @@ var app = new Vue({
 
           if(re.rspHead.retCode == '1'){
 
-            re.rspBody.deviceId = re.rspBody.deviceId.split(',')
+            if(typeof re.rspBody.deviceId == 'string'){
+              re.rspBody.deviceId = re.rspBody.deviceId.split(',')
+            }else{
+              re.rspBody.deviceId = []
+            }
             _this.view = re.rspBody
 
             $('#view').modal('show')
@@ -1126,7 +1131,7 @@ var app = new Vue({
 
     saveView: function(){
 
-      var body2 = this.view
+      var body2 = JSON.parse(JSON.stringify(this.view))
 
       // 合翻埋设备id
       body2.deviceId = body2.deviceId.join(',')
