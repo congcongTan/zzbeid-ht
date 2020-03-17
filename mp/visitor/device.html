@@ -829,53 +829,6 @@ var app = new Vue({
 
     },
 
-
-    del: function(id){
-
-      if(!confirm('确认删除？')){
-        return void(0)
-      }
-
-      //单个
-      if(id != undefined){
-        var ids = [id]
-      }
-      //多个
-      else if(this.ids.length == 0){
-        console.log('一个都没有选中')
-        return void(0)
-      }else{
-
-        var ids = this.ids
-      }
-
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'adm/del',
-        data: {
-          table: this.param.table,
-          id: ids,
-        },
-        dataType: 'text',
-        beforeSend: function(request){
-          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re == 1){
-            _this.getList()
-
-            _this.ids = []
-          }else{
-            alert(re)
-          }
-
-        }
-      })
-
-    },
-
     getList: function(key, val){
 
       this.list.loading = 1
@@ -1039,6 +992,10 @@ var app = new Vue({
     },
 
     del: function(id){
+
+      if(!confirm('确认删除？')){
+        return void(0)
+      }
 
       var data = {
         "reqHead":
