@@ -351,7 +351,7 @@
 <div class="form-group">
   <label class="col-sm-5 control-label">有效期(截止日期)</label>
   <div class="col-sm-7">
-    <input type="text" class="form-control input-sm datepicker" id="expireTime">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="expireTime">
   </div>
 </div>
 
@@ -1166,6 +1166,26 @@ var app = new Vue({
 
       // 头像
       delete body2.headimgUrl
+
+      var 必填 = {
+        realName: '请填写：员工姓名',
+        identityCard: '请填写：身份证号',
+        sex: '请选择：性别',
+        departId: '请选择：组织架构',
+        expireTime: '请填写：有效期(截止日期)',
+      }
+      for(var i in 必填){
+        var v = 必填[i]
+
+        if(body2[i] == undefined || body2[i] == ''){
+          alert(v)
+          return
+        }
+      }
+      if(body2.deviceId.length == 0){
+      	alert('通行设备至少选择一个')
+      	return
+      }
 
       var data = {
         "reqHead":
