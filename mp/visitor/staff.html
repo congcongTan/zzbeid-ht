@@ -376,8 +376,11 @@
                 <div class="col-sm-6 tc">
 
                   <label>
-                    <img :src="`http://image.zzb110.cn${view.headimgUrl}`" id="预览图片" width="80%">
-                    <img src="" id="预览图片" width="80%">
+                    <img :src="`http://image.zzb110.cn${view.headimgUrl}`" id="预览图片" width="80%"
+                    v-if="view.id != undefined">
+
+                    <img src="../../img/no-img.gif" width="80%"
+                    v-if="view.id == undefined">
                     <input style="display:none" type="file" accept="image/*"
                     id="upload_input" @change="选图()">
                   </label>
