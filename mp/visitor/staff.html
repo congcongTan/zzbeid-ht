@@ -361,7 +361,7 @@
     <div class="checkbox">
       <label>
         <input type="checkbox" :checked="JSON.stringify(view.deviceSn) === JSON.stringify(通行设备全选时)"
-        onclick="app.通行设备全选(this.checked)"> 全选
+        onclick="app.通行设备全选(this.checked)"> 全选 
       </label>
     </div>
     <div class="checkbox" v-for="v in 通行设备">
@@ -1136,7 +1136,7 @@ var app = new Vue({
             try{
               re.rspBody.deviceSn = JSON.parse(re.rspBody.deviceSn)
             }catch(e){
-              re.rspBody.deviceSn = {}
+              re.rspBody.deviceSn = []
             }
             _this.view = re.rspBody
 
