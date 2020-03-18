@@ -360,7 +360,7 @@
   <div class="col-sm-7">
     <div class="checkbox">
       <label>
-        <input type="checkbox" :checked="JSON.stringify(view.deviceId) === JSON.stringify(通行设备全选时)"
+        <input type="checkbox" :checked="JSON.stringify(view.deviceSn) === JSON.stringify(通行设备全选时)"
         onclick="app.通行设备全选(this.checked)"> 全选
       </label>
     </div>
@@ -376,11 +376,8 @@
                 <div class="col-sm-6 tc">
 
                   <label>
-                    <img :src="`http://image.zzb110.cn${view.headimgUrl}`" id="预览图片" width="80%"
-                    v-if="view.id != undefined">
-
-                    <img src="../../img/no-img.gif" width="80%"
-                    v-if="view.id == undefined">
+                    <img src="../../img/no-img.gif"
+                    id="预览图片" width="80%">
                     <input style="display:none" type="file" accept="image/*"
                     id="upload_input" @change="选图()">
                   </label>
@@ -780,7 +777,7 @@ var app = new Vue({
     },
 
     view:{
-      deviceId: [],
+      deviceSn: [],
     },
 
     组织架构: [],
@@ -1091,10 +1088,12 @@ var app = new Vue({
     getView: function(id){
 
       this.view = {
-        deviceId: []
+        deviceSn: []
       }
 
       if(id == -1){
+
+        $('#预览图片').attr('src', '../../img/no-img.gif')
 
         $('#view').modal('show')
 
@@ -1135,11 +1134,13 @@ var app = new Vue({
           if(re.rspHead.retCode == '1'){
 
             try{
-              re.rspBody.deviceId = JSON.parse(re.rspBody.deviceId)
+              re.rspBody.deviceSn = JSON.parse(re.rspBody.deviceSn)
             }catch(e){
-              re.rspBody.deviceId = {}
+              re.rspBody.deviceSn = {}
             }
             _this.view = re.rspBody
+
+            $('#预览图片').attr('src', 'http://image.zzb110.cn' + _this.view.headimgUrl)
 
             $('#view').modal('show')
 
@@ -1166,7 +1167,7 @@ var app = new Vue({
       body2.expireTime = $('#expireTime').val()
 
       // 合翻埋设备id
-      body2.deviceId = JSON.stringify(body2.deviceId)
+      body2.deviceSn = JSON.stringify(body2.deviceSn)
 
       // 头像
       delete body2.headimgUrl
