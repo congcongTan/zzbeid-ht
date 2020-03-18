@@ -184,7 +184,7 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">员工姓名</label>
                     <div class="col-sm-5">
-                      <input type="text" class="form-control" v-model="list.post.realName" required>
+                      <input type="text" class="form-control" v-model="list.post.realName">
                     </div>
                   </div>
                   <div class="form-group">
@@ -376,11 +376,11 @@
                 <div class="col-sm-6 tc">
 
                   <label>
-                    <img src="../../img/no-img.gif" id="预览图片" width="80%">
+                    <img :src="`http://image.zzb110.cn${view.headimgUrl}`" id="预览图片" width="80%">
                     <input style="display:none" type="file" accept="image/*"
                     id="upload_input" @change="选图()">
                   </label>
-
+                  <br>
                   照片(点击拍照)
 
                 </div>
