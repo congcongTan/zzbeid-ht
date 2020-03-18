@@ -366,7 +366,7 @@
     </div>
     <div class="checkbox" v-for="v in 通行设备">
       <label>
-        <input type="checkbox" :value="`${v.id}`" v-model="view.deviceId" @change="通行设备排序()"> {{v.title}}
+        <input type="checkbox" :value="`${v.id}`" v-model="view.deviceSn" @change="通行设备排序()"> {{v.title}}
       </label>
     </div>
   </div>
@@ -1187,7 +1187,7 @@ var app = new Vue({
           return
         }
       }
-      if(body2.deviceId.length == 0){
+      if(body2.deviceSn.length == 0){
       	alert('通行设备至少选择一个')
       	return
       }
@@ -1441,21 +1441,21 @@ var app = new Vue({
     通行设备排序: function(){
 
       var tmp = []
-      for(var i in this.view.deviceId){
-        tmp.push(Number(this.view.deviceId[i]))
+      for(var i in this.view.deviceSn){
+        tmp.push(Number(this.view.deviceSn[i]))
       }
-      this.view.deviceId = tmp.sort()
+      this.view.deviceSn = tmp.sort()
     },
 
     通行设备全选: function(how){
 
       // 先清
-      this.view.deviceId = []
+      this.view.deviceSn = []
 
       // 全选
       if(how){
 
-        this.view.deviceId = this.通行设备全选时
+        this.view.deviceSn = this.通行设备全选时
 
       }
 
