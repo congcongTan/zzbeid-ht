@@ -223,6 +223,7 @@
                     <th>被访部门</th>
                     <th>被访人员</th>
                     <th>携带物品</th>
+                    <th>有效期</th>
                     <th>可通行时间</th>
                     <th>审核状态</th>
                     <th width="1%">操作</th>
@@ -235,15 +236,16 @@
                     <td>{{v.realName}}</td>
                     <td>{{v.identityCard}}</td>
                     <td>{{性别[v.sex]}}</td>
-                    <td>{{v.deviceSn}}</td>
+                    <td>{{v.deviceTitle}}</td>
                     <td>{{v.departTitle}}</td>
                     <td>{{v.beVisited}}</td>
                     <td>{{v.tote}}</td>
-                    <td>{{v.transitTime}}</td>
+                    <td>{{v.expireTime}}</td>
+                    <td v-html="v.transitTime"></td>
                     <td>{{审核状态[v.auditStatus]}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">审核</a><br>
-                      <!-- v-if="v.auditStatus == 0"  -->
+                      <a class="btn btn-xs btn-primary" v-if="v.auditStatus == 0" @click="getView(v.id)">审核</a><br>
+                      <!-- v-if="v.auditStatus == 0" -->
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -341,7 +343,7 @@
   <label class="col-sm-5 control-label">被访部门</label>
   <div class="col-sm-7">
     <select class="form-control" v-model="view.departId">
-      <option value="0">--请选择--</option>
+      <option value="">--请选择--</option>
       <option :value="`${v.id}`" v-for="v in 组织架构">{{v.title}}</option>
     </select>
   </div>
@@ -409,13 +411,13 @@
   <div class="col-sm-9">
     <div class="checkbox">
       <label>
-        <input type="checkbox" :checked="view.deviceId.length === 通行设备.length"
+        <input type="checkbox" :checked="JSON.stringify(view.deviceSn) === JSON.stringify(通行设备全选时)"
         onclick="app.通行设备全选(this.checked)"> 全选
       </label>
     </div>
     <div class="checkbox" v-for="v in 通行设备">
       <label>
-        <input type="checkbox" :value="`${v.id}`" v-model="view.deviceId"> {{v.title}}
+        <input type="checkbox" :value="`${v.sn}`" v-model="view.deviceSn" @change="通行设备排序()"> {{v.title}}
       </label>
     </div>
   </div>
@@ -792,7 +794,7 @@ var app = new Vue({
       post: {
         pageNum: 1,
         pageSize: 10,
-        departId: 0,
+        // deviceSn: '',
       },
       info: {},
       page: {},
@@ -804,7 +806,7 @@ var app = new Vue({
     },
 
     view:{
-      deviceId: [],
+      deviceSn: [],
     },
 
     审核状态: ['等待审核','审核通过','审核不通过'],
@@ -812,6 +814,7 @@ var app = new Vue({
     组织架构: [],
 
     通行设备: [],
+    通行设备全选时: [],
 
   },
   methods: {
@@ -1116,7 +1119,7 @@ var app = new Vue({
     getView: function(id){
 
       this.view = {
-        deviceId: []
+        deviceSn: []
       }
 
       if(id == -1){
@@ -1151,9 +1154,9 @@ var app = new Vue({
           if(re.rspHead.retCode == '1'){
 
             try{
-              re.rspBody.deviceId = re.rspBody.deviceId.split(',')
+              re.rspBody.deviceSn = JSON.parse(re.rspBody.deviceSn)
             }catch(e){
-              re.rspBody.deviceId = []
+              re.rspBody.deviceSn = []
             }
 
             try{
@@ -1180,7 +1183,7 @@ var app = new Vue({
       var body2 = JSON.parse(JSON.stringify(this.view))
 
       // 合翻埋设备id
-      body2.deviceId = body2.deviceId.join(',')
+      body2.deviceSn = JSON.stringify(body2.deviceSn)
 
       body2.validCycle = JSON.stringify(body2.validCycle)
 
@@ -1432,6 +1435,12 @@ var app = new Vue({
         success: function(re){
           if(re.rspHead.retCode == '1'){
             _this.通行设备 = re.rspBody.hsDeviceInfoList
+            for(var i in re.rspBody.hsDeviceInfoList){
+              var v = re.rspBody.hsDeviceInfoList[i]
+              _this.通行设备全选时.push(v.sn)
+            }
+            _this.通行设备全选时.sort()
+
           }else{
             alert(re.rspHead.retMsg)
           }
@@ -1439,18 +1448,24 @@ var app = new Vue({
       })
     },
 
+    通行设备排序: function(){
+
+      var tmp = []
+      for(var i in this.view.deviceSn){
+        tmp.push(this.view.deviceSn[i])
+      }
+      this.view.deviceSn = tmp.sort()
+    },
+
     通行设备全选: function(how){
 
       // 先清
-      this.view.deviceId = []
+      this.view.deviceSn = []
 
       // 全选
       if(how){
 
-        for(var i in this.通行设备){
-          var v = this.通行设备[i]
-          this.view.deviceId.push(v.id)
-        }
+        this.view.deviceSn = this.通行设备全选时
 
       }
 
