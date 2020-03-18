@@ -184,7 +184,7 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">员工姓名</label>
                     <div class="col-sm-5">
-                      <input type="text" class="form-control" v-model="list.post.realName">
+                      <input type="text" class="form-control" v-model="list.post.realName" required>
                     </div>
                   </div>
                   <div class="form-group">
@@ -1337,12 +1337,9 @@ var app = new Vue({
         $('#预览图片').attr('src', base64Code)
 
         // 丢掉 data:image/jpeg;base64,
-        // var base64Code2 = base64Code.replace('data:image/jpeg;base64,', '')
-        _this.view.cardBase64 = base64Code
+        var base64Code2 = base64Code.replace('data:image/jpeg;base64,', '')
+        _this.view.cardBase64 = base64Code2
 
-        //把base64码放入input
-        // $('input[name="liveImg"]').val(base64Code2)
-        // _this.a.liveImg = base64Code2
       }
 
     },
