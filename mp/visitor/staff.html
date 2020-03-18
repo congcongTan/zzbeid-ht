@@ -1191,6 +1191,10 @@ var app = new Vue({
       	alert('通行设备至少选择一个')
       	return
       }
+      if(body2.id == undefined && body2.cardBase64 == undefined){
+        alert('请上传照片')
+        return
+      }
 
       var data = {
         "reqHead":
@@ -1365,6 +1369,8 @@ var app = new Vue({
         var base64Code2 = base64Code.replace('data:image/jpeg;base64,', '')
         _this.view.cardBase64 = base64Code2
 
+        //input框清空
+        $('#upload_input').val('')
       }
 
     },
