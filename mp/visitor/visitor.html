@@ -20,6 +20,11 @@
 
     <title>访客管理</title>
 
+<style>
+.datepicker{
+  z-index: 9999;
+}
+</style>
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
 
@@ -366,7 +371,7 @@
 <div class="form-group">
   <label class="col-sm-5 control-label">有效期(截止日期)</label>
   <div class="col-sm-7">
-    <input type="text" class="form-control input-sm" v-model="view.expireTime">
+    <input type="text" class="form-control input-sm datepicker" id="expireTime">
   </div>
 </div>
 
@@ -604,6 +609,9 @@
 <script src="../../plugins/adminLTE/js/adminlte.min.js"></script>
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
+
+<link rel="stylesheet" href="../../plugins/datepicker/datepicker.css">
+<script src="../../plugins/datepicker/datepicker.js"></script>
 
 <script src="../../js/exif.min.js"></script>
 <script>
@@ -1168,6 +1176,13 @@ var app = new Vue({
             _this.view = re.rspBody
 
             $('#view').modal('show')
+
+            //插件的值
+            $('#expireTime').val(_this.view.expireTime)
+            $('.datepicker').datepicker({
+              format: 'yyyy-mm-dd'
+            })
+
           }
           else{
             alert(re.rspBody.retMsg)
@@ -1181,6 +1196,8 @@ var app = new Vue({
     saveView: function(){
 
       var body2 = JSON.parse(JSON.stringify(this.view))
+
+      body2.expireTime = $('#expireTime').val()
 
       // 合翻埋设备id
       body2.deviceSn = JSON.stringify(body2.deviceSn)

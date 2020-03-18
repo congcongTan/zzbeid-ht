@@ -1091,7 +1091,17 @@ var app = new Vue({
       }
 
       if(id == -1){
+
         $('#view').modal('show')
+
+        // 时间控件
+        var d1 = new Date(new Date().getTime() + (86400000 * 365))//加7天
+
+        $('#expireTime').val(d1.getFullYear() + '-' + (d1.getMonth() + 1) + '-' + d1.getDate())
+        $('.datepicker').datepicker({
+          format: 'yyyy-mm-dd'
+        })
+
         return
       }
 
