@@ -377,6 +377,7 @@
 
                   <label>
                     <img :src="`http://image.zzb110.cn${view.headimgUrl}`" id="预览图片" width="80%">
+                    <img src="" id="预览图片" width="80%">
                     <input style="display:none" type="file" accept="image/*"
                     id="upload_input" @change="选图()">
                   </label>
@@ -1130,10 +1131,10 @@ var app = new Vue({
 
           if(re.rspHead.retCode == '1'){
 
-            if(typeof re.rspBody.deviceId == 'string'){
-              re.rspBody.deviceId = re.rspBody.deviceId.split(',')
-            }else{
-              re.rspBody.deviceId = []
+            try{
+              re.rspBody.deviceId = JSON.parse(re.rspBody.deviceId)
+            }catch(e){
+              re.rspBody.deviceId = {}
             }
             _this.view = re.rspBody
 
@@ -1162,7 +1163,7 @@ var app = new Vue({
       body2.expireTime = $('#expireTime').val()
 
       // 合翻埋设备id
-      body2.deviceId = body2.deviceId.join(',')
+      body2.deviceId = JSON.stringify(body2.deviceId)
 
       // 头像
       delete body2.headimgUrl
