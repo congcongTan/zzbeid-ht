@@ -18,13 +18,8 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>访客管理</title>
+    <title>设备列表</title>
 
-<style>
-.datepicker{
-  z-index: 9999;
-}
-</style>
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
 
@@ -147,12 +142,12 @@
 
     <section class="content-header">
       <h1>
-        访客管理
+        设备列表
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>访客管理</li>
-        <li class="active">访客管理</li>
+        <li>设备列表</li>
+        <li class="active">设备列表</li>
       </ol>
     </section>
 
@@ -163,41 +158,30 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <!-- <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
-              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
+              <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane" id="操作">
+              <div class="tab-pane active" id="操作">
 
-                <a class="btn btn-sm btn-danger" @click="del()">删除</a>
-
-                <a class="btn btn-sm btn-primary" @click="getView(-1)">新增访客</a>
+                <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
               </div>
-              <div class="tab-pane active" id="搜索">
+              <div class="tab-pane" id="搜索">
 
                 <div class="form-horizontal">
 
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">访客姓名</label>
-                    <div class="col-sm-5">
-                      <input type="text" class="form-control" v-model="list.post.realName">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">身份证号</label>
-                    <div class="col-sm-5">
-                      <input type="text" class="form-control" v-model="list.post.identityCard">
-                    </div>
-                  </div>
-                  <div class="form-group">
                     <label class="col-sm-2 control-label">设备名称</label>
-                    <div class="col-sm-5">
-                      <select class="form-control" v-model="list.post.deviceId">
-                        <option value="0">--请选择--</option>
-                        <option :value="`${v.id}`" v-for="v in 通行设备">{{v.title}}</option>
-                      </select>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.title">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">设备编号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.sn">
                     </div>
                   </div>
 
@@ -219,38 +203,21 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr class="text-nowrap">
-                    <th>头像</th>
-                    <th>访客编号</th>
-                    <th>访客姓名</th>
-                    <th>身份证号</th>
-                    <th>性别</th>
-                    <th>通行设备</th>
-                    <th>被访部门</th>
-                    <th>被访人员</th>
-                    <th>携带物品</th>
-                    <th>有效期</th>
-                    <th>可通行时间</th>
-                    <th>审核状态</th>
+                    <th>设备名称</th>
+                    <th>设备编号</th>
+                    <th>添加时间</th>
                     <th width="1%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><img :src="`http://image.zzb110.cn${v.headimgUrl}`" height="60"></td>
-                    <td>{{v.visitorId}}</td>
-                    <td>{{v.realName}}</td>
-                    <td>{{v.identityCard}}</td>
-                    <td>{{性别[v.sex]}}</td>
-                    <td>{{v.deviceTitle}}</td>
-                    <td>{{v.departTitle}}</td>
-                    <td>{{v.beVisited}}</td>
-                    <td>{{v.tote}}</td>
-                    <td>{{v.expireTime}}</td>
-                    <td v-html="v.transitTime"></td>
-                    <td>{{审核状态[v.auditStatus]}}</td>
+                    <td>{{v.title}}</td>
+                    <td>{{v.sn}}</td>
+                    <td>{{v.createTimeTitle}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" v-if="v.auditStatus == 0" @click="getView(v.id)">审核</a><br>
-                      <!-- v-if="v.auditStatus == 0" -->
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
+
+                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -307,158 +274,34 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
-              审核访客
+              <span v-if="view.id == undefined">新增</span>
+              <span v-if="view.id != undefined">编辑</span>
             </h4>
           </div>
           <div class="modal-body">
 
             <form class="form-horizontal">
 
-              <div class="row">
-
-                <div class="col-sm-6">
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">访客姓名</label>
-  <div class="col-sm-7">
-    <input type="text" class="form-control input-sm" v-model="view.realName" disabled>
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">身份证号</label>
-  <div class="col-sm-7">
-    <input type="text" class="form-control input-sm" v-model="view.identityCard" disabled>
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">性别</label>
-  <div class="col-sm-7">
-    <select class="form-control" v-model="view.sex" disabled>
-      <option value="0">--请选择--</option>
-      <option :value="`${i}`" v-for="(v, i) in 性别">{{v}}</option>
-    </select>
-  </div>
-</div>
-
-<hr>
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">被访部门</label>
-  <div class="col-sm-7">
-    <select class="form-control" v-model="view.departId">
-      <option value="">--请选择--</option>
-      <option :value="`${v.id}`" v-for="v in 组织架构">{{v.title}}</option>
-    </select>
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">被访人员</label>
-  <div class="col-sm-7">
-    <input type="text" class="form-control input-sm" v-model="view.beVisited">
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">携带物品</label>
-  <div class="col-sm-7">
-    <input type="text" class="form-control input-sm" v-model="view.tote">
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">有效期(截止日期)</label>
-  <div class="col-sm-7">
-    <input type="text" class="form-control input-sm datepicker" id="expireTime">
-  </div>
-</div>
-
+              <div class="form-group">
+                <label class="col-sm-3 control-label">设备名称</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.title">
                 </div>
-                <div class="col-sm-6 tc">
-
-                  <img :src="`http://image.zzb110.cn${view.headimgUrl}`" id="预览图片" width="80%"><br>
-
-                  照片
-
-                </div>
-
               </div>
 
-              <hr>
-
-<div class="form-group">
-  <label class="col-sm-3 control-label mt6">每日通行时间</label>
-  <div class="col-sm-9">
-    <table class="table table-bordered">
-      <tr v-for="(v, i) in view.validCycle">
-        <td width="25%"><input class="form-control input-sm datepicker" type="text" v-model="v.start_time"></td>
-        <td class="tc"><div class="mt6">至</div></td>
-        <td width="25%"><input class="form-control input-sm datepicker" type="text" v-model="v.end_time"></td>
-        <td>
-          <div class="mt3">
-            <a class="btn btn-xs btn-default" @click="order_rules(i, '-')"><i class="fa fa-arrow-up"></i></a>
-            <a class="btn btn-xs btn-default" @click="order_rules(i, '+')"><i class="fa fa-arrow-down"></i></a>
-            <a class="btn btn-xs btn-danger" @click="del_rules(i)"><i class="fa fa-remove"></i></a>
-          </div>
-        </td>
-      </tr>
-    </table>
-    <div class="mt10">
-      <a class="btn btn-sm btn-primary" href="javascript:;" @click="add_rules()">增加一条</a>
-    </div>
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-sm-3 control-label">通行设备</label>
-  <div class="col-sm-9">
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" :checked="JSON.stringify(view.deviceSn) === JSON.stringify(通行设备全选时)"
-        onclick="app.通行设备全选(this.checked)"> 全选
-      </label>
-    </div>
-    <div class="checkbox" v-for="v in 通行设备">
-      <label>
-        <input type="checkbox" :value="`${v.sn}`" v-model="view.deviceSn" @change="通行设备排序()"> {{v.title}}
-      </label>
-    </div>
-  </div>
-</div>
+              <div class="form-group">
+                <label class="col-sm-3 control-label">设备编号</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.sn">
+                </div>
+              </div>
 
             </form>
 
           </div>
           <div class="modal-footer">
-            <a class="btn btn-primary" @click="view.auditStatus = 1; saveView()">审核通过</a>
-            <a class="btn btn-danger" @click="view.auditStatus = 2; saveView()">审核不通过</a>
+            <a class="btn btn-primary" @click="saveView">确定</a>
           </div>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="modal fade" id="中证宝快速录入访客">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">
-              中证宝快速录入访客
-            </h4>
-          </div>
-          <div class="modal-body">
-            <center>
-• 使用中证宝APP扫码可快速导入身份信息<br>
-• 扫码后，可刷新列表查找访客信息<br>
-<br>
-<img src="../../img/no-img.gif" width="150">
-
-            </center>
-          </div>
-
         </div>
       </div>
     </div>
@@ -610,10 +453,6 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
-<link rel="stylesheet" href="../../plugins/datepicker/datepicker.css">
-<script src="../../plugins/datepicker/datepicker.js"></script>
-
-<script src="../../js/exif.min.js"></script>
 <script>
 var app = new Vue({
   el: '#app',
@@ -802,7 +641,6 @@ var app = new Vue({
       post: {
         pageNum: 1,
         pageSize: 10,
-        // deviceSn: '',
       },
       info: {},
       page: {},
@@ -813,16 +651,6 @@ var app = new Vue({
       },
     },
 
-    view:{
-      deviceSn: [],
-    },
-
-    审核状态: ['等待审核','审核通过','审核不通过'],
-
-    组织架构: [],
-
-    通行设备: [],
-    通行设备全选时: [],
 
   },
   methods: {
@@ -1050,6 +878,8 @@ var app = new Vue({
 
       this.list.loading = 1
 
+      _this = this
+
       if(key == 'page'){
 
         if(val == '+1'){
@@ -1083,7 +913,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsVisitorManageList/interface',
+        url: mp_api + 'mp/getHsDeviceList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1094,8 +924,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.hsVisitorManageList
-          delete re.rspBody.hsVisitorManageList
+          _this.list.data = re.rspBody.hsDeviceInfoList
+          delete re.rspBody.hsDeviceInfoList
 
           _this.list.info = re.rspBody
 
@@ -1126,12 +956,9 @@ var app = new Vue({
 
     getView: function(id){
 
-      this.view = {
-        deviceSn: []
-      }
+      this.view = {}
 
       if(id == -1){
-        this.add_rules()
         $('#view').modal('show')
         return
       }
@@ -1151,7 +978,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsVisitorManageInfo/interface',
+        url: mp_api + 'mp/getHsDeviceInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1159,34 +986,12 @@ var app = new Vue({
         },
         success: function(re){
 
-          if(re.rspHead.retCode == '1'){
-
-            try{
-              re.rspBody.deviceSn = JSON.parse(re.rspBody.deviceSn)
-            }catch(e){
-              re.rspBody.deviceSn = []
-            }
-
-            try{
-              re.rspBody.validCycle = JSON.parse(re.rspBody.validCycle)
-            }catch(e){
-              re.rspBody.validCycle = [{start_time:'',end_time:''}]
-            }
-
-            _this.view = re.rspBody
-
-            $('#view').modal('show')
-
-            //插件的值
-            $('#expireTime').val(_this.view.expireTime)
-
-            $('.datepicker').datepicker({
-              format: 'yyyy-mm-dd'
-            })
-
+          if(re.rspHead.retCode == '0'){
+            alert(re.rspHead.retMsg)
           }
           else{
-            alert(re.rspBody.retMsg)
+            _this.view = re.rspBody
+            $('#view').modal('show')
           }
 
         }
@@ -1196,22 +1001,6 @@ var app = new Vue({
 
     saveView: function(){
 
-      var body2 = JSON.parse(JSON.stringify(this.view))
-
-      body2.expireTime = $('#expireTime').val()
-
-      // 合翻埋设备id
-      body2.deviceSn = JSON.stringify(body2.deviceSn)
-
-      body2.validCycle = JSON.stringify(body2.validCycle)
-
-      body2.visitorManageId = body2.id
-      delete body2.id
-
-      // 头像
-      delete body2.headimgUrl
-
-
       var data = {
         "reqHead":
         {
@@ -1220,12 +1009,14 @@ var app = new Vue({
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
-        reqBody: body2
+        reqBody: this.view
       }
+
+      var add_or_edit = this.view.id == undefined ? 'add':'edit'
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/hsExamine/interface',
+        url: mp_api + 'mp/' + add_or_edit + 'HsDevice/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1245,245 +1036,43 @@ var app = new Vue({
 
     },
 
-    中证宝快速录入访客: function(){
-      $('#中证宝快速录入访客').modal('show')
-    },
-
-
-    add_rules: function(){
-
-      this.view['validCycle'].push({
-        start_time: '',
-        end_time: '',
-      })
-
-    },
-
-    del_rules: function(i){
+    del: function(id){
 
       if(!confirm('确认删除？')){
         return
       }
 
-      this.view['validCycle'].splice(i, 1)
-
-    },
-
-    order_rules: function(i, way){
-
-      var tmp = this.view['validCycle'][i]
-
-      if(way == '-'){
-
-        if(i == 0){
-          console.log('不能上移')
-          return
-        }
-
-        var new_i = i - 1
-
-      }else{
-
-        if( i == this.view['validCycle'].length - 1 ){
-          console.log('不能下移')
-          return
-        }
-
-        var new_i = i + 1
-      }
-
-      this.view['validCycle'].splice(i, 1)
-      this.view['validCycle'].splice(new_i, 0, tmp)
-
-    },
-
-
-    选图: function(){
-
-      var file = $('#upload_input')[0].files[0]
-      // console.log(file)
-
-      // 方向 1=0° 6=顺时针90° 8=逆时针90° 3=180°
-      var Orientation
-      EXIF.getData(file, function(){
-
-        Orientation = EXIF.getTag(this, 'Orientation')
-
-        //创建一个文件读取的工具类
-        var reader = new FileReader()
-
-        reader.onload = function(e){
-
-          // console.log(this.result)//原base64码
-
-          _this.压图(this.result, Orientation)
-        }
-
-        //告诉文件读取工具类读取那个文件
-        reader.readAsDataURL(file)
-
-      })
-    },
-    压图:function(src, Orientation){
-
-      // 需要压缩的最大尺寸
-      var MAX_SIZE = 500
-
-      //创建Image对象
-      var image = new Image()
-
-      image.src = src
-      image.onload = function(){
-
-        console.log('压前：' + image.width + ' x ' + image.height)
-
-        //宽大于高的情况
-        if (image.width > MAX_SIZE && image.width >= image.height){
-          image.height *= MAX_SIZE / image.width
-          image.width = MAX_SIZE
-        }
-        //宽小于高的情况
-        if (image.height > MAX_SIZE && image.height > image.width){
-          image.width *= MAX_SIZE / image.height
-          image.height = MAX_SIZE
-        }
-
-        console.log('压后：' + image.width + ' x ' + image.height)
-
-        var canvas = document.createElement("canvas")
-
-        //获取2d画布
-        var ctx = canvas.getContext("2d")
-        canvas.width = image.width
-        canvas.height = image.height
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-        // 摆正
-        switch(Orientation){
-          case 6:// 旋转90度
-            canvas.width = image.height
-            canvas.height = image.width
-            ctx.rotate(Math.PI / 2)
-            ctx.drawImage(image, 0, -image.height, image.width, image.height)
-            break
-          case 3:// 旋转180度
-            ctx.rotate(Math.PI)
-            ctx.drawImage(image, -image.width, -image.height, image.width, image.height)
-            break
-          case 8:// 旋转-90度
-            canvas.width = image.height
-            canvas.height = image.width
-            ctx.rotate(3 * Math.PI / 2)
-            ctx.drawImage(image, -image.width, 0, image.width, image.height)
-            break
-          
-          default:
-            ctx.drawImage(image, 0, 0, image.width, image.height)
-            break
-        }
-
-        // 生成base64码
-        var base64Code = canvas.toDataURL("image/jpeg")
-        $('#预览图片').attr('src', base64Code)
-
-        // 丢掉 data:image/jpeg;base64,
-        var base64Code2 = base64Code.replace('data:image/jpeg;base64,', '')
-        _this.view.cardBase64 = base64Code2
-
-      }
-
-    },
-
-
-    组织架构get: function(){
       var data = {
         "reqHead":
         {
           clientType: 1,
           format: "json",
           version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
-        "reqBody":{}
+        reqBody: {
+          id: id
+        }
       }
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsDepartFrame/interface',
+        url: mp_api + 'mp/deleteHsDevice/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
         success: function(re){
+
           if(re.rspHead.retCode == '1'){
-            _this.组织架构 = re.rspBody.hsDepartFrame
+            _this.getList()
           }else{
             alert(re.rspHead.retMsg)
           }
-        }
-      })
-    },
 
-    通行设备get: function(){
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
         },
-        "reqBody":{
-          pageSize: 99999
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/getHsDeviceList/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-          if(re.rspHead.retCode == '1'){
-            _this.通行设备 = re.rspBody.hsDeviceInfoList
-            for(var i in re.rspBody.hsDeviceInfoList){
-              var v = re.rspBody.hsDeviceInfoList[i]
-              _this.通行设备全选时.push(v.sn)
-            }
-            _this.通行设备全选时.sort()
-
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-        }
       })
-    },
-
-    通行设备排序: function(){
-
-      var tmp = []
-      for(var i in this.view.deviceSn){
-        tmp.push(this.view.deviceSn[i])
-      }
-      this.view.deviceSn = tmp.sort()
-    },
-
-    通行设备全选: function(how){
-
-      // 先清
-      this.view.deviceSn = []
-
-      // 全选
-      if(how){
-
-        this.view.deviceSn = this.通行设备全选时
-
-      }
 
     },
 
@@ -1582,9 +1171,9 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    this.组织架构get()
+    this.list.post.userId = this.admin.userId
+    // this.list.post.type = this.admin.type
 
-    this.通行设备get()
 
     this.getList()
 
