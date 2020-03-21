@@ -249,7 +249,7 @@
                     <td v-html="v.transitTime"></td>
                     <td>{{审核状态[v.auditStatus]}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" v-if="v.auditStatus == 0" @click="getView(v.id)">审核</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">审核</a><br>
                       <!-- v-if="v.auditStatus == 0" -->
                     </td>
                   </tr>
@@ -371,7 +371,7 @@
 <div class="form-group">
   <label class="col-sm-5 control-label">有效期(截止日期)</label>
   <div class="col-sm-7">
-    <input type="text" class="form-control input-sm datepicker" id="expireTime">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="expireTime">
   </div>
 </div>
 
@@ -1170,12 +1170,21 @@ var app = new Vue({
             try{
               re.rspBody.validCycle = JSON.parse(re.rspBody.validCycle)
             }catch(e){
-              re.rspBody.validCycle = [{start_time:'',end_time:''}]
+              re.rspBody.validCycle = [{start_time:'00:00',end_time:'23:59'}]
             }
 
             _this.view = re.rspBody
 
             $('#view').modal('show')
+
+            if(_this.view.expireTime == ''){
+
+                _this.view.expireTime = new Date(new Date().getTime() + 86400000*2)
+                .toLocaleString()
+                .split(" ")[0]
+                .replace(/\//g,'-')
+
+            }
 
             //插件的值
             $('#expireTime').val(_this.view.expireTime)
@@ -1253,8 +1262,8 @@ var app = new Vue({
     add_rules: function(){
 
       this.view['validCycle'].push({
-        start_time: '',
-        end_time: '',
+        start_time: '00:00',
+        end_time: '23:59',
       })
 
     },
