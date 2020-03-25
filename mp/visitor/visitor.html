@@ -1213,7 +1213,8 @@ var app = new Vue({
       // 合翻埋设备id
       body2.deviceSn = JSON.stringify(body2.deviceSn)
 
-      body2.validCycle = JSON.stringify(body2.validCycle)
+      // body2.validCycle = JSON.stringify(body2.validCycle)
+      body2.validCycle = ''//李玉明要求去除
 
       body2.visitorManageId = body2.id
       delete body2.id
