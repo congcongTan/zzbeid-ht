@@ -369,9 +369,16 @@
 </div>
 
 <div class="form-group">
-  <label class="col-sm-5 control-label">有效期(截止日期)</label>
+  <label class="col-sm-5 control-label">访问时间</label>
   <div class="col-sm-7">
-    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="expireTime">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="visitTime">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">离开时间</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="leaveTime">
   </div>
 </div>
 
@@ -388,7 +395,7 @@
 
               <hr>
 
-<!-- <div class="form-group">
+<div class="form-group">
   <label class="col-sm-3 control-label mt6">每日通行时间</label>
   <div class="col-sm-9">
     <table class="table table-bordered">
@@ -409,7 +416,7 @@
       <a class="btn btn-sm btn-primary" href="javascript:;" @click="add_rules()">增加一条</a>
     </div>
   </div>
-</div> -->
+</div>
 
 <div class="form-group">
   <label class="col-sm-3 control-label">通行设备</label>
@@ -720,7 +727,8 @@ var app = new Vue({
 	访客行业:{
 		0:'无软件',
 		20000:'佛山曇京',
-		60001:'华舜'
+		60001:'园区访客',
+		60002:'酒店访客'
 	},
 
 	充电行业:{
@@ -1177,17 +1185,9 @@ var app = new Vue({
 
             $('#view').modal('show')
 
-            if(_this.view.expireTime == ''){
-
-                _this.view.expireTime = new Date(new Date().getTime() + 86400000*2)
-                .toLocaleString()
-                .split(" ")[0]
-                .replace(/\//g,'-')
-
-            }
-
             //插件的值
-            $('#expireTime').val(_this.view.expireTime)
+            $('#visitTime').val(_this.view.visitTime)
+            $('#leaveTime').val(_this.view.leaveTime)
 
             $('.datepicker').datepicker({
               format: 'yyyy-mm-dd'
@@ -1207,13 +1207,13 @@ var app = new Vue({
 
       var body2 = JSON.parse(JSON.stringify(this.view))
 
-      body2.expireTime = $('#expireTime').val()
+      body2.visitTime = $('#visitTime').val()
+      body2.leaveTime = $('#leaveTime').val()
 
       // 合翻埋设备id
       body2.deviceSn = JSON.stringify(body2.deviceSn)
 
-      // body2.validCycle = JSON.stringify(body2.validCycle)
-      body2.validCycle = ''//李玉明要求传空值
+      body2.validCycle = JSON.stringify(body2.validCycle)
 
       body2.visitorManageId = body2.id
       delete body2.id
