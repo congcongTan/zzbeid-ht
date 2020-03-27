@@ -1202,6 +1202,7 @@ var app = new Vue({
 
             //插件的值
             $('#visitTime').val(_this.view.visitTime)
+            $('#visitTime').val(_this.view.visitTime)
             $('#leaveTime').val(_this.view.leaveTime)
 
             $('.datepicker').datepicker({
@@ -1229,7 +1230,7 @@ var app = new Vue({
       body2.deviceSn = JSON.stringify(body2.deviceSn)
 
       // body2.validCycle = JSON.stringify(body2.validCycle)
-      body2.validCycle = ''//李玉明要求去除
+      body2.validCycle = ''//李玉明要求传空值
 
       body2.visitorManageId = body2.id
       delete body2.id
