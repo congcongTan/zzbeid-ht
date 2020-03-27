@@ -205,7 +205,6 @@
                   <tr class="text-nowrap">
                     <th>设备名称</th>
                     <th>设备编号</th>
-                    <th>硬件厂商</th>
                     <th>添加时间</th>
                     <th width="1%">操作</th>
                   </tr>
@@ -214,7 +213,6 @@
                   <tr v-for="(v, i) in list.data">
                     <td>{{v.title}}</td>
                     <td>{{v.sn}}</td>
-                    <td>{{硬件厂商[v.type]}}</td>
                     <td>{{v.createTimeTitle}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
@@ -295,16 +293,6 @@
                 <label class="col-sm-3 control-label">设备编号</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="view.sn">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">设备编号</label>
-                <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.type">
-                    <option value="">请选择</option>
-                    <option :value="`${i}`" v-for="(v,i) in 硬件厂商">{{v}}</option>
-                  </select>
                 </div>
               </div>
 
@@ -571,7 +559,8 @@ var app = new Vue({
 	访客行业:{
 		0:'无软件',
 		20000:'佛山曇京',
-		60001:'华舜'
+		60001:'园区访客',
+		60002:'酒店访客'
 	},
 
 	充电行业:{
@@ -663,10 +652,6 @@ var app = new Vue({
       },
     },
 
-    硬件厂商:{
-      0:'其它',
-      10001:'华舜',
-    },
 
   },
   methods: {
