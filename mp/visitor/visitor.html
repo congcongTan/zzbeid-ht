@@ -360,9 +360,16 @@
 <hr>
 
 <div class="form-group">
-  <label class="col-sm-5 control-label">客户申请拜访部门</label>
+  <label class="col-sm-5 control-label">申请拜访部门</label>
   <div class="col-sm-7">
     <input type="text" class="form-control input-sm" v-model="view.departTitle" disabled>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">拜访原因</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.cause" disabled>
   </div>
 </div>
 
@@ -380,13 +387,6 @@
   <label class="col-sm-5 control-label">拜访人员</label>
   <div class="col-sm-7">
     <input type="text" class="form-control input-sm" v-model="view.beVisited">
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">拜访原因</label>
-  <div class="col-sm-7">
-    <input type="text" class="form-control input-sm" v-model="view.cause" disabled>
   </div>
 </div>
 
