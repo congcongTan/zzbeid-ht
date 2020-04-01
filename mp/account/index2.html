@@ -15,43 +15,69 @@
 <link rel="stylesheet" href="../../plugins/Font-Awesome/css/font-awesome.min.css">
 <link rel="stylesheet" href="../../plugins/cong/cong.css">
 
+<style>
+body{
+  background: url(../../img/bg.jpg) #4875DC left bottom no-repeat;
+  background-size: cover;
+}
+.box{
+  position: absolute;
+  top: 20%;
+  right: 100px;
+  width: 350px;
+  height: 400px;
+  padding: 40px;
+}
+.btn-primary{
+  background: #4875DC;
+}
+.form-control{
+  border: none;
+  border-bottom: 1px solid #CCC;
+}
+</style>
+
 <script src="../../js/all.js"></script>
 
   <title>登录</title>
 
 </head>
-<body class="hold-transition login-page">
+<body class="hold-transition">
 
-<div class="login-box" id="app">
+  <!-- <div class="pa top30 left30"><img src="../../img/logo.png" height="40"></div> -->
 
-  <div class="login-logo">
-    <a href="#">商户后台</a>
-  </div>
+<div id="app">
 
-  <div class="login-box-body">
-    <p class="login-box-msg">请登录</p>
+  <div class="box">
+
+    <div class="mt10 tc"><img src="../../img/logo-blue.png" height="60"></div>
 
     <form class="form-horizontal">
 
-      <div class="form-group">
-        <label class="col-sm-3 control-label">登录账号</label>
-        <div class="col-sm-9">
+      <div class="mt40">
+        <div class="pa">
+          <img src="../../img/icon-user.gif">
+        </div>
+        <div class="ml40">
           <input type="text" class="form-control" name="account" v-model="account.account">
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="col-sm-3 control-label">登录密码</label>
-        <div class="col-sm-9">
-          <input type="password" class="form-control" name="password" v-model="account.password">
+      <div class="mt20">
+        <div class="pa">
+          <img src="../../img/icon-password.gif">
+        </div>
+        <div class="ml40">
+          <input type="text" class="form-control" name="password" v-model="account.password">
         </div>
       </div>
 
-      <div class="form-group">
-        <div class="col-sm-9 col-sm-offset-3">
-          <a class="btn btn-primary btn-flat" @click="submit">登录</a>
-        </div>
-      </div>
+      <label class="mt30">
+        <input type="checkbox"> 记住密码
+      </label>
+
+      <a class="btn btn-primary btn-block mt20" @click="submit">登录</a>
+
 
     </form>
 
