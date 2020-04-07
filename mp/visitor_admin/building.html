@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>接口认证明细</title>
+    <title>楼栋管理</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -34,9 +34,9 @@
     <!-- Logo -->
     <a href="../index.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini">管理后台</span>
+      <span class="logo-mini">商户后台</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg">管理后台</span>
+      <span class="logo-lg">商户后台</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -96,15 +96,6 @@
         </div>
       </div>
 
-      <form action="#" method="get" class="sidebar-form">
-        <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Search...">
-          <span class="input-group-btn">
-            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
-            </button>
-          </span>
-        </div>
-      </form>
 
       <ul class="sidebar-menu" data-widget="tree">
 
@@ -120,7 +111,8 @@
 
             <li :class="{'treeview': v2.children.length != 0, 'active': v2.title_en == mca.a}" v-for="(v2, i2) in v.children">
 
-              <a :href="`../${v2.url == '#' ? v2.url : v2.url + '.html'}`">
+              <a :href="`../${v2.url == '#' ? v2.url : v2.url + '.html'}`"
+              v-if="!(admin.isPrimaryAccount == 2 && v2.title == '员工账号')">
                 <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
                 <span class="pull-right-container" v-if="v2.children.length != 0">
                   <i class="fa fa-angle-left pull-right"></i>
@@ -150,12 +142,12 @@
 
     <section class="content-header">
       <h1>
-        接口认证明细
+        楼栋管理
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>计费管理</li>
-        <li class="active">接口认证明细</li>
+        <li>系统管理</li>
+        <li class="active">楼栋管理</li>
       </ol>
     </section>
 
@@ -166,60 +158,39 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <!-- <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
-              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
+              <!-- <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li> -->
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane" id="操作">
+              <div class="tab-pane active" id="操作">
 
-                <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
-
-                <!-- <a class="btn btn-sm btn-info" @click="location.reload()">刷新</a> -->
-
-                <!-- <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a> -->
+                <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
 
               </div>
-              <div class="tab-pane active" id="搜索">
+              <div class="tab-pane" id="搜索">
 
                 <div class="form-horizontal">
+
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">发生时间</label>
-                    <div class="col-sm-10">
-                      <div class="row">
-                        <div class="col-xs-5 col-sm-4">
-                          <input type="text" class="form-control datetimepicker" id="startTime">
-                        </div>
-                        <div class="fl w20 tc mt5">
-                          ~
-                        </div>
-                        <div class="col-xs-5 col-sm-4">
-                          <input type="text" class="form-control datetimepicker" id="endTime">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">身份证号</label>
+                    <label class="col-sm-2 control-label">设备名称</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.identityCard">
+                      <input type="text" class="form-control" v-model="list.post.title">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="col-sm-2 control-label">发起人</label>
+                    <label class="col-sm-2 control-label">设备编号</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.memberName">
+                      <input type="text" class="form-control" v-model="list.post.sn">
                     </div>
                   </div>
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">姓名</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.realName">
-                    </div>
-                  </div>
+
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
+                        查找
+                        <i class="fa fa-spinner fa-spin" v-if="list.loading == 1"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -232,34 +203,22 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr class="text-nowrap">
-                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
-                    <th>发起人</th>
-                    <th>姓名</th>
-                    <th>身份证号</th>
-                    <th>内部接口</th>
-                    <th>接口手续费</th>
-                    <th>外部接口</th>
-                    <th>接口手续费</th>
-                    <th>认证结果</th>
-                    <th>接口返回信息</th>
-                    <th>发生时间</th>
+                    <th>楼栋名称</th>
+                    <th>排序</th>
+                    <th width="1%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.memberName}}</td>
-                    <td>{{v.realName}}</td>
-                    <td :title="`${v.identityCard}`">{{v.identityCard.substr(0,4)}}****{{v.identityCard.substr(-4)}}</td>
-                    <td>{{v.interfaceName}}</td>
-                    <td>{{v.interfacePoundage}}</td>
-                    <td>{{v.interfaceInfoName}}</td>
-                    <td>{{v.interfaceInfoPoundage}}</td>
-                    <td>{{v.statusTitle}}</td>
-                    <td>{{v.msg}}</td>
-                    <td>{{v.createTime}}</td>
+                    <td>{{v.title}}</td>
+                    <td>{{v.sort}}</td>
+                    <td class="text-nowrap operation">
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
+
+                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
+                    </td>
                   </tr>
-                  <tr v-if="list.data.length == 0">
+                  <tr v-if="list.length == 0">
                     <td colspan="99">没有数据</td>
                   </tr>
                 </tbody>
@@ -306,13 +265,52 @@
 
     </section>
 
+
+    <div class="modal fade" id="view">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              <span v-if="view.id == undefined">新增</span>
+              <span v-if="view.id != undefined">编辑</span>
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">楼栋名称</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.title">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">排序</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.sort">
+                </div>
+              </div>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="saveView">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Version</b> 2.0
+      <b>Version</b> 2.4.0
     </div>
-    <b>中证宝</b> 管理后台
+    <b>中证宝</b> 商户后台
   </footer>
 
   <!-- Control Sidebar -->
@@ -453,15 +451,13 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
-<link rel="stylesheet" href="../../plugins/datetimepicker/datetimepicker.css">
-<script src="../../plugins/datetimepicker/datetimepicker.js"></script>
 <script>
 var app = new Vue({
   el: '#app',
   data: {
 	mca: {},
-    admin: {},
-    sidemenu: {},
+		admin: {},
+		sidemenu: {},
 
 	list: {},
 	// page: {},
@@ -470,30 +466,193 @@ var app = new Vue({
 
 	view: {},
 
+	性别:{
+		1:'男',
+		2:'女',
+	},
+
+	软件版本:{
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家'
+	},
+
+	接口类型: {
+		1:'公安部',
+		2:'海鑫',
+		3:'国政通',
+		4:'上海爱金'
+	},
+
+	接口版本: {
+		1:'标准版',
+		2:'简化版'
+	},
+
+	行业:{
+		1:'旅馆',
+		2:'网吧',
+		3:'汽车站',
+		4:'机场',
+		5:'旅行社',
+		6:'访客',
+		7:'充电',
+		8:'出租屋',
+		9:'足浴'
+	},
+
+	行业软件: {
+		0:'无软件',
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家',
+		6:'恒邦',
+		7:'鼎泰云计费',
+		10000:'中证宝酒店',
+		10001:'中冠PMS',
+		10002:'千里马酒店',
+		10003:'锦江酒店',
+		10004:'广电运通',
+		20000:'佛山曇京',
+		60001:'华舜'
+	},
+
+	旅馆行业: {
+		0:'无软件',
+		10000:'中证宝酒店',
+		10001:'中冠PMS',
+		10002:'千里马酒店',
+		10003:'锦江酒店',
+		10004:'广电运通',
+		20000:'佛山曇京'
+	},
+
+	网吧行业: {
+		0:'无软件',
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家',
+		6:'恒邦',
+		7:'鼎泰云计费',
+	},
+
+	汽车站行业:{
+		0:'无软件'
+	},
+
+	机场行业:{
+		0:'无软件'
+	},
+
+	旅行社行业:{
+		0:'无软件'
+	},
+
+	访客行业:{
+		0:'无软件',
+		20000:'佛山曇京',
+		60001:'园区访客',
+		60002:'酒店访客'
+	},
+
+	充电行业:{
+		0:'无软件'
+	},
+
+	出租屋行业: {
+		0:'无软件',
+		10000:'中证宝酒店'
+	},
+
+	足浴行业: {
+		0:'无软件',
+		10000:'中证宝酒店'
+	},
+
+	状态: {
+		1:'可用',
+		2:'不可用'
+	},
+
+	是否加密: {
+		0:'否',
+		1:'是'
+	},
+
+	同步模式: {
+		1:'在线（云服务器）',
+		2:'xml文件（铃铛）',
+		3:'本地数据库（LockSend）',
+		4:'上海旅业',
+		5:'湖南旅业',
+		6:'身份证硬件',
+	},
+
+	分成基数: {
+		1: '月消费总积分（对冲退款）',
+		// 2: '日均消费总积分（对冲退款）'
+	},
+
+	分成模式: {
+		1: '阶梯式累计分成'
+	},
+
+	支付方式: {
+		0:'全部',
+		1:'电子现金',
+		2:'声波',
+		3:'NFC',
+		4:'扫码',
+		5:'手输',
+	},
+
+	交易模式: {
+		// 0:		'全部',
+		10001:	'担保',
+		10002:	'消费',
+	},
+
+	支付状态: {
+		0:'未生成',
+		1:'已提交担保',
+		2:'担保完成',
+		3:'担保撤销',
+		4:'担保冲正',
+		101:'支付',
+		102:'支付冲正',
+		103:'支付撤销',
+		104:'支付退款'
+	},
+
+	证件类型: {
+		1: '中证宝',
+		2: '二代证',
+	},
+
     list: {
       data: [],
       post: {
-        // title: '',
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
       },
       info: {},
       page: {},
+      loading: 0,
       checkbox: {
         all: [],
         checked: [],
       },
     },
 
-    支付方式: {
-      1: '积分',
-      2: '卡券',
-    },
-
-    支付状态: {
-      1: '付款成功',
-      2: '付款失败',
-      3: '正在付款',
+    硬件厂商:{
+      0:'其它',
+      10001:'华舜',
     },
 
   },
@@ -720,12 +879,9 @@ var app = new Vue({
 
     getList: function(key, val){
 
+      this.list.loading = 1
+
       _this = this
-
-      //这里用v-model会有大坑
-      this.list.post.startTime = $('#startTime').val()
-      this.list.post.endTime = $('#endTime').val()
-
 
       if(key == 'page'){
 
@@ -753,26 +909,28 @@ var app = new Vue({
           clientType: 1,
           format: "json",
           version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
         },
         reqBody: this.list.post
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/externalInterfaceCallList/interface',
+        url: mp_api + 'mp/getHsDeviceList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
+        complete: function(){
+          _this.list.loading = 0
+        },
         success: function(re){
 
-          _this.list.data = re.rspBody.list
-          delete re.rspBody.list
+          _this.list.data = re.rspBody.hsDeviceInfoList
+          delete re.rspBody.hsDeviceInfoList
 
-          _this.list.info = re.rspBody          
-
+          _this.list.info = re.rspBody
 
           //id
           for( var i in _this.list.data ){
@@ -795,6 +953,128 @@ var app = new Vue({
           }
 
         }
+      })
+
+    },
+
+    getView: function(id){
+
+      this.view = {}
+
+      if(id == -1){
+        $('#view').modal('show')
+        return
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getHsDeviceInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '0'){
+            alert(re.rspHead.retMsg)
+          }
+          else{
+            _this.view = re.rspBody
+            $('#view').modal('show')
+          }
+
+        }
+      })
+
+    },
+
+    saveView: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.view
+      }
+
+      var add_or_edit = this.view.id == undefined ? 'add':'edit'
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/' + add_or_edit + 'HsDevice/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    del: function(id){
+
+      if(!confirm('确认删除？')){
+        return
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/deleteHsDevice/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
       })
 
     },
@@ -826,10 +1106,22 @@ var app = new Vue({
     }
 
 
+    if(this.admin.softwareVersion == 60001){
+      var url = '../../db/menu-mp-visitor.json'
+    }
+    else if(this.admin.type == 1 || this.admin.type == 2){
+      var url = '../../db/menu-mp-agent.json'
+    }else if(this.admin.type == 4){
+      var url = '../../db/menu-mp-sale-group.json'
+    }else{
+      var url = '../../db/menu-mp.json'
+    }
+
+
     // 侧栏菜单
     $.ajax({
       type: 'GET',
-      url: '../../db/menu-manager.json',
+      url: url,
       //url: 'http://192.168.199.196:8692/token/generate',
       dataType: 'json',
       beforeSend: function(request){
@@ -843,7 +1135,23 @@ var app = new Vue({
         // LS.admin = JSON.stringify(re.data.info)
 
         _this.sidemenu = re
-        //console.log(_this.sidemenu)
+/*        console.log(_this.sidemenu)
+
+        if(_this.admin.isPrimaryAccount != 1){
+          // console.log('我不是主帐户')
+
+          for(var i in _this.sidemenu){
+            var v = _this.sidemenu[i]
+
+            if(v.title == '客服管理'){
+
+              console.log(v)
+              delete _this.sidemenu[i]
+              break
+
+            }
+          }
+        }*/
 
       }
     })
@@ -866,13 +1174,9 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    var date = new Date()
-    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
+    this.list.post.userId = this.admin.userId
+    // this.list.post.type = this.admin.type
 
-    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01 00:00')
-    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date + ' 23:59')
-
-    $(".datetimepicker").datetimepicker();
 
     this.getList()
 
