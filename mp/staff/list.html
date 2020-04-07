@@ -321,13 +321,6 @@
                 <div class="col-sm-6">
 
 <div class="form-group">
-  <label class="col-sm-5 control-label">员工编号 <span class="text-danger">*</span></label>
-  <div class="col-sm-7">
-    <input type="text" class="form-control input-sm" v-model="view.code">
-  </div>
-</div>
-
-<div class="form-group">
   <label class="col-sm-5 control-label">员工姓名 <span class="text-danger">*</span></label>
   <div class="col-sm-7">
     <input type="text" class="form-control input-sm" v-model="view.realName">
@@ -1196,7 +1189,6 @@ var app = new Vue({
       delete body2.headimgUrl
 
       var 必填 = {
-        code: '员工编号',
         realName: '员工姓名',
         mobile: '手机号码',
         identityCard: '身份证号',
