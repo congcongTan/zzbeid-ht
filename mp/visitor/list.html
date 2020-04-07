@@ -1250,8 +1250,19 @@ var app = new Vue({
       // 头像
       delete body2.headimgUrl
 
-      var 必填 = {
+
+      var 必选 = {
         departId: '拜访部门',
+      }
+      for(var i in 必填){
+        var v = 必填[i]
+
+        if(body2[i] == undefined || body2[i] == ''){
+          alert('【' + v + '】必选，请录入后再次提交')
+          return
+        }
+      }
+      var 必填 = {
         visitTime: '访问时间',
         leaveTime: '离开时间',
       }
@@ -1571,7 +1582,10 @@ var app = new Vue({
 
 
     if(this.admin.softwareVersion == 60001){
-      var url = '../../db/menu-mp-visitor.json'
+      var url = '../../db/menu-mp-company.json'
+    }
+    else if(this.admin.softwareVersion == 60002){
+      var url = '../../db/menu-mp-hotel.json'
     }
     else if(this.admin.type == 1 || this.admin.type == 2){
       var url = '../../db/menu-mp-agent.json'

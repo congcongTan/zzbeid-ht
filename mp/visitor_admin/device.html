@@ -1121,7 +1121,10 @@ var app = new Vue({
 
 
     if(this.admin.softwareVersion == 60001){
-      var url = '../../db/menu-mp-visitor.json'
+      var url = '../../db/menu-mp-company.json'
+    }
+    else if(this.admin.softwareVersion == 60002){
+      var url = '../../db/menu-mp-hotel.json'
     }
     else if(this.admin.type == 1 || this.admin.type == 2){
       var url = '../../db/menu-mp-agent.json'
