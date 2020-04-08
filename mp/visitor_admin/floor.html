@@ -212,7 +212,7 @@
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td>{{v.title}}</td>
-                    <td>{{v.sn}}</td>
+                    <td>{{v.buildingTitle}}</td>
                     <td>{{v.sort}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
@@ -292,9 +292,9 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">所属楼栋</label>
                 <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.type">
+                  <select class="form-control input-sm" v-model="view.buildingId">
                     <option value="">请选择</option>
-                    <option :value="`${i}`" v-for="(v,i) in 硬件厂商">{{v}}</option>
+                    <option :value="`${v.id}`" v-for="v in 楼栋">{{v.title}}</option>
                   </select>
                 </div>
               </div>
@@ -662,6 +662,8 @@ var app = new Vue({
       },
     },
 
+    楼栋:{},
+
     硬件厂商:{
       0:'其它',
       10001:'华舜',
@@ -928,7 +930,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsDeviceList/interface',
+        url: mp_api + 'mp/getHsFloorList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -939,8 +941,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.hsDeviceInfoList
-          delete re.rspBody.hsDeviceInfoList
+          _this.list.data = re.rspBody.hsFloorInfoList
+          delete re.rspBody.hsFloorInfoList
 
           _this.list.info = re.rspBody
 
@@ -993,7 +995,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsDeviceInfo/interface',
+        url: mp_api + 'mp/getHsFloorInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1031,7 +1033,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/' + add_or_edit + 'HsDevice/interface',
+        url: mp_api + 'mp/' + add_or_edit + 'HsFloor/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1072,7 +1074,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/deleteHsDevice/interface',
+        url: mp_api + 'mp/deleteHsFloor/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1087,6 +1089,36 @@ var app = new Vue({
           }
 
         },
+      })
+
+    },
+
+    get楼栋: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getHsBuildingList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.楼栋 = re.rspBody.hsBuildingInfoList
+
+        }
       })
 
     },
@@ -1192,8 +1224,9 @@ var app = new Vue({
     this.list.post.userId = this.admin.userId
     // this.list.post.type = this.admin.type
 
-
     this.getList()
+
+    this.get楼栋()
 
   }
 })

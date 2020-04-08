@@ -205,6 +205,7 @@
                   <tr class="text-nowrap">
                     <th>房间名称</th>
                     <th>所属楼层</th>
+					<th>所属楼栋</th>
                     <th>排序</th>
                     <th width="1%">操作</th>
                   </tr>
@@ -212,7 +213,8 @@
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td>{{v.title}}</td>
-                    <td>{{v.sn}}</td>
+                    <td>{{v.floorTitle}}</td>
+					<td>{{v.buildingTitle}}</td>
                     <td>{{v.sort}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
@@ -283,26 +285,36 @@
             <form class="form-horizontal">
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">设备名称</label>
+                <label class="col-sm-3 control-label">房间名称</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="view.title">
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">设备编号</label>
+                <label class="col-sm-3 control-label">所属楼栋</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.sn">
+                  <select class="form-control input-sm" v-model="view.buildingId" @change="get楼层('清楼层')">
+                    <option value="">请选择</option>
+                    <option :value="`${v.id}`" v-for="v in 楼栋">{{v.title}}</option>
+                  </select>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">设备编号</label>
+                <label class="col-sm-3 control-label">所属楼层</label>
                 <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.type">
+                  <select class="form-control input-sm" v-model="view.floorId">
                     <option value="">请选择</option>
-                    <option :value="`${i}`" v-for="(v,i) in 硬件厂商">{{v}}</option>
+                    <option :value="`${v.id}`" v-for="v in 楼层">{{v.title}}</option>
                   </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">排序</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.sort">
                 </div>
               </div>
 
@@ -662,6 +674,9 @@ var app = new Vue({
       },
     },
 
+    楼栋:{},
+    楼层:{},
+
     硬件厂商:{
       0:'其它',
       10001:'华舜',
@@ -928,7 +943,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsDeviceList/interface',
+        url: mp_api + 'mp/getHsRoomList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -939,8 +954,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.hsDeviceInfoList
-          delete re.rspBody.hsDeviceInfoList
+          _this.list.data = re.rspBody.hsRoomInfoList
+          delete re.rspBody.hsRoomInfoList
 
           _this.list.info = re.rspBody
 
@@ -971,7 +986,12 @@ var app = new Vue({
 
     getView: function(id){
 
-      this.view = {}
+      this.view = {
+		  buildingId: '',
+		  floorId: '',
+	  }
+	  
+	  this.楼层 = {}
 
       if(id == -1){
         $('#view').modal('show')
@@ -993,7 +1013,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsDeviceInfo/interface',
+        url: mp_api + 'mp/getHsRoomInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1006,6 +1026,7 @@ var app = new Vue({
           }
           else{
             _this.view = re.rspBody
+			_this.get楼层()
             $('#view').modal('show')
           }
 
@@ -1031,7 +1052,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/' + add_or_edit + 'HsDevice/interface',
+        url: mp_api + 'mp/' + add_or_edit + 'HsRoom/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1072,7 +1093,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/deleteHsDevice/interface',
+        url: mp_api + 'mp/deleteHsRoom/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1089,6 +1110,72 @@ var app = new Vue({
         },
       })
 
+    },
+
+    get楼栋: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        reqBody: {}
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getHsBuildingList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+		  console.log('楼栋', re.rspBody.hsBuildingInfoList)
+          _this.楼栋 = re.rspBody.hsBuildingInfoList
+
+        }
+      })
+    },
+
+    get楼层: function(清楼层){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        reqBody: {
+			id: this.view.buildingId
+		}
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getHsFloorListByBuildingId/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+		  console.log('楼层', re.rspBody.hsFloorInfoList)
+          _this.楼层 = re.rspBody.hsFloorInfoList
+		  
+		  if(清楼层 != undefined){
+			  _this.view.floorId = ''
+		  }
+
+        }
+      })
     },
 
   },
@@ -1192,8 +1279,9 @@ var app = new Vue({
     this.list.post.userId = this.admin.userId
     // this.list.post.type = this.admin.type
 
-
     this.getList()
+
+    this.get楼栋()
 
   }
 })

@@ -20,8 +20,36 @@
 
     <title>房态图</title>
 
-<link rel="stylesheet" href="../../plugins/bootstrap-treeview/bootstrap-treeview.min.css">
-<script src="../../plugins/bootstrap-treeview/bootstrap-treeview.min.js"></script>
+<style>
+
+.clearfix:after{ display:block; visibility:hidden; clear:both; height:0; content:"";}
+.clearfix{zoom:1;}
+
+
+/*左侧导航菜单    home*/
+.sideMenu{ border:1px solid #ddd; }
+.sideMenu h3{}
+.sideMenu h3{
+	margin:0;
+	height:32px;
+	line-height:32px;
+	padding-left:10px;
+	border-top:1px solid #e3e3e3;
+	background:#f4f4f4;
+	cursor:pointer;
+	font-weight: bold;
+	font-size: 14px;
+	color: #333;
+}
+.sideMenu ul .nLi.on .sub{ display: block;}
+.sideMenu ul .nLi .sub{ padding:8px 0; color:#999; display:none; }
+.sideMenu ul {padding-left: 0;}
+.sideMenu ul li{ list-style: none;}
+/* .sideMenu ul .nLi .sub li{ height: 30px; line-height: 30px;} */
+.sideMenu ul .nLi .sub li a{ display: block; width: 100%; height: 100%; font-family: 'Microsoft YaHei'; font-size: 14px; color: #333; text-decoration: none; padding:0 25px; box-sizing:border-box;}
+.sideMenu ul .nLi .sub li a:hover{ background:#eee;}
+/*左侧导航菜单    end*/
+</style>
 
 <style>
 .datepicker{
@@ -217,7 +245,40 @@
 
                 <div class="" style="flex:1">
 
-                  <div id="treeview1" class=""></div>
+<div class="sideMenu">
+    <ul>
+        <li class="nLi on">
+            <h3>一级菜单</h3>
+            <ul class="sub on">
+                <li><a href="">二级菜单</a></li>
+                <li><a href="">二级菜单</a></li>
+                <li><a href="">二级菜单</a></li>
+                <li><a href="">二级菜单</a></li>
+                <li><a href="">二级菜单</a></li>
+            </ul>
+        </li>
+        <li class="nLi">
+            <h3>一级菜单</h3>
+            <ul class="sub">
+                <li><a href="">二级菜单</a></li>
+                <li><a href="">二级菜单</a></li>
+                <li><a href="">二级菜单</a></li>
+                <li><a href="">二级菜单</a></li>
+                <li><a href="">二级菜单</a></li>
+            </ul>
+        </li>
+        <li class="nLi">
+            <h3>一级菜单</h3>
+            <ul class="sub">
+                <li><a href="">二级菜单</a></li>
+                <li><a href="">二级菜单</a></li>
+                <li><a href="">二级菜单</a></li>
+                <li><a href="">二级菜单</a></li>
+                <li><a href="">二级菜单</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
 
                 </div>
 
@@ -1077,7 +1138,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsVisitorManageList/interface',
+        url: mp_api + 'mp/getHsRoonStatusList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1243,158 +1304,7 @@ var app = new Vue({
 
     },
 
-    中证宝快速录入访客: function(){
-      $('#中证宝快速录入访客').modal('show')
-    },
-
-
-    add_rules: function(){
-
-      this.view['validCycle'].push({
-        start_time: '00:00',
-        end_time: '23:59',
-      })
-
-    },
-
-    del_rules: function(i){
-
-      if(!confirm('确认删除？')){
-        return
-      }
-
-      this.view['validCycle'].splice(i, 1)
-
-    },
-
-    order_rules: function(i, way){
-
-      var tmp = this.view['validCycle'][i]
-
-      if(way == '-'){
-
-        if(i == 0){
-          console.log('不能上移')
-          return
-        }
-
-        var new_i = i - 1
-
-      }else{
-
-        if( i == this.view['validCycle'].length - 1 ){
-          console.log('不能下移')
-          return
-        }
-
-        var new_i = i + 1
-      }
-
-      this.view['validCycle'].splice(i, 1)
-      this.view['validCycle'].splice(new_i, 0, tmp)
-
-    },
-
-
-    选图: function(){
-
-      var file = $('#upload_input')[0].files[0]
-      // console.log(file)
-
-      // 方向 1=0° 6=顺时针90° 8=逆时针90° 3=180°
-      var Orientation
-      EXIF.getData(file, function(){
-
-        Orientation = EXIF.getTag(this, 'Orientation')
-
-        //创建一个文件读取的工具类
-        var reader = new FileReader()
-
-        reader.onload = function(e){
-
-          // console.log(this.result)//原base64码
-
-          _this.压图(this.result, Orientation)
-        }
-
-        //告诉文件读取工具类读取那个文件
-        reader.readAsDataURL(file)
-
-      })
-    },
-    压图:function(src, Orientation){
-
-      // 需要压缩的最大尺寸
-      var MAX_SIZE = 500
-
-      //创建Image对象
-      var image = new Image()
-
-      image.src = src
-      image.onload = function(){
-
-        console.log('压前：' + image.width + ' x ' + image.height)
-
-        //宽大于高的情况
-        if (image.width > MAX_SIZE && image.width >= image.height){
-          image.height *= MAX_SIZE / image.width
-          image.width = MAX_SIZE
-        }
-        //宽小于高的情况
-        if (image.height > MAX_SIZE && image.height > image.width){
-          image.width *= MAX_SIZE / image.height
-          image.height = MAX_SIZE
-        }
-
-        console.log('压后：' + image.width + ' x ' + image.height)
-
-        var canvas = document.createElement("canvas")
-
-        //获取2d画布
-        var ctx = canvas.getContext("2d")
-        canvas.width = image.width
-        canvas.height = image.height
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-        // 摆正
-        switch(Orientation){
-          case 6:// 旋转90度
-            canvas.width = image.height
-            canvas.height = image.width
-            ctx.rotate(Math.PI / 2)
-            ctx.drawImage(image, 0, -image.height, image.width, image.height)
-            break
-          case 3:// 旋转180度
-            ctx.rotate(Math.PI)
-            ctx.drawImage(image, -image.width, -image.height, image.width, image.height)
-            break
-          case 8:// 旋转-90度
-            canvas.width = image.height
-            canvas.height = image.width
-            ctx.rotate(3 * Math.PI / 2)
-            ctx.drawImage(image, -image.width, 0, image.width, image.height)
-            break
-          
-          default:
-            ctx.drawImage(image, 0, 0, image.width, image.height)
-            break
-        }
-
-        // 生成base64码
-        var base64Code = canvas.toDataURL("image/jpeg")
-        $('#预览图片').attr('src', base64Code)
-
-        // 丢掉 data:image/jpeg;base64,
-        var base64Code2 = base64Code.replace('data:image/jpeg;base64,', '')
-        _this.view.cardBase64 = base64Code2
-
-      }
-
-    },
-
-
-    组织架构get: function(){
+    get楼层树: function(){
       var data = {
         "reqHead":
         {
@@ -1408,7 +1318,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsDepartFrame/interface',
+        url: mp_api + 'mp/getHsFloorTree/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1422,67 +1332,6 @@ var app = new Vue({
           }
         }
       })
-    },
-
-    通行设备get: function(){
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
-        },
-        "reqBody":{
-          pageSize: 99999
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/getHsDeviceList/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-          if(re.rspHead.retCode == '1'){
-            _this.通行设备 = re.rspBody.hsDeviceInfoList
-            for(var i in re.rspBody.hsDeviceInfoList){
-              var v = re.rspBody.hsDeviceInfoList[i]
-              _this.通行设备全选时.push(v.sn)
-            }
-            _this.通行设备全选时.sort()
-
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-        }
-      })
-    },
-
-    通行设备排序: function(){
-
-      var tmp = []
-      for(var i in this.view.deviceSn){
-        tmp.push(this.view.deviceSn[i])
-      }
-      this.view.deviceSn = tmp.sort()
-    },
-
-    通行设备全选: function(how){
-
-      // 先清
-      this.view.deviceSn = []
-
-      // 全选
-      if(how){
-
-        this.view.deviceSn = this.通行设备全选时
-
-      }
-
     },
 
   },
@@ -1583,46 +1432,20 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    this.组织架构get()
-
-    this.通行设备get()
+    // this.组织架构get()
 
     this.getList()
 
-        var defaultData = [
-          {
-            text: '1栋',
-            href: 'javascript:alert(123)',
-            nodes: [
-              {
-                text: '1楼',
-                href: 'javascript:alert(123)'
-              },
-              {
-                text: '2楼',
-                href: 'javascript:alert(123)'
-              }
-            ]
-          },
-          {
-            text: '2栋',
-            href: 'alert(123)',
-            nodes: [
-              {
-                text: '1楼',
-                href: '#child1',
-              },
-              {
-                text: '2楼',
-                href: '#child2',
-              }
-            ]
-          },
-        ];
+    this.get楼层树()
 
-        $('#treeview1').treeview({
-          data: defaultData
-        });
+	$(".sideMenu .nLi h3").click(function(){
+		if($(this).parent(".nLi").hasClass("on")){
+			//当前状态展开的时候，继续点击无效
+		}else{
+			$(this).parents("ul").find(".nLi").removeClass("on")
+			$(this).parent(".nLi").addClass("on")
+		}
+	})
 
   }
 })

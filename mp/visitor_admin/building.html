@@ -916,7 +916,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsDeviceList/interface',
+        url: mp_api + 'mp/getHsBuildingList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -927,8 +927,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.hsDeviceInfoList
-          delete re.rspBody.hsDeviceInfoList
+          _this.list.data = re.rspBody.hsBuildingInfoList
+          delete re.rspBody.hsBuildingInfoList
 
           _this.list.info = re.rspBody
 
@@ -981,7 +981,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsDeviceInfo/interface',
+        url: mp_api + 'mp/getHsBuildingInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1019,7 +1019,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/' + add_or_edit + 'HsDevice/interface',
+        url: mp_api + 'mp/' + add_or_edit + 'HsBuilding/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1060,7 +1060,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/deleteHsDevice/interface',
+        url: mp_api + 'mp/deleteHsBuilding/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
