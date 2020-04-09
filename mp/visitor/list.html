@@ -1463,7 +1463,7 @@ var app = new Vue({
     },
 
 
-    组织架构get: function(){
+    get组织架构: function(){
       var data = {
         "reqHead":
         {
@@ -1493,7 +1493,7 @@ var app = new Vue({
       })
     },
 
-    通行设备get: function(){
+    get通行设备: function(){
       var data = {
         "reqHead":
         {
@@ -1652,9 +1652,9 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    this.组织架构get()
+    this.get组织架构()
 
-    this.通行设备get()
+    this.get通行设备()
 
     this.getList()
 
