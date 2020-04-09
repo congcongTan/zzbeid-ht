@@ -889,14 +889,14 @@ var app = new Vue({
 
     楼层树: {},
 
-	guestList: [],
-	visitorList: [],
+  	guestList: [],
+  	visitorList: [],
 
-	组织架构: [],
+  	组织架构: [],
 
-	楼栋: {},
-	楼层: {},
-	房间: {},
+  	楼栋: {},
+  	楼层: {},
+  	房间: {},
 
     通行设备: [],
     通行设备全选时: [],
@@ -1537,7 +1537,7 @@ var app = new Vue({
 
     },
 
-    get楼栋: function(清){
+    get楼栋: function(){
 
       var data = {
         "reqHead":
@@ -1560,17 +1560,13 @@ var app = new Vue({
         },
         success: function(re){
 
-		  _this.楼栋 = {}
-		  for(let i in re.rspBody.hsBuildingInfoList){
-			  let v = re.rspBody.hsBuildingInfoList[i]
-			  _this.楼栋[v.id] = v.title
-		  }
-		  // console.log('楼栋', _this.楼栋)
+          _this.楼栋 = {}
+          for(let i in re.rspBody.hsBuildingInfoList){
+            let v = re.rspBody.hsBuildingInfoList[i]
+            _this.楼栋[v.id] = v.title
+          }
+          console.log('楼栋', _this.楼栋)
 
-		  if(清 != undefined){
-			  _this.view.floorId = ''
-			  _this.view.roomId = ''
-		  }
         }
       })
     },
@@ -1586,8 +1582,8 @@ var app = new Vue({
           sign: "2A71F91102AE746493B3CDF67FCCDCF3"
         },
         reqBody: {
-			id: this.view.buildingId
-		}
+          buildingId: this.view.buildingId
+        }
       }
 
       $.ajax({
@@ -1600,23 +1596,25 @@ var app = new Vue({
         },
         success: function(re){
 
-    		  _this.楼层 = {}
-    		  for(let i in re.rspBody.hsFloorInfoList){
-    			  let v = re.rspBody.hsFloorInfoList[i]
-    			  _this.楼层[v.id] = v.title
-    		  }
-    		  // console.log('楼层', _this.楼层)
-    		  
-    		  if(清 != undefined){
-    			  _this.view.roomId = ''
-    		  }
+          _this.楼层 = {}
+          for(let i in re.rspBody.hsFloorInfoList){
+            let v = re.rspBody.hsFloorInfoList[i]
+            _this.楼层[v.id] = v.title
+          }
+          console.log('楼层', _this.楼层)
+          
+          if(清 != undefined){
+            _this.view.floorId = ''
+            _this.房间 = {}
+            _this.view.roomId = ''
+          }
 
         }
       })
     },
 
 
-    get房间: function(){
+    get房间: function(清){
 
       var data = {
         "reqHead":
@@ -1627,8 +1625,8 @@ var app = new Vue({
           sign: "2A71F91102AE746493B3CDF67FCCDCF3"
         },
         reqBody: {
-			floorId: this.view.floorId
-		}
+      floorId: this.view.floorId
+    }
       }
 
       $.ajax({
@@ -1641,12 +1639,16 @@ var app = new Vue({
         },
         success: function(re){
 
-		  _this.房间 = {}
-		  for(let i in re.rspBody.hsRoomInfoList){
-			  let v = re.rspBody.hsRoomInfoList[i]
-			  _this.房间[v.id] = v.title
-		  }
-		  // console.log('房间', _this.房间)
+          _this.房间 = {}
+          for(let i in re.rspBody.hsRoomInfoList){
+            let v = re.rspBody.hsRoomInfoList[i]
+            _this.房间[v.id] = v.title
+          }
+          console.log('房间', _this.房间)
+
+          if(清 != undefined){
+            _this.view.roomId = ''
+          }
 
         }
       })
@@ -1754,8 +1756,8 @@ var app = new Vue({
 
     this.get楼层树()
 
-	// this.get组织架构()
-	this.get楼栋()
+
+	  this.get楼栋()
 
     this.get通行设备()
 
