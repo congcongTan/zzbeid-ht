@@ -309,11 +309,11 @@
             </h4>
           </div>
           <div class="modal-body">
-			  入住人员：{{guestList.length}}
+			  入住人员：{{旅客访客.guestList.length}}
 			  <table class="table table-bordered">
 				  <thead>
 					  <tr>
-						  <th width="100">头像</th>
+						  <th width="60">头像</th>
 						  <th>旅客识别号</th>
 						  <th>旅客姓名</th>
 						  <th>身份证号</th>
@@ -324,17 +324,17 @@
 					  </tr>
 				  </thead>
 				  <tbody>
-					  <tr v-for="v in guestList">
+					  <tr v-for="v in 旅客访客.guestList">
 						  <td><img :src="`http://image.zzb110.cn${v.headimgUrl}`" width="100%"></td>
 						  <td>{{v.visitorId}}</td>
 						  <td>{{v.realName}}</td>
 						  <td>{{v.identityCard}}</td>
-						  <td>{{v.sex}}</td>
+						  <td>{{性别[v.sex]}}</td>
 						  <td>{{v.checkinTime}}</td>
 						  <td>{{v.leaveTime}}</td>
 						  <td class="noenter">
-							  <a class="btn btn-xs btn-primary mb5" href="javascript:;" @click="getView(v.id)">修改</a><br>
-							  <a class="btn btn-xs btn-danger" href="javascript:;" @click="离店(v.id)">离店</a>
+							  <a class="btn btn-xs btn-primary mb5" href="javascript:;" @click="getView(v.id, 'Guest')">修改</a><br>
+							  <a class="btn btn-xs btn-danger" href="javascript:;" @click="离店(v.id, 'Guest')">离店</a>
 						  </td>
 					  </tr>
 				  </tbody>
@@ -342,11 +342,11 @@
 			  
 			  <br><br>
 
-			  访客：{{visitorList.length}}
+			  访客：{{旅客访客.visitorList.length}}
 			  <table class="table table-bordered">
 				  <thead>
 					  <tr>
-						  <th width="100">头像</th>
+						  <th width="60">头像</th>
 						  <th>旅客识别号</th>
 						  <th>旅客姓名</th>
 						  <th>身份证号</th>
@@ -357,7 +357,7 @@
 					  </tr>
 				  </thead>
 				  <tbody>
-					  <tr v-for="v in visitorList">
+					  <tr v-for="v in 旅客访客.visitorList">
 						  <td><img :src="`http://image.zzb110.cn${v.headimgUrl}`" width="100%"></td>
 						  <td>{{v.visitorId}}</td>
 						  <td>{{v.realName}}</td>
@@ -366,8 +366,8 @@
 						  <td>{{v.checkinTime}}</td>
 						  <td>{{v.leaveTime}}</td>
 						  <td class="noenter">
-							  <a class="btn btn-xs btn-primary mb5" href="javascript:;" @click="getView(v.id)">修改</a><br>
-							  <a class="btn btn-xs btn-danger" href="javascript:;" @click="离店(v.id)">离店</a>
+							  <a class="btn btn-xs btn-primary mb5" href="javascript:;" @click="getView(v.id, 'Visitor')">修改</a><br>
+							  <a class="btn btn-xs btn-danger" href="javascript:;" @click="离店(v.id, 'Visitor')">离店</a>
 						  </td>
 					  </tr>
 				  </tbody>
@@ -449,7 +449,7 @@
 </div>
 
 <div class="form-group">
-  <label class="col-sm-5 control-label">入住房间号 <span class="text-danger">*</span></label>
+  <label class="col-sm-5 control-label">房间号 <span class="text-danger">*</span></label>
   <div class="col-sm-7">
     <select class="form-control" v-model="view.roomId">
       <option value="">--请选择--</option>
@@ -458,12 +458,23 @@
   </div>
 </div>
 
+<template v-if="view.visitorType == 3">
 <div class="form-group">
   <label class="col-sm-5 control-label">入住日期 <span class="text-danger">*</span></label>
   <div class="col-sm-7">
     <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="checkinTime">
   </div>
 </div>
+</template>
+
+<template v-if="view.visitorType == 1">
+<div class="form-group">
+  <label class="col-sm-5 control-label">访问日期 <span class="text-danger">*</span></label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="visitTime">
+  </div>
+</div>
+</template>
 
 <div class="form-group">
   <label class="col-sm-5 control-label">离店日期 <span class="text-danger">*</span></label>
@@ -889,8 +900,10 @@ var app = new Vue({
 
     楼层树: {},
 
-  	guestList: [],
-  	visitorList: [],
+    旅客访客:{
+  	 guestList: [],
+  	 visitorList: [],
+    },
 
   	组织架构: [],
 
@@ -1225,56 +1238,14 @@ var app = new Vue({
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
         success: function(re){
-			_this.guestList = re.rspBody.guestList
-			_this.visitorList = re.rspBody.visitorList
-			
-			$('#旅客访客').modal('show')
-		},
+			    _this.旅客访客 = re.rspBody
+    			$('#旅客访客').modal('show')
+    		},
 	  })
 
 	},
-	
-	离店: function(id){
 
-      if(!confirm('确认离店？')){
-        return
-      }
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          id: id
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/hsExamine/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
-      })
-
-	},
-
-    getView: function(id){
+    getView: function(id, 接口地址){
 
       this.view = {
         deviceSn: []
@@ -1301,7 +1272,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsGuestManageInfo/interface',
+        url: mp_api + 'mp/getHs' + 接口地址 + 'ManageInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1317,29 +1288,32 @@ var app = new Vue({
               re.rspBody.deviceSn = []
             }
 
-            try{
+/*            try{
               re.rspBody.validCycle = JSON.parse(re.rspBody.validCycle)
             }catch(e){
               re.rspBody.validCycle = [{start_time:'00:00',end_time:'23:59'}]
-            }
+            }*/
 
             _this.view = re.rspBody
 
             $('#view').modal('show')
 			
       			setTimeout(function(){
+
       				_this.get楼层()
       				_this.get房间()
+
+              //插件的值
+              $('#checkinTime').val(_this.view.checkinTime)
+              $('#visitTime').val(_this.view.visitTime)
+              $('#leaveTime').val(_this.view.leaveTime)
+
+              $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+              })
+
       				}, 100
       			)
-
-            //插件的值
-            $('#checkinTime').val(_this.view.checkinTime)
-            $('#leaveTime').val(_this.view.leaveTime)
-
-            $('.datepicker').datepicker({
-              format: 'yyyy-mm-dd'
-            })
 
           }
           else{
@@ -1353,23 +1327,33 @@ var app = new Vue({
 
     saveView: function(){
 
-      var body2 = JSON.parse(JSON.stringify(this.view))
+      var post = {
+        sex: this.view.sex,
+        deviceSn: JSON.stringify(this.view.deviceSn),
+        buildingId: this.view.buildingId,
+        floorId: this.view.floorId,
+        roomId: this.view.roomId,
+        mobile: this.view.mobile,
+        leaveTime: $('#leaveTime').val(),
+        // expireTime: "2020-03-04",
+        validCycle: '',//李玉明要求传空值
+      }
 
-      body2.visitTime = $('#checkinTime').val()
-      body2.leaveTime = $('#leaveTime').val()
+      if(this.view.visitorType == 1){
+        post.visitorManageId = this.view.id
+        post.auditStatus = this.view.auditStatus
+        post.beVisited = this.view.beVisited
+        post.tote = this.view.tote
+        post.visitTime = $('#visitTime').val()
+        var 接口地址 = 'hsExamine'
+      }
 
-      // 合翻埋设备id
-      body2.deviceSn = JSON.stringify(body2.deviceSn)
-
-      // body2.validCycle = JSON.stringify(body2.validCycle)
-      // body2.validCycle = ''//李玉明要求传空值
-
-      body2.guestManageId = body2.id
-      delete body2.id
-
-      // 头像
-      delete body2.headimgUrl
-
+      if(this.view.visitorType == 3){
+        post.id = this.view.id
+        post.checkinStatus = this.view.checkinStatus
+        post.checkinTime = $('#checkinTime').val()
+        var 接口地址 = 'editHsGuestManage'
+      }
 
       var data = {
         "reqHead":
@@ -1379,12 +1363,12 @@ var app = new Vue({
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
-        reqBody: body2
+        reqBody: post
       }
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/editHsGuestManage/interface',
+        url: mp_api + 'mp/' + 接口地址 + '/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1394,12 +1378,114 @@ var app = new Vue({
 
           if(re.rspHead.retCode == '1'){
             _this.getList()
+            _this.get旅客访客(_this.旅客访客.roomId)
             $('#view').modal('hide')
           }else{
             alert(re.rspHead.retMsg)
           }
 
         },
+      })
+
+    },
+
+    离店: function(id, 接口地址){
+
+      if(!confirm('确认离店？')){
+        return
+      }
+
+      //拿出来
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getHs' + 接口地址 + 'ManageInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+
+            //存回去
+            var post = re.rspBody
+
+            if(接口地址 == 'Guest'){
+
+              post.checkinStatus = 2
+
+              var 接口地址2 = 'editHsGuestManage'
+            }
+
+            if(接口地址 == 'Visitor'){
+
+              var post = {
+                visitorManageId: re.rspBody.id,
+                auditStatus: 3,
+                sex: re.rspBody.sex,
+                deviceSn: re.rspBody.deviceSn,
+                beVisited: re.rspBody.beVisited,
+                mobile: re.rspBody.mobile,
+                tote: re.rspBody.tote,
+                buildingId: Number(re.rspBody.buildingId),
+                floorId: Number(re.rspBody.floorId),
+                roomId: Number(re.rspBody.roomId),
+                visitTime: re.rspBody.visitTime,
+                leaveTime: re.rspBody.leaveTime,
+                expireTime: re.rspBody.expireTime,
+                validCycle: re.rspBody.validCycle
+              }
+
+              var 接口地址2 = 'hsExamine'
+            }
+
+            var data = {
+              "reqHead":
+              {
+                clientType: 1,
+                format: "json",
+                version: "1.0",
+                sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+              },
+              reqBody: post
+            }
+
+            $.ajax({
+              type: 'POST',
+              url: mp_api + 'mp/' + 接口地址2 + '/interface',
+              data: JSON.stringify(data),
+              dataType: 'json',
+              beforeSend: function(request){
+                request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+              },
+              success: function(re){
+
+                _this.getList()
+                _this.get旅客访客(_this.旅客访客.roomId)
+
+              }
+            })
+
+          }
+          else{
+            alert(re.rspBody.retMsg)
+          }
+
+        }
       })
 
     },
@@ -1429,15 +1515,15 @@ var app = new Vue({
 
             _this.楼层树 = re.rspBody.hsBuildingList
 
-			setTimeout(function(){
-				$(".sideMenu .nLi h3").click(function(){
-					if($(this).parent(".nLi").hasClass("on")){
-					}else{
-						$(this).parents("ul").find(".nLi").removeClass("on")
-						$(this).parent(".nLi").addClass("on")
-					}
-				})
-			}, 100)
+      			setTimeout(function(){
+      				$(".sideMenu .nLi h3").click(function(){
+      					if($(this).parent(".nLi").hasClass("on")){
+      					}else{
+      						$(this).parents("ul").find(".nLi").removeClass("on")
+      						$(this).parent(".nLi").addClass("on")
+      					}
+      				})
+      			}, 100)
 
           }else{
             alert(re.rspHead.retMsg)

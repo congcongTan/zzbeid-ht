@@ -223,7 +223,9 @@
                     <th>身份证号</th>
                     <th>性别</th>
                     <th>通行设备</th>
-                    <th>房间号</th>
+                    <th>楼栋</th>
+                    <th>楼层</th>
+                    <th>房间</th>
                     <th>入住日期</th>
                     <th>离店日期</th>
                     <th>入住状态</th>
@@ -239,7 +241,9 @@
                     <td>{{v.identityCard.substr(0,4)}}****{{v.identityCard.substr(-4)}}</td>
                     <td>{{性别[v.sex]}}</td>
                     <td>{{v.deviceTitle}}</td>
-                    <td>{{v.buildingName}} - {{v.floorName}} - {{v.roomName}}</td>
+                    <td>{{v.buildingName}}</td>
+                    <td>{{v.floorName}}</td>
+                    <td>{{v.roomName}}</td>
                     <td>{{v.checkinTime}}</td>
                     <td>{{v.leaveTime}}</td>
                     <td>{{入住状态[v.checkinStatus]}}</td>

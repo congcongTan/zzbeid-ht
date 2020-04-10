@@ -239,8 +239,9 @@
                     <th>身份证号</th>
                     <th>性别</th>
                     <th>通行设备</th>
+                    <th>楼栋</th>
                     <th>楼层</th>
-                    <th>房间号</th>
+                    <th>房间</th>
                     <th>体温</th>
                     <th>出入时间</th>
                   </tr>
@@ -253,8 +254,9 @@
                     <td>{{v.identityCard}}</td>
                     <td>{{性别[v.sex]}}</td>
                     <td>{{v.deviceTitle}}</td>
-                    <td>{{v.departTitle}}</td>
-                    <td>{{v.beVisited}}</td>
+                    <td>{{v.buildingName}}</td>
+                    <td>{{v.floorName}}</td>
+                    <td>{{v.roomName}}</td>
                     <td>{{v.temperature}}</td>
                     <td>{{v.accessTimeTitle}}</td>
                   </tr>
@@ -782,7 +784,7 @@ var app = new Vue({
       post: {
         pageNum: 1,
         pageSize: 10,
-        visitorType: 1,//1旅客 2员工
+        visitorType: 3,//1旅客 2员工 3旅客
         accessTimeBegin: '',
         accessTimeEnd: '',
         deviceId: '',
