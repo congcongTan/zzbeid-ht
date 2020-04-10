@@ -241,7 +241,8 @@
                     <th>身份证号</th>
                     <th>性别</th>
                     <th>通行设备</th>
-                    <th>被访部门</th>
+                    <th v-if="admin.softwareVersion == 60001">被访部门</th>
+                    <th v-if="admin.softwareVersion == 60002">被访房间</th>
                     <th>被访人员</th>
                     <th>体温</th>
                     <th>携带物品</th>
@@ -257,7 +258,8 @@
                     <td>{{v.identityCard}}</td>
                     <td>{{性别[v.sex]}}</td>
                     <td>{{v.deviceTitle}}</td>
-                    <td>{{v.departTitle}}</td>
+                    <td v-if="admin.softwareVersion == 60001">{{v.departTitle}}</td>
+                    <td v-if="admin.softwareVersion == 60002">{{v.roomName}}</td>
                     <td>{{v.beVisited}}</td>
                     <td>{{v.temperature}}</td>
                     <td>{{v.tote}}</td>
