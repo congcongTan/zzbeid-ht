@@ -257,8 +257,9 @@
                     <td>{{v.leaveTime}}</td>
                     <td>{{审核状态[v.auditStatus]}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">审核</a><br>
-                      <!-- v-if="v.auditStatus == 0" -->
+                      <a class="btn btn-xs btn-primary"
+                      v-if="v.auditStatus == 0 || v.auditStatus == 1 || v.auditStatus == 2"
+                      @click="getView(v.id)">审核</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -380,7 +381,7 @@
     <div class="col-sm-7">
       <select class="form-control" v-model="view.departId">
         <option value="">--请选择--</option>
-        <option :value="`${i}`" v-for="(v,i) in 组织架构">{{v.title}}</option>
+        <option :value="`${i}`" v-for="(v,i) in 组织架构">{{v}}</option>
       </select>
     </div>
   </div>
@@ -892,7 +893,7 @@ var app = new Vue({
       deviceSn: [],
     },
 
-    审核状态: ['等待审核','审核通过','审核不通过'],
+    审核状态: ['等待审核','审核通过','审核不通过','已离店'],
 
     楼栋: {},
     楼层: {},
