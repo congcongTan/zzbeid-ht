@@ -17,7 +17,7 @@
 
 <style>
 body{
-  background: url(../../img/bg.jpg) #4875DC left bottom no-repeat;
+  background: url(../../img/bg.jpg) #012BE2 center no-repeat;
   background-size: cover;
 }
 .box{
@@ -25,15 +25,15 @@ body{
   top: 20%;
   right: 100px;
   width: 350px;
-  height: 400px;
+  height: 420px;
   padding: 40px;
 }
 .btn-primary{
   background: #4875DC;
 }
 .form-control{
-  border: none;
-  border-bottom: 1px solid #CCC;
+  height: 50px;
+  line-height: 50px;
 }
 </style>
 
@@ -55,20 +55,20 @@ body{
     <form class="form-horizontal">
 
       <div class="mt40">
-        <div class="pa">
+        <div class="pa mt10 pt3 ml10">
           <img src="../../img/icon-user.gif">
         </div>
-        <div class="ml40">
-          <input type="text" class="form-control" name="account" v-model="account.account">
+        <div>
+          <input type="text" class="form-control pl50" name="account" v-model="account.account">
         </div>
       </div>
 
       <div class="mt20">
-        <div class="pa">
+        <div class="pa mt10 pt3 ml10">
           <img src="../../img/icon-password.gif">
         </div>
-        <div class="ml40">
-          <input type="password" class="form-control" name="password" v-model="account.password">
+        <div>
+          <input type="password" class="form-control pl50" name="password" v-model="account.password">
         </div>
       </div>
 

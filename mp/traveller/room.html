@@ -233,7 +233,7 @@
 				<div class="sideMenu">
 					<ul>
 						<li class="nLi">
-							<h3 @click="list.post.floorId = 0; getList();">全部</h3>
+							<h3 @click="list.post.title = ''; list.post.floorId = 0; getList();">全部</h3>
 						</li>
 						<li :class="`nLi${i == 0 ? ' on':''}`" v-for="(v,i) in 楼层树">
 							<h3><div class="fl w30"><i class="fa fa-plus-square-o"></i></div>{{v.title}}</h3>

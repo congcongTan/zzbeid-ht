@@ -502,7 +502,7 @@
         onclick="app.通行设备全选(this.checked)"> 全选
       </label>
     </div>
-    <div class="checkbox" v-for="v in 通行设备">
+    <div class="checkbox fl w150" v-for="v in 通行设备">
       <label>
         <input type="checkbox" :value="`${v.sn}`" v-model="view.deviceSn" @change="通行设备排序()"> {{v.title}}
       </label>
