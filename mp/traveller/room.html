@@ -351,8 +351,8 @@
 						  <th>旅客姓名</th>
 						  <th>身份证号</th>
 						  <th>性别</th>
-						  <th>入住日期</th>
-						  <th>离店日期</th>
+						  <th>访问日期</th>
+						  <th>离开日期</th>
 						  <th width="1%">操作</th>
 					  </tr>
 				  </thead>
@@ -363,7 +363,7 @@
 						  <td>{{v.realName}}</td>
 						  <td>{{v.identityCard}}</td>
 						  <td>{{v.sex}}</td>
-						  <td>{{v.checkinTime}}</td>
+						  <td>{{v.visitTime}}</td>
 						  <td>{{v.leaveTime}}</td>
 						  <td class="noenter">
 							  <a class="btn btn-xs btn-primary mb5" href="javascript:;" @click="getView(v.id, 'Visitor')">修改</a><br>
