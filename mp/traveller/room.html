@@ -321,8 +321,8 @@
 					  <tr>
               <th width="1%">
                 <input type="checkbox"
-                :checked="JSON.stringify(view.deviceSn) === JSON.stringify(通行设备全选时)"
-                onclick="app.通行设备全选(this.checked)">
+                :checked="JSON.stringify(旅客访客.guestList_选中) === JSON.stringify(旅客访客.guestList_全选)"
+                onclick="app.全选('旅客访客.guestList', this.checked)">
               </th>
 						  <th width="60">头像</th>
 						  <th>旅客识别号</th>
@@ -336,7 +336,8 @@
 				  </thead>
 				  <tbody>
 					  <tr v-for="v in 旅客访客.guestList">
-              <td><input type="checkbox" :value="`${v.id}`" v-model="guestList_选中"></td>
+              <td><input type="checkbox" :value="`${v.id}`" v-model="旅客访客.guestList_选中"
+                @change="旅客访客.guestList_选中 = 旅客访客.guestList_选中.sort()"></td>
 						  <td><a class="fancybox" :href="`http://image.zzb110.cn${v.headimgUrl}`"><img :src="`http://image.zzb110.cn${v.headimgUrl}`" width="100%"></a></td>
 						  <td>{{v.visitorId}}</td>
 						  <td>{{v.realName}}</td>
@@ -362,7 +363,11 @@
 			  <table class="table table-bordered">
 				  <thead>
 					  <tr>
-              <th width="1%"></th>
+              <th width="1%">
+                <input type="checkbox"
+                :checked="JSON.stringify(旅客访客.visitorList_选中) === JSON.stringify(旅客访客.visitorList_全选)"
+                onclick="app.全选('旅客访客.visitorList', this.checked)">
+              </th>
 						  <th width="60">头像</th>
 						  <th>旅客识别号</th>
 						  <th>旅客姓名</th>
@@ -375,7 +380,8 @@
 				  </thead>
 				  <tbody>
 					  <tr v-for="v in 旅客访客.visitorList">
-              <td><input type="checkbox" :value="`${v.id}`" v-model="visitorList_选中"></td>
+              <td><input type="checkbox" :value="`${v.id}`" v-model="旅客访客.visitorList_选中"
+                @change="旅客访客.visitorList_选中 = 旅客访客.visitorList_选中.sort()"></td>
 						  <td><a class="fancybox" :href="`http://image.zzb110.cn${v.headimgUrl}`"><img :src="`http://image.zzb110.cn${v.headimgUrl}`" width="100%"></a></td>
 						  <td>{{v.visitorId}}</td>
 						  <td>{{v.realName}}</td>
@@ -902,10 +908,11 @@ var app = new Vue({
     旅客访客:{
   	  guestList: [],
   	  visitorList: [],
+      guestList_选中: [],
+      visitorList_选中: [],
     },
 
-    guestList_选中: [],
-    visitorList_选中: [],
+
 
     msg: '',
 
@@ -1242,15 +1249,53 @@ var app = new Vue({
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
         success: function(re){
-			    _this.旅客访客 = re.rspBody
-    			$('#旅客访客').modal('show')
+
+			    _this.旅客访客.guestList = re.rspBody.guestList
+          _this.旅客访客.visitorList = re.rspBody.visitorList
+    			
+
+          // 全选数组
+          _this.旅客访客.guestList_全选 = []
+          for(let i in _this.旅客访客.guestList){
+            let v = _this.旅客访客.guestList[i]
+            _this.旅客访客.guestList_全选.push(String(v.id))
+          }
+          _this.旅客访客.guestList_全选 = _this.旅客访客.guestList_全选.sort()
+          // console.log('guestList_全选', _this.旅客访客.guestList_全选)
+
+
+          _this.旅客访客.visitorList_全选 = []
+          for(let i in _this.旅客访客.visitorList){
+            let v = _this.旅客访客.visitorList[i]
+            _this.旅客访客.visitorList_全选.push(String(v.id))
+          }
+          _this.旅客访客.visitorList_全选 = _this.旅客访客.visitorList_全选.sort()
+          // console.log('visitorList_全选', _this.旅客访客.visitorList_全选)
+
+
+          $('#旅客访客').modal('show')
+
           setTimeout(function(){
             $('.fancybox').fancybox()
           }, 100)
+
     		},
 	    })
 
 	  },
+
+    全选: function(变量名, 开关){
+
+      if(开关){
+
+        eval('this.' + 变量名 + '_选中 = this.' + 变量名 + '_全选')
+
+      }else{
+
+        eval('this.' + 变量名 + '_选中 = []')
+      }
+
+    },
 
     批量离店: function(旅客定访客){
 
@@ -1258,12 +1303,12 @@ var app = new Vue({
 
       if(旅客定访客 == '旅客'){
 
-        if(this.guestList_选中.length == 0){
+        if(this.旅客访客.guestList_选中.length == 0){
           alert('没有选中离店人员')
         }
 
-        for(let i in this.guestList_选中){
-          let id = this.guestList_选中[i]
+        for(let i in this.旅客访客.guestList_选中){
+          let id = this.旅客访客.guestList_选中[i]
           this.离店(id, 'Guest')
         }
 
@@ -1271,12 +1316,12 @@ var app = new Vue({
 
       if(旅客定访客 == '访客'){
 
-        if(this.visitorList_选中.length == 0){
+        if(this.旅客访客.visitorList_选中.length == 0){
           alert('没有选中离店人员')
         }
 
-        for(let i in this.visitorList_选中){
-          let id = this.visitorList_选中[i]
+        for(let i in this.旅客访客.visitorList_选中){
+          let id = this.旅客访客.visitorList_选中[i]
           this.离店(id, 'Visitor')
         }
 
