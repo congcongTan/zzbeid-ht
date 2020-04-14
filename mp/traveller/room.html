@@ -315,7 +315,7 @@
         <!-- <a class="btn btn-sm btn-primary" href="javascript:;" @click="办理入住()">办理入住</a> -->
         <a class="btn btn-sm btn-danger" href="javascript:;"
         v-if="旅客访客.guestList.length != 0"
-        @click="if(confirm('确认批量离店？'))批量离店('旅客')">批量离店</a>
+        @click="if(confirm('确认批量离店？'))批量离店('旅客')">批量离店 <i class="fa fa-spinner fa-spin" v-if="旅客访客.guestList_菊花 == 1"></i></a>
 			  <table class="table table-bordered">
 				  <thead>
 					  <tr>
@@ -359,7 +359,7 @@
         <!-- <a class="btn btn-sm btn-primary" href="javascript:;" @click="办理入住()">办理入住</a> -->
         <a class="btn btn-sm btn-danger" href="javascript:;"
         v-if="旅客访客.visitorList.length != 0"
-        @click="if(confirm('确认批量离店？'))批量离店('访客')">批量离店</a>
+        @click="if(confirm('确认批量离店？'))批量离店('访客')">批量离店 <i class="fa fa-spinner fa-spin" v-if="旅客访客.visitorList_菊花 == 1"></i></a>
 			  <table class="table table-bordered">
 				  <thead>
 					  <tr>
@@ -908,8 +908,12 @@ var app = new Vue({
     旅客访客:{
   	  guestList: [],
   	  visitorList: [],
+
       guestList_选中: [],
       visitorList_选中: [],
+
+      guestList_菊花: 0,
+      visitorList_菊花: 0,
     },
 
 
@@ -1250,9 +1254,9 @@ var app = new Vue({
         },
         success: function(re){
 
+          _this.旅客访客.roomId = re.rspBody.roomId
 			    _this.旅客访客.guestList = re.rspBody.guestList
           _this.旅客访客.visitorList = re.rspBody.visitorList
-    			
 
           // 全选数组
           _this.旅客访客.guestList_全选 = []
@@ -1305,7 +1309,10 @@ var app = new Vue({
 
         if(this.旅客访客.guestList_选中.length == 0){
           alert('没有选中离店人员')
+          return
         }
+
+        this.旅客访客.guestList_菊花 = 1
 
         for(let i in this.旅客访客.guestList_选中){
           let id = this.旅客访客.guestList_选中[i]
@@ -1318,7 +1325,11 @@ var app = new Vue({
 
         if(this.旅客访客.visitorList_选中.length == 0){
           alert('没有选中离店人员')
+          return
         }
+
+        this.旅客访客.visitorList_菊花 = 1
+
 
         for(let i in this.旅客访客.visitorList_选中){
           let id = this.旅客访客.visitorList_选中[i]
@@ -1328,7 +1339,9 @@ var app = new Vue({
       }
 
       setTimeout(function(){
-       alert(_this.msg)
+        _this.旅客访客.guestList_菊花 = 0
+        _this.旅客访客.visitorList_菊花 = 0
+        alert(_this.msg)
       },1000)
 
     },
@@ -1479,8 +1492,6 @@ var app = new Vue({
 
     离店: function(id, 接口地址){
 
-      var msg = ''
-
       //拿出来
       var data = {
         "reqHead":
@@ -1506,8 +1517,6 @@ var app = new Vue({
         success: function(re){
 
           if(re.rspHead.retCode == '1'){
-
-            _this.msg += '【' + re.rspBody.realName + '】'
 
             //存回去
             var post = re.rspBody
@@ -1560,20 +1569,20 @@ var app = new Vue({
               beforeSend: function(request){
                 request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
               },
-              success: function(re){
+              success: function(re2){
 
-                if(re.rspHead.retCode == '1'){
+                if(re2.rspHead.retCode == '1'){
 
-                  _this.msg += "已离店\r\n"
+                  _this.msg += '【' + re.rspBody.realName + "】已离店\r\n"
 
                   _this.getList()
                   _this.get旅客访客(_this.旅客访客.roomId)
 
                 }else{
 
-                  _this.msg += "离店失败\r\n"
+                  _this.msg += '【' + re.rspBody.realName + "】离店失败\r\n"
 
-                  alert(re.rspHead.signMsg)
+                  alert(re2.rspHead.signMsg)
                 }
 
               }
