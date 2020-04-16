@@ -202,7 +202,7 @@
                     <div class="col-sm-5">
                       <select class="form-control" v-model="list.post.deviceId">
                         <option value="">--请选择--</option>
-                        <option :value="`${v.sn}`" v-for="v in 通行设备">{{v.title}}</option>
+                        <option :value="`${v.id}`" v-for="v in 通行设备">{{v.title}}</option>
                       </select>
                     </div>
                   </div>
