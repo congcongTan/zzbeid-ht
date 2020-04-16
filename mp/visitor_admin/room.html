@@ -284,7 +284,14 @@
 
             <form class="form-horizontal">
 
-              <div class="form-group">
+              <div class="form-group" v-if="view.id == undefined">
+                <label class="col-sm-3 control-label">房间名称</label>
+                <div class="col-sm-4">
+                  <textarea class="form-control input-sm" rows="5" placeholder="批量添加一行一个" v-model="view.title"></textarea>
+                </div>
+              </div>
+
+              <div class="form-group" v-if="view.id != undefined">
                 <label class="col-sm-3 control-label">房间名称</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="view.title">
@@ -1044,38 +1051,71 @@ var app = new Vue({
 
     saveView: function(){
 
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: this.view
+      if(this.view.title == undefined){
+        alert('请输入房间名称')
+        return
+      }
+      if(this.view.buildingId == ''){
+        alert('请选择所属楼栋')
+        return
+      }
+      if(this.view.floorId == ''){
+        alert('请选择所属楼层')
+        return
+      }
+      if(this.view.sort == undefined){
+        alert('请输入排序')
+        return
       }
 
-      var add_or_edit = this.view.id == undefined ? 'add':'edit'
+      var titles = this.view.title.split('\n')
 
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/' + add_or_edit + 'HsRoom/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
+      var msg = '';
 
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-            $('#view').modal('hide')
-          }else{
-            alert(re.rspHead.retMsg)
-          }
+      for(let i in titles){
+        var v = titles[i]
 
-        },
-      })
+        if(v == '')continue;
+
+        this.view.title = v
+
+        var data = {
+          reqHead:{
+            clientType: 1,
+            format: "json",
+            version: "1.0",
+            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          },
+          reqBody: this.view
+        }
+
+        var add_or_edit = this.view.id == undefined ? 'add':'edit'
+
+        $.ajax({
+          type: 'POST',
+          url: mp_api + 'mp/' + add_or_edit + 'HsRoom/interface',
+          data: JSON.stringify(data),
+          dataType: 'json',
+          beforeSend: function(request){
+            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+          },
+          success: function(re){
+
+            if(re.rspHead.retCode != '1'){
+              msg += re.rspHead.retMsg + '\n'
+            }
+
+          },
+        })
+      }
+
+      setTimeout(function(){
+        _this.getList()
+        $('#view').modal('hide')
+        if(msg != ''){
+          alert(msg)
+        }
+      }, 1000)
 
     },
 

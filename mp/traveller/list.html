@@ -217,7 +217,6 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th>头像</th>
-                    <th>旅客识别号</th>
                     <th>旅客姓名</th>
                     <th>手机号码</th>
                     <th>身份证号</th>
@@ -235,7 +234,6 @@
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td><img :src="`http://image.zzb110.cn${v.headimgUrl}`" height="60"></td>
-                    <td>{{v.visitorId}}</td>
                     <td>{{v.realName}}</td>
                     <td>{{v.mobile}}</td>
                     <td>{{v.identityCard.substr(0,4)}}****{{v.identityCard.substr(-4)}}</td>
