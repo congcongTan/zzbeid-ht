@@ -158,14 +158,10 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
               <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
-<!--               <div class="tab-pane" id="操作">
-
-              </div> -->
               <div class="tab-pane active" id="搜索">
 
                 <div class="form-horizontal">
@@ -637,6 +633,12 @@ var app = new Vue({
 		1: '中证宝',
 		2: '二代证',
 	},
+
+	入住状态:[
+		'已预约',
+		'已入住',
+		'已离店'
+	],
 
     list: {
       data: [],

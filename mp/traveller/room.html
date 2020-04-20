@@ -206,7 +206,7 @@
 			  <div class="fl w120 mr15 mb15 yj5"
 			  :style="`box-shadow: 0 0 7px #3C8DBC; border: 1px solid #3C8DBC;${v.guestNum != 0 ? ' background:#C4DDEC;':''}`"
 			  v-for="(v, i) in list.data"
-			  @click="get旅客访客(v.id)">
+			  @click="get旅客访客(v.id, {buildingId:v.buildingId,floorId:v.floorId})">
 				<div class="pr h60">
 				  <div class="mt10 ml15 b">{{v.title.length > 5 ? v.title.substr(0,5) + '..':v.title}}</div>
 				  <div class="pa left15 bottom10">
@@ -312,10 +312,9 @@
           </div>
           <div class="modal-body">
 			  入住人员：{{旅客访客.guestList.length}}人　
-        <!-- <a class="btn btn-sm btn-primary" href="javascript:;" @click="办理入住()">办理入住</a> -->
-        <a class="btn btn-sm btn-danger" href="javascript:;"
-        v-if="旅客访客.guestList.length != 0"
-        @click="if(confirm('确认批量离店？'))批量离店('旅客')">批量离店 <i class="fa fa-spinner fa-spin" v-if="旅客访客.guestList_菊花 == 1"></i></a>
+        <a class="btn btn-sm btn-primary" @click="get办理入住()">办理入住</a>
+        <a class="btn btn-sm btn-danger" @click="if(confirm('确认批量离店？'))批量离店('旅客')"
+        v-if="旅客访客.guestList.length != 0">批量离店 <i class="fa fa-spinner fa-spin" v-if="旅客访客.guestList_菊花 == 1"></i></a>
 			  <table class="table table-bordered">
 				  <thead>
 					  <tr>
@@ -356,7 +355,7 @@
 			  <br><br>
 
 			  房间访客：{{旅客访客.visitorList.length}}人　
-        <!-- <a class="btn btn-sm btn-primary" href="javascript:;" @click="办理入住()">办理入住</a> -->
+        <a class="btn btn-sm btn-primary" href="javascript:;" @click="get来访登记('')">来访登记</a>
         <a class="btn btn-sm btn-danger" href="javascript:;"
         v-if="旅客访客.visitorList.length != 0"
         @click="if(confirm('确认批量离店？'))批量离店('访客')">批量离店 <i class="fa fa-spinner fa-spin" v-if="旅客访客.visitorList_菊花 == 1"></i></a>
@@ -369,8 +368,8 @@
                 onclick="app.全选('旅客访客.visitorList', this.checked)">
               </th>
 						  <th width="60">头像</th>
-						  <th>旅客识别号</th>
-						  <th>旅客姓名</th>
+						  <th>访客识别号</th>
+						  <th>访客姓名</th>
 						  <th>身份证号</th>
 						  <th>性别</th>
 						  <th>访问日期</th>
@@ -390,8 +389,8 @@
 						  <td>{{v.visitTime}}</td>
 						  <td>{{v.leaveTime}}</td>
 						  <td class="noenter">
-							  <a class="btn btn-xs btn-primary mb5" href="javascript:;" @click="getView(v.id, 'Visitor')">修改</a><br>
-							  <a class="btn btn-xs btn-danger" href="javascript:;" @click="if(confirm('确认离店？'))离店(v.id, 'Visitor')">离店</a>
+							  <a class="btn btn-xs btn-primary mb5" @click="getView(v.id, 'Visitor')">修改</a><br>
+							  <a class="btn btn-xs btn-danger" @click="if(confirm('确认离店？'))离店(v.id, 'Visitor')">离店</a>
 						  </td>
 					  </tr>
 				  </tbody>
@@ -401,6 +400,448 @@
 		</div>
 	  </div>
 	</div>
+
+
+    <div class="modal fade" id="办理入住">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              办理入住
+            </h4>
+          </div>
+          <div class="modal-body">
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th width="60">头像</th>
+              <th>旅客姓名</th>
+              <th>手机号码</th>
+              <th>身份证号</th>
+              <th>性别</th>
+              <th>通行设备</th>
+              <th>楼栋</th>
+              <th>楼层</th>
+              <th>房间</th>
+              <th>入住日期</th>
+              <th>入住状态</th>
+              <th width="1%">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="v in 办理入住">
+              <td><a class="fancybox" :href="`http://image.zzb110.cn${v.headimgUrl}`"><img :src="`http://image.zzb110.cn${v.headimgUrl}`" height="60"></a></td>
+              <td>{{v.realName}}</td>
+              <td>{{v.mobile}}</td>
+              <td>{{v.identityCard.substr(0,4)}}****{{v.identityCard.substr(-4)}}</td>
+              <td>{{性别[v.sex]}}</td>
+              <td>{{v.deviceTitle}}</td>
+              <td>{{v.buildingName}}</td>
+              <td>{{v.floorName}}</td>
+              <td>{{v.roomName}}</td>
+              <td>{{v.checkinTime}}</td>
+              <td>{{入住状态[v.checkinStatus]}}</td>
+              <td class="text-nowrap operation">
+                <a class="btn btn-xs btn-primary" v-if="v.checkinStatus == 0" @click="get办理入住View(v.id)">办理入住</a><br>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="办理入住view">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              办理入住
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="row">
+
+                <div class="col-sm-6">
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">访客姓名</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.realName" disabled>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">手机号码</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.mobile" disabled>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">身份证号</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.identityCard" disabled>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">性别</label>
+  <div class="col-sm-7">
+    <select class="form-control" v-model="view.sex" disabled>
+      <option value="0">--请选择--</option>
+      <option :value="`${i}`" v-for="(v, i) in 性别">{{v}}</option>
+    </select>
+  </div>
+</div>
+
+<hr>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">楼栋 <span class="text-danger">*</span></label>
+  <div class="col-sm-7">
+    <select class="form-control" v-model="view.buildingId" @change="get楼层(1)">
+      <option value="">--请选择--</option>
+      <option :value="`${i}`" v-for="(v,i) in 楼栋">{{v}}</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">楼层 <span class="text-danger">*</span></label>
+  <div class="col-sm-7">
+    <select class="form-control" v-model="view.floorId" @change="get房间(1)">
+      <option value="">--请选择--</option>
+      <option :value="`${i}`" v-for="(v,i) in 楼层">{{v}}</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">入住房间号 <span class="text-danger">*</span></label>
+  <div class="col-sm-7">
+    <select class="form-control" v-model="view.roomId">
+      <option value="">--请选择--</option>
+      <option :value="`${i}`" v-for="(v,i) in 房间">{{v}}</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">入住日期 <span class="text-danger">*</span></label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="checkinTime">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">离店日期 <span class="text-danger">*</span></label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="leaveTime">
+  </div>
+</div>
+
+                </div>
+                <div class="col-sm-6 tc">
+
+                  <img :src="`http://image.zzb110.cn${view.headimgUrl}`" id="预览图片" width="80%"><br>
+
+                  照片
+
+                </div>
+
+              </div>
+
+              <hr>
+
+<!-- <div class="form-group">
+  <label class="col-sm-3 control-label mt6">每日通行时间</label>
+  <div class="col-sm-9">
+    <table class="table table-bordered">
+      <tr v-for="(v, i) in view.validCycle">
+        <td width="25%"><input class="form-control input-sm datepicker" type="text" v-model="v.start_time"></td>
+        <td class="tc"><div class="mt6">至</div></td>
+        <td width="25%"><input class="form-control input-sm datepicker" type="text" v-model="v.end_time"></td>
+        <td>
+          <div class="mt3">
+            <a class="btn btn-xs btn-default" @click="order_rules(i, '-')"><i class="fa fa-arrow-up"></i></a>
+            <a class="btn btn-xs btn-default" @click="order_rules(i, '+')"><i class="fa fa-arrow-down"></i></a>
+            <a class="btn btn-xs btn-danger" @click="del_rules(i)"><i class="fa fa-remove"></i></a>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <div class="mt10">
+      <a class="btn btn-sm btn-primary" href="javascript:;" @click="add_rules()">增加一条</a>
+    </div>
+  </div>
+</div> -->
+
+<div class="form-group">
+  <label class="col-sm-3 control-label">通行设备 <span class="text-danger">*</span></label>
+  <div class="col-sm-9">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" :checked="JSON.stringify(view.deviceSn) === JSON.stringify(通行设备全选时)"
+        onclick="app.通行设备全选(this.checked)"> 全选
+      </label>
+    </div>
+    <div class="checkbox fl w150" v-for="v in 通行设备">
+      <label>
+        <input type="checkbox" :value="`${v.sn}`" v-model="view.deviceSn" @change="通行设备排序()"> {{v.title}}
+      </label>
+    </div>
+  </div>
+</div>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="save办理入住View()">提交</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="来访登记">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              来访登记
+            </h4>
+          </div>
+          <div class="modal-body">
+
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th width="60">头像</th>
+              <th>访客姓名</th>
+              <th>手机号码</th>
+              <th>身份证号</th>
+              <th>性别</th>
+              <th>通行设备</th>
+              <th>被访房间</th>
+              <th>被访人员</th>
+              <th>访问时间</th>
+              <th width="1%">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="v in 来访登记">
+              <td><a class="fancybox" :href="`http://image.zzb110.cn${v.headimgUrl}`"><img :src="`http://image.zzb110.cn${v.headimgUrl}`" height="60"></a></td>
+              <td>{{v.realName}}</td>
+              <td>{{v.mobile}}</td>
+              <td>{{v.identityCard.substr(0,4)}}****{{v.identityCard.substr(-4)}}</td>
+              <td>{{性别[v.sex]}}</td>
+              <td>{{v.deviceTitle}}</td>
+              <td>{{v.buildingName}}</td>
+              <td>{{v.floorName}}</td>
+              <td>{{v.roomName}}</td>
+              <td>{{v.checkinTime}}</td>
+              <td>{{入住状态[v.checkinStatus]}}</td>
+              <td class="text-nowrap operation">
+                <a class="btn btn-xs btn-primary" @click="get来访登记View(v.id)">来访登记</a><br>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="来访登记view">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              来访登记
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="row">
+
+                <div class="col-sm-6">
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">访客姓名</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.realName" disabled>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">手机号码</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.mobile" disabled>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">身份证号</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.identityCard" disabled>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">性别</label>
+  <div class="col-sm-7">
+    <select class="form-control" v-model="view.sex" disabled>
+      <option value="0">--请选择--</option>
+      <option :value="`${i}`" v-for="(v, i) in 性别">{{v}}</option>
+    </select>
+  </div>
+</div>
+
+<hr>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">被访房间</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.roomName" disabled>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">楼栋 <span class="text-danger">*</span></label>
+  <div class="col-sm-7">
+    <select class="form-control" v-model="view.buildingId" @change="get楼层(1)">
+      <option value="">--请选择--</option>
+      <option :value="`${i}`" v-for="(v,i) in 楼栋">{{v}}</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">楼层 <span class="text-danger">*</span></label>
+  <div class="col-sm-7">
+    <select class="form-control" v-model="view.floorId" @change="get房间(1)">
+      <option value="">--请选择--</option>
+      <option :value="`${i}`" v-for="(v,i) in 楼层">{{v}}</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">房间号 <span class="text-danger">*</span></label>
+  <div class="col-sm-7">
+    <select class="form-control" v-model="view.roomId">
+      <option value="">--请选择--</option>
+      <option :value="`${i}`" v-for="(v,i) in 房间">{{v}}</option>
+    </select>
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">拜访人员</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.beVisited">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">携带物品</label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm" v-model="view.tote">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">访问时间 <span class="text-danger">*</span></label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="visitTime">
+  </div>
+</div>
+
+<div class="form-group">
+  <label class="col-sm-5 control-label">离开时间 <span class="text-danger">*</span></label>
+  <div class="col-sm-7">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="leaveTime">
+  </div>
+</div>
+
+                </div>
+                <div class="col-sm-6 tc">
+
+                  <img :src="`http://image.zzb110.cn${view.headimgUrl}`" id="预览图片" width="80%"><br>
+
+                  照片
+
+                </div>
+
+              </div>
+
+              <hr>
+
+<!-- <div class="form-group">
+  <label class="col-sm-3 control-label mt6">每日通行时间</label>
+  <div class="col-sm-9">
+    <table class="table table-bordered">
+      <tr v-for="(v, i) in view.validCycle">
+        <td width="25%"><input class="form-control input-sm datepicker" type="text" v-model="v.start_time"></td>
+        <td class="tc"><div class="mt6">至</div></td>
+        <td width="25%"><input class="form-control input-sm datepicker" type="text" v-model="v.end_time"></td>
+        <td>
+          <div class="mt3">
+            <a class="btn btn-xs btn-default" @click="order_rules(i, '-')"><i class="fa fa-arrow-up"></i></a>
+            <a class="btn btn-xs btn-default" @click="order_rules(i, '+')"><i class="fa fa-arrow-down"></i></a>
+            <a class="btn btn-xs btn-danger" @click="del_rules(i)"><i class="fa fa-remove"></i></a>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <div class="mt10">
+      <a class="btn btn-sm btn-primary" href="javascript:;" @click="add_rules()">增加一条</a>
+    </div>
+  </div>
+</div> -->
+
+<div class="form-group">
+  <label class="col-sm-3 control-label">通行设备 <span class="text-danger">*</span></label>
+  <div class="col-sm-9">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" :checked="JSON.stringify(view.deviceSn) === JSON.stringify(通行设备全选时)"
+        onclick="app.通行设备全选(this.checked)"> 全选
+      </label>
+    </div>
+    <div class="checkbox fl w150" v-for="v in 通行设备">
+      <label>
+        <input type="checkbox" :value="`${v.sn}`" v-model="view.deviceSn" @change="通行设备排序()"> {{v.title}}
+      </label>
+    </div>
+  </div>
+</div>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="save来访登记View()">提交</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
     <div class="modal fade" id="view">
       <div class="modal-dialog">
@@ -887,6 +1328,14 @@ var app = new Vue({
 		2: '二代证',
 	},
 
+	入住状态:[
+		'已预约',
+		'已入住',
+		'已离店'
+	],
+
+    a: {},
+
     list: {
       data: [],
       post: {
@@ -916,7 +1365,8 @@ var app = new Vue({
       visitorList_菊花: 0,
     },
 
-
+    办理入住: [],
+    来访登记: [],
 
     msg: '',
 
@@ -1229,7 +1679,13 @@ var app = new Vue({
 
     },
 	
-	  get旅客访客: function(id){
+	  get旅客访客: function(id, json){
+
+      if(json != undefined){
+        this.a.buildingId = json.buildingId
+        this.a.floorId = json.floorId
+      }
+      this.a.roomId = id
 
       var data = {
         "reqHead":
@@ -1287,6 +1743,377 @@ var app = new Vue({
 	    })
 
 	  },
+
+    get办理入住: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          checkinStatus: 0
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getHsGuestManageList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+            alert(re.rspHead.retMsg)
+          }
+
+          _this.办理入住 = re.rspBody.hsGuestManageInfoList
+
+          $('#办理入住').modal('show')
+
+          setTimeout(function(){
+            $('.fancybox').fancybox()
+          })
+
+        }
+      })
+    },
+
+    get办理入住View: function(id){
+
+      this.view = {
+        deviceSn: []
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getHsGuestManageInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+
+            try{
+              re.rspBody.deviceSn = JSON.parse(re.rspBody.deviceSn)
+            }catch(e){
+              re.rspBody.deviceSn = []
+            }
+
+/*            try{
+              re.rspBody.validCycle = JSON.parse(re.rspBody.validCycle)
+            }catch(e){
+              re.rspBody.validCycle = [{start_time:'00:00',end_time:'23:59'}]
+            }*/
+
+            _this.view = re.rspBody
+
+            _this.view.buildingId = _this.a.buildingId
+            _this.view.floorId = _this.a.floorId
+            _this.view.roomId = _this.a.roomId
+
+            $('#办理入住view').modal('show')
+
+            setTimeout(function(){
+              _this.get楼层()
+              _this.get房间()
+              }, 100
+            )
+
+            //插件的值
+            $('#checkinTime').val(_this.view.checkinTime)
+            $('#leaveTime').val(_this.view.leaveTime)
+
+            $('.datepicker').datepicker({
+              format: 'yyyy-mm-dd'
+            })
+
+          }
+          else{
+            alert(re.rspBody.retMsg)
+          }
+
+        }
+      })
+
+    },
+
+    save办理入住View: function(){
+
+      var body2 = JSON.parse(JSON.stringify(this.view))
+
+      body2.checkinTime = $('#checkinTime').val()
+      body2.leaveTime = $('#leaveTime').val()
+
+      // 合翻埋设备id
+      body2.deviceSn = JSON.stringify(body2.deviceSn)
+
+      body2.checkinStatus = 1
+
+      // 头像
+      delete body2.headimgUrl
+
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: body2
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/editHsGuestManage/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+            alert(re.rspHead.retMsg)
+          }
+
+          _this.getList()
+          _this.get旅客访客(_this.a.roomId)
+          _this.get办理入住()
+          alert('办理入住成功')
+          $('#办理入住view').modal('hide')
+
+        },
+      })
+
+    },
+
+    get来访登记: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          auditStatus: 0
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getHsVisitorManageList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+            alert(re.rspHead.retMsg)
+          }
+
+          _this.来访登记 = re.rspBody.hsVisitorManageList
+
+          $('#来访登记').modal('show')
+
+          setTimeout(function(){
+            $('.fancybox').fancybox()
+          })
+
+        }
+      })
+    },
+
+    get来访登记View: function(id){
+
+      this.view = {
+        deviceSn: []
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: id,
+          auditStatus: 0,
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/getHsVisitorManageInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+
+            try{
+              re.rspBody.deviceSn = JSON.parse(re.rspBody.deviceSn)
+            }catch(e){
+              re.rspBody.deviceSn = []
+            }
+
+
+            _this.view = re.rspBody
+
+            _this.view.buildingId = _this.a.buildingId
+            _this.view.floorId = _this.a.floorId
+            _this.view.roomId = _this.a.roomId
+
+            $('#来访登记view').modal('show')
+
+            setTimeout(function(){
+              _this.get楼层()
+              _this.get房间()
+              }, 100
+            )
+
+            //插件的值
+            $('#visitTime').val(_this.view.visitTime)
+            $('#leaveTime').val(_this.view.leaveTime)
+
+            $('.datepicker').datepicker({
+              format: 'yyyy-mm-dd'
+            })
+
+          }
+          else{
+            alert(re.rspBody.retMsg)
+          }
+
+        }
+      })
+
+    },
+
+    save来访登记View: function(){
+
+      var post = {
+        visitorManageId: this.view.id,
+        auditStatus: 1,
+        sex: this.view.sex,
+        deviceSn: JSON.stringify(this.view.deviceSn),
+        beVisited: this.view.beVisited,
+        tote: this.view.tote,
+        visitTime: $('#visitTime').val(),
+        leaveTime: $('#leaveTime').val(),
+        // expireTime: "2020-03-04",
+        validCycle: '',//李玉明要求传空值
+      }
+
+      if(this.admin.softwareVersion == 60001){
+        post.departId = this.view.departId
+
+        var 必选 = {
+          departId: '拜访部门',
+        }
+        for(var i in 必选){
+          var v = 必选[i]
+
+          if(post[i] == undefined || post[i] == ''){
+            alert('【' + v + '】必选，请录入后再次提交')
+            return
+          }
+        }
+
+      }
+
+      if(this.admin.softwareVersion == 60002){
+        post.buildingId = this.view.buildingId
+        post.floorId = this.view.floorId
+        post.roomId = this.view.roomId
+      }
+
+      var 必填 = {
+        visitTime: '访问时间',
+        leaveTime: '离开时间',
+      }
+      for(var i in 必填){
+        var v = 必填[i]
+
+        if(post[i] == undefined || post[i] == ''){
+          alert('【' + v + '】必填，请录入后再次提交')
+          return
+        }
+      }
+      if(post.deviceSn == '[]'){
+        alert('【通行设备】必选，请选择后再次提交')
+        return
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/hsExamine/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+            alert(re.rspHead.retMsg)
+          }
+
+          _this.getList()
+          _this.get旅客访客(_this.a.roomId)
+          _this.get来访登记()
+          alert('来访登记成功')
+          $('#来访登记view').modal('hide')
+
+        },
+      })
+
+    },
 
     全选: function(变量名, 开关){
 

@@ -303,7 +303,7 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
-              审核访客
+              办理入住
             </h4>
           </div>
           <div class="modal-body">
@@ -789,6 +789,12 @@ var app = new Vue({
 		2: '二代证',
 	},
 
+	入住状态:[
+		'已预约',
+		'已入住',
+		'已离店'
+	],
+
     list: {
       data: [],
       post: {
@@ -808,8 +814,6 @@ var app = new Vue({
     view:{
       deviceSn: [],
     },
-
-    入住状态: ['已预约','已入住','已离店'],
 
     组织架构: [],
 
