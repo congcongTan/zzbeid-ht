@@ -453,7 +453,7 @@
                 <a class="btn btn-xs btn-primary" v-if="v.checkinStatus == 0" @click="get办理入住View(v.id)">办理入住</a><br>
               </td>
             </tr>
-            <tr v-if="办理入住.length == 0">
+            <tr v-if="办理入住 == undefined">
               <td colspan="12" class="tc" style="line-height: 100px;">没有新旅客</td>
             </tr>
           </tbody>
@@ -642,8 +642,7 @@
               <th>身份证号</th>
               <th>性别</th>
               <th>通行设备</th>
-              <th>被访房间</th>
-              <th>被访人员</th>
+              <th>拜访人员</th>
               <th>访问时间</th>
               <th width="1%" class="noenter">操作</th>
             </tr>
@@ -656,16 +655,13 @@
               <td>{{v.identityCard.substr(0,4)}}****{{v.identityCard.substr(-4)}}</td>
               <td>{{性别[v.sex]}}</td>
               <td>{{v.deviceTitle}}</td>
-              <td>{{v.buildingName}}</td>
-              <td>{{v.floorName}}</td>
-              <td>{{v.roomName}}</td>
-              <td>{{v.checkinTime}}</td>
-              <td>{{入住状态[v.checkinStatus]}}</td>
+              <td>{{v.beVisited}}</td>
+              <td>{{v.visitTime}}</td>
               <td class="text-nowrap operation">
                 <a class="btn btn-xs btn-primary" @click="get来访登记View(v.id)">来访登记</a><br>
               </td>
             </tr>
-            <tr v-if="来访登记.length == 0">
+            <tr v-if="来访登记 == undefined">
               <td colspan="12" class="tc" style="line-height: 100px;">没有新访客</td>
             </tr>
           </tbody>
