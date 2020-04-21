@@ -330,7 +330,7 @@
 						  <th>性别</th>
 						  <th>入住日期</th>
 						  <th>离店日期</th>
-						  <th width="1%">操作</th>
+						  <th width="1%" class="noenter">操作</th>
 					  </tr>
 				  </thead>
 				  <tbody>
@@ -349,6 +349,9 @@
 							  <a class="btn btn-xs btn-danger" href="javascript:;" @click="if(confirm('确认离店？'))离店(v.id, 'Guest')">离店</a>
 						  </td>
 					  </tr>
+            <tr v-if="旅客访客.guestList.length == 0">
+              <td colspan="9" class="tc" style="line-height: 100px;">没有记录</td>
+            </tr>
 				  </tbody>
 			  </table>
 			  
@@ -374,7 +377,7 @@
 						  <th>性别</th>
 						  <th>访问日期</th>
 						  <th>离开日期</th>
-						  <th width="1%">操作</th>
+						  <th width="1%" class="noenter">操作</th>
 					  </tr>
 				  </thead>
 				  <tbody>
@@ -393,6 +396,9 @@
 							  <a class="btn btn-xs btn-danger" @click="if(confirm('确认离店？'))离店(v.id, 'Visitor')">离店</a>
 						  </td>
 					  </tr>
+            <tr v-if="旅客访客.visitorList.length == 0">
+              <td colspan="9" class="tc" style="line-height: 100px;">没有记录</td>
+            </tr>
 				  </tbody>
 			  </table>
 
