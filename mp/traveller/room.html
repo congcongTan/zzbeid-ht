@@ -547,14 +547,14 @@
 <div class="form-group">
   <label class="col-sm-5 control-label">入住日期 <span class="text-danger">*</span></label>
   <div class="col-sm-7">
-    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="checkinTime">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="入住日期">
   </div>
 </div>
 
 <div class="form-group">
   <label class="col-sm-5 control-label">离店日期 <span class="text-danger">*</span></label>
   <div class="col-sm-7">
-    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="leaveTime">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="离店日期">
   </div>
 </div>
 
@@ -776,14 +776,14 @@
 <div class="form-group">
   <label class="col-sm-5 control-label">访问时间 <span class="text-danger">*</span></label>
   <div class="col-sm-7">
-    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="visitTime">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="访问时间">
   </div>
 </div>
 
 <div class="form-group">
   <label class="col-sm-5 control-label">离开时间 <span class="text-danger">*</span></label>
   <div class="col-sm-7">
-    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="leaveTime">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="离开时间">
   </div>
 </div>
 
@@ -1851,8 +1851,8 @@ var app = new Vue({
             )
 
             //插件的值
-            $('#checkinTime').val(_this.view.checkinTime)
-            $('#leaveTime').val(_this.view.leaveTime)
+            $('#入住日期').val(_this.view.checkinTime)
+            $('#离店日期').val(_this.view.leaveTime)
 
             $('.datepicker').datepicker({
               format: 'yyyy-mm-dd'
@@ -1872,8 +1872,8 @@ var app = new Vue({
 
       var body2 = JSON.parse(JSON.stringify(this.view))
 
-      body2.checkinTime = $('#checkinTime').val()
-      body2.leaveTime = $('#leaveTime').val()
+      body2.checkinTime = $('#入住日期').val()
+      body2.leaveTime = $('#离店日期').val()
 
       // 合翻埋设备id
       body2.deviceSn = JSON.stringify(body2.deviceSn)
@@ -2015,8 +2015,8 @@ var app = new Vue({
             )
 
             //插件的值
-            $('#visitTime').val(_this.view.visitTime)
-            $('#leaveTime').val(_this.view.leaveTime)
+            $('#访问时间').val(_this.view.visitTime)
+            $('#离开时间').val(_this.view.leaveTime)
 
             $('.datepicker').datepicker({
               format: 'yyyy-mm-dd'
@@ -2041,8 +2041,8 @@ var app = new Vue({
         deviceSn: JSON.stringify(this.view.deviceSn),
         beVisited: this.view.beVisited,
         tote: this.view.tote,
-        visitTime: $('#visitTime').val(),
-        leaveTime: $('#leaveTime').val(),
+        visitTime: $('#访问时间').val(),
+        leaveTime: $('#离开时间').val(),
         // expireTime: "2020-03-04",
         validCycle: '',//李玉明要求传空值
       }
