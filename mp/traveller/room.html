@@ -433,7 +433,7 @@
               <th>房间</th>
               <th>入住日期</th>
               <th>入住状态</th>
-              <th width="1%">操作</th>
+              <th width="1%" class="noenter">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -452,6 +452,9 @@
               <td class="text-nowrap operation">
                 <a class="btn btn-xs btn-primary" v-if="v.checkinStatus == 0" @click="get办理入住View(v.id)">办理入住</a><br>
               </td>
+            </tr>
+            <tr v-if="办理入住.length == 0">
+              <td colspan="12" class="tc" style="line-height: 100px;">没有新旅客</td>
             </tr>
           </tbody>
         </table>
@@ -642,7 +645,7 @@
               <th>被访房间</th>
               <th>被访人员</th>
               <th>访问时间</th>
-              <th width="1%">操作</th>
+              <th width="1%" class="noenter">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -661,6 +664,9 @@
               <td class="text-nowrap operation">
                 <a class="btn btn-xs btn-primary" @click="get来访登记View(v.id)">来访登记</a><br>
               </td>
+            </tr>
+            <tr v-if="来访登记.length == 0">
+              <td colspan="12" class="tc" style="line-height: 100px;">没有新访客</td>
             </tr>
           </tbody>
         </table>
