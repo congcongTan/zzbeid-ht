@@ -345,8 +345,8 @@
 <div class="form-group">
   <label class="col-sm-3 control-label">上班没打卡 <span class="text-danger">*</span></label>
   <div class="col-sm-9">
-    <label><input type="radio" name="上班没打卡" value="旷工" v-model="view.上班没打卡"> 记录为旷工</label>&nbsp;&nbsp;&nbsp;
-    <label><input type="radio" name="上班没打卡" value="迟到" v-model="view.上班没打卡"> 记录为迟到</label>&nbsp;&nbsp;&nbsp;
+    <label><input type="radio" name="上班没打卡" value="旷工" v-model="view.上班没打卡"> 记录为旷工</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <label><input type="radio" name="上班没打卡" value="迟到" v-model="view.上班没打卡"> 记录为迟到</label>&nbsp;
     <input type="text" class="w60" v-model="view.am_BeLateTime"> 分钟
   </div>
 </div>
@@ -370,8 +370,8 @@
 <div class="form-group">
   <label class="col-sm-3 control-label">下班没打卡 <span class="text-danger">*</span></label>
   <div class="col-sm-9">
-    <label><input type="radio" name="下班没打卡" value="旷工" v-model="view.下班没打卡"> 记录为旷工</label>&nbsp;&nbsp;&nbsp;
-    <label><input type="radio" name="下班没打卡" value="迟到" v-model="view.下班没打卡"> 记录为迟到</label>&nbsp;&nbsp;&nbsp;
+    <label><input type="radio" name="下班没打卡" value="旷工" v-model="view.下班没打卡"> 记录为旷工</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <label><input type="radio" name="下班没打卡" value="迟到" v-model="view.下班没打卡"> 记录为迟到</label>&nbsp;
     <input type="text" class="w60" v-model="view.pm_leaveEarlyTime"> 分钟
   </div>
 </div>
@@ -1104,7 +1104,9 @@ var app = new Vue({
         success: function(re){
 
           if(re.rspHead.retCode != '1'){
-            alert(re.rspBody.retMsg)
+            re.rspBody = {
+              configJson: '{}'
+            }
           }
 
           _this.view = JSON.parse(re.rspBody.configJson)
@@ -1170,7 +1172,6 @@ var app = new Vue({
         am_clockInEnd: '上班打卡时段',
         am_isAbsenteeism: '上班没打卡',
         am_isBeLate: '上班没打卡',
-        am_BeLateTime: '上班没打卡',
 
         pm_goworkBegin: '下午上班时间',
         pm_goworkEnd: '下午上班时间',
@@ -1178,16 +1179,23 @@ var app = new Vue({
         pm_clockInEnd: '下班打卡时段',
         pm_isAbsenteeism: '下班没打卡',
         pm_isLeaveEarly: '下班没打卡',
-        pm_leaveEarlyTime: '下班没打卡',
       }
       for(var i in 必填){
         var v = 必填[i]
 
         if(post[i] === undefined || post[i] === ''){
           alert('【' + v + '】没有填写正确，请检查修正后再次提交')
-          console.log(i,post[i])
+          // console.log(i,post[i])
           return
         }
+      }
+      if(post.am_isBeLate === 1 && post.am_BeLateTime === ''){
+        alert('【上班没打卡>记录为迟到多少分钟】没有填写正确，请检查修正后再次提交')
+        return
+      }
+      if(post.pm_isLeaveEarly === 1 && post.pm_leaveEarlyTime === ''){
+        alert('【下班没打卡>记录为迟到多少分钟】没有填写正确，请检查修正后再次提交')
+        return
       }
 
       var data = {
