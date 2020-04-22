@@ -1109,6 +1109,10 @@ var app = new Vue({
             }
           }
 
+          if(re.rspBody.configJson == ''){
+            re.rspBody.configJson = '{}'
+          }
+
           _this.view = JSON.parse(re.rspBody.configJson)
 
           if(_this.view.am_isAbsenteeism == 1){
