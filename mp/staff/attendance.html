@@ -1156,16 +1156,16 @@ var app = new Vue({
         am_goworkEnd: $('#上午上班时间2').val(),
         am_clockInBegin: $('#上班打卡时段1').val(),
         am_clockInEnd: $('#上班打卡时段2').val(),
-        am_isAbsenteeism: this.view.上班没打卡 == '旷工' ? 1:0,
-        am_isBeLate: this.view.上班没打卡 == '迟到' ? 1:0,
+        am_isAbsenteeism: this.view.上班没打卡 == '旷工' ? '1':'0',
+        am_isBeLate: this.view.上班没打卡 == '迟到' ? '1':'0',
         am_BeLateTime: this.view.am_BeLateTime,
 
         pm_goworkBegin: $('#下午上班时间1').val(),
         pm_goworkEnd: $('#下午上班时间2').val(),
         pm_clockInBegin: $('#下班打卡时段1').val(),
         pm_clockInEnd: $('#下班打卡时段2').val(),
-        pm_isAbsenteeism: this.view.下班没打卡 == '旷工' ? 1:0,
-        pm_isLeaveEarly: this.view.下班没打卡 == '迟到' ? 1:0,
+        pm_isAbsenteeism: this.view.下班没打卡 == '旷工' ? '1':'0',
+        pm_isLeaveEarly: this.view.下班没打卡 == '迟到' ? '1':'0',
         pm_leaveEarlyTime: this.view.pm_leaveEarlyTime,
       }
 
@@ -1202,10 +1202,10 @@ var app = new Vue({
         return
       }
       if(post.am_BeLateTime === undefined || post.am_BeLateTime === ''){
-        post.am_BeLateTime = 0
+        post.am_BeLateTime = '0'
       }
       if(post.pm_leaveEarlyTime === undefined || post.pm_leaveEarlyTime === ''){
-        post.pm_leaveEarlyTime = 0
+        post.pm_leaveEarlyTime = '0'
       }
 
       var data = {
