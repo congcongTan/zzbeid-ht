@@ -1197,6 +1197,12 @@ var app = new Vue({
         alert('【下班没打卡>记录为迟到多少分钟】没有填写正确，请检查修正后再次提交')
         return
       }
+      if(post.am_BeLateTime === ''){
+        post.am_BeLateTime = 0
+      }
+      if(post.pm_leaveEarlyTime === ''){
+        post.pm_leaveEarlyTime = 0
+      }
 
       var data = {
         reqHead:
