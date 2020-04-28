@@ -387,7 +387,7 @@
 </div>
 
 <div class="form-group">
-  <label class="col-sm-3 control-label">户籍地址</label>
+  <label class="col-sm-3 control-label">户籍地址 <span class="text-danger">*</span></label>
   <div class="col-sm-3">
     <select class="form-control" v-model="view.crProvince" onchange="app.getC('户籍地址', this.value)">
       <option value="" selected>--请选择--</option>
@@ -416,7 +416,7 @@
 </div>
 
 <div class="form-group">
-  <label class="col-sm-3 control-label">现居地址</label>
+  <label class="col-sm-3 control-label">现居地址 <span class="text-danger">*</span></label>
   <div class="col-sm-3">
     <select class="form-control" v-model="view.paProvince" onchange="app.getC('现居地址', this.value)">
       <option value="">--请选择--</option>
@@ -466,7 +466,7 @@
 <div class="form-group">
   <label class="col-sm-3 control-label">离职时间 <span class="text-danger">*</span></label>
   <div class="col-sm-4">
-    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="离职时间">
+    <input type="text" class="form-control input-sm datepicker" autocomplete="off" id="离职时间" :disabled="view.employeeSatus != 4">
   </div>
 </div>
 
@@ -1232,12 +1232,6 @@ var app = new Vue({
         employeeType: '',
         employeeClasses: '',
         employeeSatus: '',
-/*        crProvince:'',
-        crCity:'',
-        crArea:'',
-        paProvince:'',
-        paCity:'',
-        paArea:'',*/
         deviceId: [],
       }
 
@@ -1338,8 +1332,14 @@ var app = new Vue({
         mobile: '手机号码',
         identityCard: '身份证号',
         sex: '性别',
-        // departId: '组织架构',
-        // expireTime: '有效期(截止日期)',
+        crProvince: '户籍地址-省',
+        crCity: '户籍地址-市',
+        crArea: '户籍地址-区',
+        crDetailedAddress: '户籍地址-详细地址',
+        paProvince: '现居地址-省',
+        paCity: '现居地址-市',
+        paArea: '现居地址-区',
+        paDetailedAddress: '现居地址-详细地址',
       }
       for(var i in 必填){
         var v = 必填[i]
