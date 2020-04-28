@@ -158,16 +158,11 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
               <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane" id="操作">
 
-                <a class="btn btn-sm btn-primary" @click="上下班时间调整()">上下班时间调整</a>
-
-              </div>
               <div class="tab-pane active" id="搜索">
 
                 <div class="form-horizontal">
@@ -296,117 +291,6 @@
       </div>
 
     </section>
-
-
-    <div class="modal fade" id="view">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">
-              <span v-if="view.id == undefined">新增</span>
-              <span v-if="view.id != undefined">编辑</span>
-            </h4>
-          </div>
-          <div class="modal-body">
-
-            <form class="form-horizontal">
-
-              <div class="row">
-
-                <div class="col-sm-6">
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">员工姓名</label>
-  <div class="col-sm-7">
-    <input type="text" class="form-control input-sm" v-model="view.title">
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">身份证号</label>
-  <div class="col-sm-7">
-    <input type="text" class="form-control input-sm" v-model="view.identifier">
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">性别</label>
-  <div class="col-sm-7">
-    <select class="form-control" v-model="list.post.industryId">
-      <option value="0">--请选择--</option>
-      <option :value="`${i}`" v-for="(v, i) in 性别">{{v}}</option>
-    </select>
-  </div>
-</div>
-
-<hr>
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">组织架构</label>
-  <div class="col-sm-7">
-    <select class="form-control" v-model="list.post.industryId">
-      <option value="0">--请选择--</option>
-      <option :value="`${v.id}`" v-for="v in 通行设备">{{v.title}}</option>
-    </select>
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">有效期(截止日期)</label>
-  <div class="col-sm-7">
-    <input type="text" class="form-control input-sm" v-model="view.identifier">
-  </div>
-</div>
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">通行设备</label>
-  <div class="col-sm-7">
-    <div class="checkbox">
-      <label>
-        <input type="checkbox"> 全选
-      </label>
-    </div>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" name="通行设备"> 1号闸机
-      </label>
-    </div>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" name="通行设备"> 2号闸机
-      </label>
-    </div>
-  </div>
-</div>
-
-                </div>
-                <div class="col-sm-6 tc">
-
-                  <label>
-                    <img src="../../img/no-img.gif" width="80%">
-                    <input type="file" accept="image/*" style="display: none">
-                  </label>
-
-                  照片(点击拍照)
-
-                </div>
-
-              </div>
-
-              <hr>
-
-              <center>点击确定将推送信息到选中的设备，请核对信息无误</center>
-
-            </form>
-
-          </div>
-          <div class="modal-footer">
-            <a class="btn btn-primary" @click="saveView">确定</a>
-          </div>
-        </div>
-      </div>
-    </div>
 
 
     <div class="modal fade" id="中证宝快速录入员工">
@@ -1095,101 +979,6 @@ var app = new Vue({
           }
 
         }
-      })
-
-    },
-
-    getView: function(id){
-
-      this.view = {}
-
-      if(id == -1){
-        // this.getLV2(this.admin.id)
-        $('#view').modal('show')
-        return
-      }
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          mchId: id
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/getMchInfo/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.view = re.rspBody
-
-          $('#view').modal('show')
-
-        }
-      })
-
-    },
-
-    saveView: function(){
-
-      if($('#password').val() != ''){
-        this.view.password = $('#password').val()
-      }else{
-        delete this.view.password
-      }
-
-      this.view.agent2Id = this.view.agentId
-      delete this.view.agentId
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: this.view
-      }
-
-      if ( data.reqBody.superiorAgentId != '' && data.reqBody.agentId == '' ){
-
-        data.reqBody.agentId = data.reqBody.superiorAgentId
-        delete data.reqBody.superiorAgentId
-
-      }
-
-      var add_or_edit = this.view.mchId == undefined ? 'add':'edit'
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/' + add_or_edit + 'Mch/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-            $('#view').modal('hide')
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
       })
 
     },
