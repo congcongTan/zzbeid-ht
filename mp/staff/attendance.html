@@ -204,16 +204,6 @@
                     </div>
                   </div>
 
-<!--                   <div class="form-group">
-                    <label class="col-sm-2 control-label">组织架构</label>
-                    <div class="col-sm-5">
-                      <select class="form-control" v-model="list.post.departId">
-                        <option value="0">--请选择--</option>
-                        <option :value="`${v.id}`" v-for="v in 组织架构">{{v.title}}</option>
-                      </select>
-                    </div>
-                  </div> -->
-
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
@@ -221,7 +211,12 @@
                         <i class="fa fa-spinner fa-spin" v-if="list.loading == 1"></i>
                       </button>
 
-                      <a class="btn btn-primary" @click="getView()">考勤设置</a>
+                      <a class="btn btn-default" @click="getView()">考勤设置</a>
+
+                      <button class="btn btn-default" onClick="app.导出(this)">
+                        导出
+                        <i class="fa fa-spinner fa-spin" style="display: none"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -761,7 +756,7 @@ var app = new Vue({
       post: {
         pageNum: 1,
         pageSize: 10,
-        // departId: '',
+        departId: 0,
       },
       info: {},
       page: {},
@@ -1284,6 +1279,54 @@ var app = new Vue({
 
     },
 
+    导出: function(obj){
+
+      if($(obj).prop('disabled')){
+        return
+      }
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
+
+      var _this = this
+
+      this.list.post.commuteDateStart = $('#考勤日期开始').val()
+      this.list.post.commuteDateEnd = $('#考勤日期结束').val()
+
+      var data = {
+        reqHead:
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/exportHsStaffCommuteLogList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+
+          if(re.rspHead.retCode == 1){
+            location.href = re.rspBody.file
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        }
+      })
+
+    },
 
   },
   mounted() {
