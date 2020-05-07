@@ -596,21 +596,27 @@ var app = new Vue({
 
       if(admin.softwareVersion == 60001){
         location.href = '../place_info/place_info.html'
+        return
       }
-      if(admin.softwareVersion == 60002){
+      else if(admin.softwareVersion == 60002){
         location.href = '../place_info/place_info.html'
+        return
       }
       else if(admin.type == 1){
         location.href = '../index/agent.html'
+        return
       }
       else if(admin.type == 2){
         location.href = '../index/agent.html'
+        return
       }
       else if(admin.type == 3){
         location.href = '../index/index.html'
+        return
       }
       else if(admin.type == 4){
         location.href = '../stats/sale_group_stats.html'
+        return
       }
 
     }
