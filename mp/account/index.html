@@ -512,58 +512,57 @@ var app = new Vue({
 
           if(re.rspHead.retCode != 1){
             alert(re.rspHead.retMsg)
+            return
+          }
+
+          //装埋入去
+          re.rspBody.adminResponseInfoDTO.token = re.rspBody.token
+
+          //变短变量名
+          var data1 = re.rspBody.adminResponseInfoDTO
+
+          // _this.save(re.rspBody.adminResponseInfoDTO)
+
+          //有老豆信息
+          if(data1.roleFlag == 2){
+
+            var data = {
+              reqHead: {
+                clientType: 6,
+                format: "json",
+                version: "1.0",
+                sign: "4600D5BC2AACE2929E9CEBB44121B8CF"
+              },
+              reqBody: {
+                agentId: data1.primaryAccountId
+              }
+            }
+
+            $.ajax({
+              type: 'POST',
+              url: mp_api + 'mp/getParentAgent/interface',
+              data: JSON.stringify(data),
+              dataType: 'json',
+              beforeSend: function(request){
+                request.setRequestHeader('Authorization', 'Bearer ' + re.rspBody.token )
+              },
+              success: function(re2){
+
+                if(re2.rspHead.retCode != '1'){
+                  alert(re2.rspHead.retMsg)
+                  return
+                }
+
+                //变短变量名
+                var data2 = re2.rspBody
+
+                _this.save(data1, data2)
+
+              }
+            })
           }else{
 
-            //装埋入去
-            re.rspBody.adminResponseInfoDTO.token = re.rspBody.token
-
-            //变短变量名
-            var data1 = re.rspBody.adminResponseInfoDTO
-
-            // _this.save(re.rspBody.adminResponseInfoDTO)
-
-            //有老豆信息
-            if(data1.roleFlag == 2){
-
-              var data = {
-                reqHead: {
-                  clientType: 6,
-                  format: "json",
-                  version: "1.0",
-                  sign: "4600D5BC2AACE2929E9CEBB44121B8CF"
-                },
-                reqBody: {
-                  agentId: data1.primaryAccountId
-                }
-              }
-
-              $.ajax({
-                type: 'POST',
-                url: mp_api + 'mp/getParentAgent/interface',
-                data: JSON.stringify(data),
-                dataType: 'json',
-                beforeSend: function(request){
-                  request.setRequestHeader('Authorization', 'Bearer ' + re.rspBody.token )
-                },
-                success: function(re2){
-
-                  if(re2.rspHead.retCode != 1){
-                    alert(re2.rspHead.retMsg)
-                  }else{
-
-                    //变短变量名
-                    var data2 = re2.rspBody
-
-                    _this.save(data1, data2)
-                  }
-
-                }
-              })
-            }else{
-
-              _this.save(data1)
-
-            }
+            _this.save(data1)
 
           }
 
