@@ -214,6 +214,8 @@
                     <th>抓拍照片</th>
                     <th>人员类别</th>
                     <th>布控期限</th>
+                    <th>通行设备</th>
+                    <th>通行时间</th>
                     <!-- <th width="1%">操作</th> -->
                   </tr>
                 </thead>
@@ -226,6 +228,8 @@
                     <td><a class="fancybox" :href="`http://image.zzb110.cn${v.headimgUrl}`"><img :src="`http://image.zzb110.cn${v.headimgUrl}`" height="60"></a></td>
                     <td>{{人员类别[v.visitorType]}}</td>
                     <td>{{v.monitorTime}}</td>
+                    <td>{{v.deviceTitle}}</td>
+                    <td>{{v.accessTimeTitle}}</td>
 <!--                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
 
