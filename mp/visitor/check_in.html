@@ -162,28 +162,28 @@
                 <div class="col-sm-6">
 
 <div class="form-group">
-  <label class="col-sm-5 control-label">访客姓名</label>
+  <label class="col-sm-5 control-label">访客姓名 <span class="text-danger">*</span></label>
   <div class="col-sm-7">
     <input type="text" class="form-control input-sm" v-model="view.realName">
   </div>
 </div>
 
 <div class="form-group">
-  <label class="col-sm-5 control-label">手机号码</label>
+  <label class="col-sm-5 control-label">手机号码 <span class="text-danger">*</span></label>
   <div class="col-sm-7">
     <input type="text" class="form-control input-sm" v-model="view.mobile">
   </div>
 </div>
 
 <div class="form-group">
-  <label class="col-sm-5 control-label">身份证号</label>
+  <label class="col-sm-5 control-label">身份证号 <span class="text-danger">*</span></label>
   <div class="col-sm-7">
     <input type="text" class="form-control input-sm" v-model="view.identityCard">
   </div>
 </div>
 
 <div class="form-group">
-  <label class="col-sm-5 control-label">性别</label>
+  <label class="col-sm-5 control-label">性别 <span class="text-danger">*</span></label>
   <div class="col-sm-7">
     <select class="form-control" v-model="view.sex">
       <option value="0">--请选择--</option>
@@ -229,13 +229,6 @@
 
 </template>
 <template v-if="admin.softwareVersion == 60002">
-
-<div class="form-group">
-  <label class="col-sm-5 control-label">被访房间</label>
-  <div class="col-sm-7">
-    <input type="text" class="form-control input-sm" v-model="view.roomName" disabled>
-  </div>
-</div>
 
 <div class="form-group">
   <label class="col-sm-5 control-label">楼栋 <span class="text-danger">*</span></label>
@@ -674,9 +667,9 @@ var app = new Vue({
 	],
 
     view:{
-      buildingId: 0,
-      floorId: 0,
-      roomId: 0,
+      buildingId: '0',
+      floorId: '0',
+      roomId: '0',
       deviceSn: [],
     },
 
@@ -913,15 +906,38 @@ var app = new Vue({
 
     saveView: function(){
 
-      var body2 = JSON.parse(JSON.stringify(this.view))
+      var post = JSON.parse(JSON.stringify(this.view))
 
-      body2.visitTime = $('#visitTime').val()
-      body2.leaveTime = $('#leaveTime').val()
+      post.visitTime = $('#visitTime').val()
+      post.leaveTime = $('#leaveTime').val()
 
       // 合翻埋设备id
-      body2.deviceSn = JSON.stringify(body2.deviceSn)
+      post.deviceSn = JSON.stringify(post.deviceSn)
 
-      body2.checkinStatus = 1
+      post.checkinStatus = 1
+
+
+      var 必填 = {
+        realName: '访客姓名',
+        mobile: '手机号码',
+        identityCard: '身份证号',
+        sex: '性别',
+        buildingId: '楼栋',
+        floorId: '楼层',
+        roomId: '入住房间号',
+        visitTime: '访问时间',
+        leaveTime: '离店日期',
+        headimgBase64: '照片',
+      }
+      for(var i in 必填){
+        var v = 必填[i]
+
+        if(post[i] === undefined || post[i] === '' || post[i] === '0'){
+          alert('【' + v + '】没有填写正确，请检查修正后再次提交')
+          // console.log(i,post[i])
+          return
+        }
+      }
 
 
       var data = {
@@ -932,7 +948,7 @@ var app = new Vue({
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
-        reqBody: body2
+        reqBody: post
       }
 
       $.ajax({
