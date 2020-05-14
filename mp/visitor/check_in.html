@@ -922,9 +922,6 @@ var app = new Vue({
         mobile: '手机号码',
         identityCard: '身份证号',
         sex: '性别',
-        buildingId: '楼栋',
-        floorId: '楼层',
-        roomId: '入住房间号',
         visitTime: '访问时间',
         leaveTime: '离店日期',
         headimgBase64: '照片',
@@ -934,9 +931,26 @@ var app = new Vue({
 
         if(post[i] === undefined || post[i] === '' || post[i] === '0'){
           alert('【' + v + '】没有填写正确，请检查修正后再次提交')
-          // console.log(i,post[i])
           return
         }
+      }
+
+      if(this.admin.softwareVersion == 60002){
+
+        var 必填 = {
+          buildingId: '楼栋',
+          floorId: '楼层',
+          roomId: '入住房间号',
+        }
+        for(var i in 必填){
+          var v = 必填[i]
+
+          if(post[i] === undefined || post[i] === '' || post[i] === '0'){
+            alert('【' + v + '】没有选择，请检查修正后再次提交')
+            return
+          }
+        }
+
       }
 
 
