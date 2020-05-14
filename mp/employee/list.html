@@ -329,7 +329,7 @@
     id="upload_input" @change="选图()">
   </label>
   <br>
-  照片(点击拍照) <span class="text-danger">*</span>
+  照片(点击选择) <span class="text-danger">*</span>
 
 </div>
 
@@ -389,13 +389,13 @@
 <div class="form-group">
   <label class="col-sm-3 control-label">户籍地址 <span class="text-danger">*</span></label>
   <div class="col-sm-3">
-    <select class="form-control" v-model="view.crProvince" onchange="app.getC('户籍地址', this.value)">
+    <select class="form-control" v-model="view.crProvince" onChange="app.getC('户籍地址', this.value)">
       <option value="" selected>--请选择--</option>
       <option :value="`${i}`" v-for="(v, i) in 户籍地址.p">{{v}}</option>
     </select>
   </div>
   <div class="col-sm-3">
-    <select class="form-control" v-model="view.crCity" onchange="app.getA('户籍地址', this.value)">
+    <select class="form-control" v-model="view.crCity" onChange="app.getA('户籍地址', this.value)">
       <option value="" selected>--请选择--</option>
       <option :value="`${i}`" v-for="(v, i) in 户籍地址.c">{{v}}</option>
     </select>
@@ -418,13 +418,13 @@
 <div class="form-group">
   <label class="col-sm-3 control-label">现居地址 <span class="text-danger">*</span></label>
   <div class="col-sm-3">
-    <select class="form-control" v-model="view.paProvince" onchange="app.getC('现居地址', this.value)">
+    <select class="form-control" v-model="view.paProvince" onChange="app.getC('现居地址', this.value)">
       <option value="">--请选择--</option>
       <option :value="`${i}`" v-for="(v, i) in 现居地址.p">{{v}}</option>
     </select>
   </div>
   <div class="col-sm-3">
-    <select class="form-control" v-model="view.paCity" onchange="app.getA('现居地址', this.value)">
+    <select class="form-control" v-model="view.paCity" onChange="app.getA('现居地址', this.value)">
       <option value="">--请选择--</option>
       <option :value="`${i}`" v-for="(v, i) in 现居地址.c">{{v}}</option>
     </select>
