@@ -158,7 +158,7 @@
 
         <div class="col-sm-6">
 
-          <div class="box box-primary" style="height: 300px;">
+          <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">人流量分析（近7天）</h3>
             </div>
@@ -170,22 +170,34 @@
         </div>
         <div class="col-sm-6">
 
-          <div class="box box-primary" style="height: 300px;">
+          <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">访客来访方式统计</h3>
               <div class="fr" id="图表2_选择">
                 <a class="btn btn-xs btn-default d7" href="javascript:app.图表2(7)">近7天</a>
                 <a class="btn btn-xs btn-default d3" href="javascript:app.图表2(3)">近3天</a>
-                <a class="btn btn-xs btn-default d0" href="javascript:app.图表2(0)">当天</a>
+                <a class="btn btn-xs btn-default d0" href="javascript:app.图表2(1)">当天</a>
               </div>
             </div>
             <div class="box-body">
-              <div class="col-xs-8 col-xs-offset-2
-              col-sm-10 col-sm-offset-1
-              col-md-6 col-md-offset-3">
+              <div class="col-xs-10 col-xs-offset-1
+              col-sm-12 col-sm-offset-0
+              col-md-10 col-md-offset-1">
                 <canvas id="访客来访方式统计"></canvas>
                 <div id="访客来访方式统计2" style="display:none; text-align:center;line-height: 200px;">暂无数据</div>
               </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-sm-6">
+
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">布控预警统计（近7天）</h3>
+            </div>
+            <div class="box-body">
+              <canvas id="布控预警统计"></canvas>
             </div>
           </div>
 
@@ -788,11 +800,94 @@ var app = new Vue({
             return
           }
 
-          console.log(JSON.parse(re.rspBody.params));
+          var config2 = {
+            type: 'line',
+            data: {
+              labels: ['2019年8月','2019年9月','2019年10月','2019年11月','2019年12月'],
+              datasets: [{
+                label: "预约",
+                fill: false,
+                borderColor: "green",
+                pointBorderColor: "green",
+                pointBackgroundColor: "white",
+                pointBorderWidth: 3,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 3,
+                data: [0,100,0,0,0],
+              },
+              {
+                label: "考试支付",
+                fill: false,
+                borderColor: "red",
+                pointBorderColor: "red",
+                pointBackgroundColor: "white",
+                pointBorderWidth: 3,
+                pointHoverRadius: 5,
+                pointHoverBorderWidth: 3,
+                data: [0,0,0,0,0]
+              }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+          };
+
+          var config = JSON.parse(re.rspBody.params)
+          // console.log(config)
+
+          delete config.data.datasets[0].backgroundColor
+          delete config.data.datasets[1].backgroundColor
+          delete config.data.datasets[2].backgroundColor
+
+          config.options = {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+
+          config.data.datasets[0].fill = false
+          config.data.datasets[0].borderColor = 'green'
+          config.data.datasets[0].pointBorderColor = 'green'
+          config.data.datasets[0].pointBackgroundColor = 'white'
+          config.data.datasets[0].pointBorderWidth = 3
+          config.data.datasets[0].pointHoverRadius = 5
+          config.data.datasets[0].pointHoverBorderWidth = 3
+
+          // config.data.datasets[0].data[1] = 1
+          // config.data.datasets[1].data[2] = 2
+          // config.data.datasets[2].data[3] = 3
+
+          config.data.datasets[1].fill = false
+          config.data.datasets[1].borderColor = 'blue'
+          config.data.datasets[1].pointBorderColor = 'blue'
+          config.data.datasets[1].pointBackgroundColor = 'white'
+          config.data.datasets[1].pointBorderWidth = 3
+          config.data.datasets[1].pointHoverRadius = 5
+          config.data.datasets[1].pointHoverBorderWidth = 3
+
+          config.data.datasets[2].fill = false
+          config.data.datasets[2].borderColor = 'red'
+          config.data.datasets[2].pointBorderColor = 'red'
+          config.data.datasets[2].pointBackgroundColor = 'white'
+          config.data.datasets[2].pointBorderWidth = 3
+          config.data.datasets[2].pointHoverRadius = 5
+          config.data.datasets[2].pointHoverBorderWidth = 3
+
+          // console.log(config)
 
           new Chart(
-            document.getElementById("人流量分析").getContext("2d"),
-            JSON.parse(re.rspBody.params)
+            $("#人流量分析").get(0).getContext("2d"),
+            config
           )
 
         }
@@ -845,8 +940,8 @@ var app = new Vue({
             data: {
               datasets: [{
                 data: [
-                  re.rspBody.scanCount,
-                  re.rspBody.sceneCount
+                  re.rspBody.networkAppointments,
+                  re.rspBody.siteRegistration
                 ],
                 backgroundColor: [
                   "#4DBBE4",
@@ -862,6 +957,119 @@ var app = new Vue({
 
           new Chart(
             document.getElementById("访客来访方式统计").getContext("2d"),
+            config
+          )
+
+        }
+      })
+
+    },
+
+    图表3: function(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          softwareVersion: this.admin.softwareVersion
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/monitorCount/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+            alert(re.rspHead.retMsg)
+            return
+          }
+
+          var config2 = {
+            type: 'bar',
+            data: {
+              labels: ['2019年8月','2019年9月','2019年10月','2019年11月','2019年12月'],
+              datasets: [{
+                label: "预约",
+                backgroundColor: "green",
+                data: [0,100,0,0,0],
+              },
+              {
+                label: "考试支付",
+                backgroundColor: "red",
+                data: [0,0,0,0,0]
+              }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+          };
+
+          var config = JSON.parse(re.rspBody.params)
+          console.log(config)
+
+          // delete config.data.datasets[0].backgroundColor
+          // delete config.data.datasets[1].backgroundColor
+          // delete config.data.datasets[2].backgroundColor
+
+          config.options = {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+
+          // config.data.datasets[0].fill = false
+          // config.data.datasets[0].borderColor = 'green'
+          // config.data.datasets[0].pointBorderColor = 'green'
+          // config.data.datasets[0].pointBackgroundColor = 'white'
+          // config.data.datasets[0].pointBorderWidth = 3
+          // config.data.datasets[0].pointHoverRadius = 5
+          // config.data.datasets[0].pointHoverBorderWidth = 3
+
+          // config.data.datasets[0].data[1] = 1
+          // config.data.datasets[1].data[2] = 2
+          // config.data.datasets[2].data[3] = 3
+
+          // config.data.datasets[1].fill = false
+          // config.data.datasets[1].borderColor = 'blue'
+          // config.data.datasets[1].pointBorderColor = 'blue'
+          // config.data.datasets[1].pointBackgroundColor = 'white'
+          // config.data.datasets[1].pointBorderWidth = 3
+          // config.data.datasets[1].pointHoverRadius = 5
+          // config.data.datasets[1].pointHoverBorderWidth = 3
+
+          // config.data.datasets[2].fill = false
+          // config.data.datasets[2].borderColor = 'red'
+          // config.data.datasets[2].pointBorderColor = 'red'
+          // config.data.datasets[2].pointBackgroundColor = 'white'
+          // config.data.datasets[2].pointBorderWidth = 3
+          // config.data.datasets[2].pointHoverRadius = 5
+          // config.data.datasets[2].pointHoverBorderWidth = 3
+
+          // console.log(config)
+
+          new Chart(
+            $("#布控预警统计").get(0).getContext("2d"),
             config
           )
 
@@ -971,6 +1179,8 @@ var app = new Vue({
     this.图表1()
 
     this.图表2(7)
+
+    this.图表3()
 
   }
 });
