@@ -176,7 +176,7 @@
               <div class="fr" id="图表2_选择">
                 <a class="btn btn-xs btn-default d7" href="javascript:app.图表2(7)">近7天</a>
                 <a class="btn btn-xs btn-default d3" href="javascript:app.图表2(3)">近3天</a>
-                <a class="btn btn-xs btn-default d0" href="javascript:app.图表2(1)">当天</a>
+                <a class="btn btn-xs btn-default d1" href="javascript:app.图表2(1)">当天</a>
               </div>
             </div>
             <div class="box-body">
@@ -841,9 +841,9 @@ var app = new Vue({
           var config = JSON.parse(re.rspBody.params)
           // console.log(config)
 
-          delete config.data.datasets[0].backgroundColor
-          delete config.data.datasets[1].backgroundColor
-          delete config.data.datasets[2].backgroundColor
+          for(var i = 0; i<config.data.datasets.length; i++){
+            delete config.data.datasets[i].backgroundColor
+          }
 
           config.options = {
             scales: {
@@ -855,33 +855,39 @@ var app = new Vue({
             }
           }
 
-          config.data.datasets[0].fill = false
-          config.data.datasets[0].borderColor = 'green'
-          config.data.datasets[0].pointBorderColor = 'green'
-          config.data.datasets[0].pointBackgroundColor = 'white'
-          config.data.datasets[0].pointBorderWidth = 3
-          config.data.datasets[0].pointHoverRadius = 5
-          config.data.datasets[0].pointHoverBorderWidth = 3
+          if(config.data.datasets[0] != undefined){
+            config.data.datasets[0].fill = false
+            config.data.datasets[0].borderColor = 'green'
+            config.data.datasets[0].pointBorderColor = 'green'
+            config.data.datasets[0].pointBackgroundColor = 'white'
+            config.data.datasets[0].pointBorderWidth = 3
+            config.data.datasets[0].pointHoverRadius = 5
+            config.data.datasets[0].pointHoverBorderWidth = 3
+          }
 
           // config.data.datasets[0].data[1] = 1
           // config.data.datasets[1].data[2] = 2
           // config.data.datasets[2].data[3] = 3
 
-          config.data.datasets[1].fill = false
-          config.data.datasets[1].borderColor = 'blue'
-          config.data.datasets[1].pointBorderColor = 'blue'
-          config.data.datasets[1].pointBackgroundColor = 'white'
-          config.data.datasets[1].pointBorderWidth = 3
-          config.data.datasets[1].pointHoverRadius = 5
-          config.data.datasets[1].pointHoverBorderWidth = 3
+          if(config.data.datasets[1] != undefined){
+            config.data.datasets[1].fill = false
+            config.data.datasets[1].borderColor = 'blue'
+            config.data.datasets[1].pointBorderColor = 'blue'
+            config.data.datasets[1].pointBackgroundColor = 'white'
+            config.data.datasets[1].pointBorderWidth = 3
+            config.data.datasets[1].pointHoverRadius = 5
+            config.data.datasets[1].pointHoverBorderWidth = 3
+          }
 
-          config.data.datasets[2].fill = false
-          config.data.datasets[2].borderColor = 'red'
-          config.data.datasets[2].pointBorderColor = 'red'
-          config.data.datasets[2].pointBackgroundColor = 'white'
-          config.data.datasets[2].pointBorderWidth = 3
-          config.data.datasets[2].pointHoverRadius = 5
-          config.data.datasets[2].pointHoverBorderWidth = 3
+          if(config.data.datasets[2] != undefined){
+            config.data.datasets[2].fill = false
+            config.data.datasets[2].borderColor = 'red'
+            config.data.datasets[2].pointBorderColor = 'red'
+            config.data.datasets[2].pointBackgroundColor = 'white'
+            config.data.datasets[2].pointBorderWidth = 3
+            config.data.datasets[2].pointHoverRadius = 5
+            config.data.datasets[2].pointHoverBorderWidth = 3
+          }
 
           // console.log(config)
 
