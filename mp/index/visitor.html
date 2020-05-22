@@ -195,9 +195,9 @@
             <div class="box-body">
               <div class="col-xs-10 col-xs-offset-1
               col-sm-12 col-sm-offset-0
-              col-md-10 col-md-offset-1">
+              col-md-10 col-md-offset-1 pr" style="min-height: 150px;">
                 <canvas id="访客来访方式统计"></canvas>
-                <div id="访客来访方式统计2" style="display:none; text-align:center;line-height: 200px;">暂无数据</div>
+                <div id="访客来访方式统计2" class="pa-center">暂无数据</div>
               </div>
             </div>
           </div>
@@ -1054,7 +1054,7 @@ var app = new Vue({
             return
           }
 
-          if(re.rspBody.scanCount == 0 && re.rspBody.sceneCount == 0){
+          if(re.rspBody.networkAppointments == 0 && re.rspBody.siteRegistration == 0){
             $('#访客来访方式统计').hide()
             $('#访客来访方式统计2').show()
           }else{
