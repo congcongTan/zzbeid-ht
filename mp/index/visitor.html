@@ -176,6 +176,7 @@
             </div>
             <div class="box-body">
               <canvas id="布控预警统计"></canvas>
+              <div id="布控预警统计2" style="display:none; text-align:center;line-height: 180px;">暂无数据</div>
             </div>
           </div>
 
@@ -1029,6 +1030,25 @@ var app = new Vue({
 
           var config = JSON.parse(re.rspBody.params)
           console.log(config)
+
+          var hide = true;
+          if( config.data.datasets[0].data != undefined ){
+            for(let i = 0; i < config.data.datasets[0].data.length; i++){
+              if(config.data.datasets[0].data[i] != 0){
+                hide = false
+                break
+              }
+            }
+          }
+
+          if( hide ){
+            $('#布控预警统计').hide()
+            $('#布控预警统计2').show()
+          }else{
+            $('#布控预警统计').show()
+            $('#布控预警统计2').hide()
+          }
+
 
           config.data.datasets[0].backgroundColor = '#B3D9B3'
           // delete config.data.datasets[1].backgroundColor
