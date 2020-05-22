@@ -158,11 +158,11 @@
 
         <div class="col-sm-6">
 
-          <div class="box box-primary" id="人流量分析-box">
+          <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">人流量分析（近7天）</h3>
             </div>
-            <div class="box-body">
+            <div class="box-body" id="人流量分析-box">
               <canvas id="人流量分析"></canvas>
             </div>
           </div>
@@ -170,13 +170,13 @@
         </div>
         <div class="col-sm-6">
 
-          <div class="box box-primary" id="布控预警统计-box">
+          <div class="box box-primary">
             <div class="box-header with-border">
               <h3 class="box-title">布控预警统计（近7天）</h3>
             </div>
-            <div class="box-body">
+            <div class="box-body pr" id="布控预警统计-box">
               <canvas id="布控预警统计"></canvas>
-              <div id="布控预警统计2" style="display:none; text-align:center;line-height: 180px;">暂无数据</div>
+              <div id="布控预警统计-无数据" class="pa-center">暂无数据</div>
             </div>
           </div>
 
@@ -874,10 +874,6 @@ var app = new Vue({
             config.data.datasets[0].pointHoverBorderWidth = 3
           }
 
-          // config.data.datasets[0].data[1] = 1
-          // config.data.datasets[1].data[2] = 2
-          // config.data.datasets[2].data[3] = 3
-
           if(config.data.datasets[1] != undefined){
             config.data.datasets[1].fill = false
             config.data.datasets[1].borderColor = 'blue'
@@ -980,11 +976,9 @@ var app = new Vue({
           }
 
           if( hide ){
-            $('#布控预警统计').hide()
-            $('#布控预警统计2').show()
+            $('#布控预警统计-无数据').show()
           }else{
-            $('#布控预警统计').show()
-            $('#布控预警统计2').hide()
+            $('#布控预警统计-无数据').hide()
           }
 
 
@@ -994,43 +988,23 @@ var app = new Vue({
 
           config.options = {
             scales: {
+              xAxes: [{
+                gridLines:{
+                  // display: false
+                },
+              }],
               yAxes: [{
                 ticks: {
                   beginAtZero: true
-                }
-              }]
-            }
+                },
+                gridLines:{
+                  display: false
+                },
+              }],
+            },
+
+
           }
-
-          // config.data.datasets[0].fill = false
-          // config.data.datasets[0].borderColor = 'green'
-          // config.data.datasets[0].pointBorderColor = 'green'
-          // config.data.datasets[0].pointBackgroundColor = 'white'
-          // config.data.datasets[0].pointBorderWidth = 3
-          // config.data.datasets[0].pointHoverRadius = 5
-          // config.data.datasets[0].pointHoverBorderWidth = 3
-
-          // config.data.datasets[0].data[1] = 1
-          // config.data.datasets[1].data[2] = 2
-          // config.data.datasets[2].data[3] = 3
-
-          // config.data.datasets[1].fill = false
-          // config.data.datasets[1].borderColor = 'blue'
-          // config.data.datasets[1].pointBorderColor = 'blue'
-          // config.data.datasets[1].pointBackgroundColor = 'white'
-          // config.data.datasets[1].pointBorderWidth = 3
-          // config.data.datasets[1].pointHoverRadius = 5
-          // config.data.datasets[1].pointHoverBorderWidth = 3
-
-          // config.data.datasets[2].fill = false
-          // config.data.datasets[2].borderColor = 'red'
-          // config.data.datasets[2].pointBorderColor = 'red'
-          // config.data.datasets[2].pointBackgroundColor = 'white'
-          // config.data.datasets[2].pointBorderWidth = 3
-          // config.data.datasets[2].pointHoverRadius = 5
-          // config.data.datasets[2].pointHoverBorderWidth = 3
-
-          // console.log(config)
 
           new Chart(
             $("#布控预警统计").get(0).getContext("2d"),
