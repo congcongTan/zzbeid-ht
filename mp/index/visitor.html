@@ -158,7 +158,7 @@
 
         <div class="col-sm-6">
 
-          <div class="box box-primary">
+          <div class="box box-primary" id="人流量分析-box">
             <div class="box-header with-border">
               <h3 class="box-title">人流量分析（近7天）</h3>
             </div>
@@ -170,7 +170,7 @@
         </div>
         <div class="col-sm-6">
 
-          <div class="box box-primary">
+          <div class="box box-primary" id="布控预警统计-box">
             <div class="box-header with-border">
               <h3 class="box-title">布控预警统计（近7天）</h3>
             </div>
@@ -771,7 +771,15 @@ var app = new Vue({
 
     },
 
-    图表1: function(){
+    齐高: function(){
+
+      $('#布控预警统计-box').height(
+        $('#人流量分析-box').height()
+      )
+
+    },
+
+    get人流量分析: function(){
 
       var data = {
         "reqHead":
@@ -902,77 +910,7 @@ var app = new Vue({
 
     },
 
-    图表2: function(numberDays){
-
-      $('#图表2_选择>a').removeClass('btn-primary').addClass('btn-default')
-      $('#图表2_选择 .d' + numberDays).addClass('btn-primary')
-
-      var data = {
-        reqHead: {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          numberDays: numberDays
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/registerSourceCount/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode != '1'){
-            alert(re.rspHead.retMsg)
-            return
-          }
-
-          if(re.rspBody.scanCount == 0 && re.rspBody.sceneCount == 0){
-            $('#访客来访方式统计').hide()
-            $('#访客来访方式统计2').show()
-          }else{
-            $('#访客来访方式统计').show()
-            $('#访客来访方式统计2').hide()
-          }
-
-          var config = {
-            type: 'doughnut',
-            data: {
-              datasets: [{
-                data: [
-                  re.rspBody.networkAppointments,
-                  re.rspBody.siteRegistration
-                ],
-                backgroundColor: [
-                  "#4DBBE4",
-                  "#B3D9B3"
-                ]
-              }],
-              labels: [
-                "预约登记",
-                "现场登记"
-              ]
-            }
-          };
-
-          new Chart(
-            document.getElementById("访客来访方式统计").getContext("2d"),
-            config
-          )
-
-        }
-      })
-
-    },
-
-    图表3: function(){
+    get布控预警统计: function(){
 
       var data = {
         "reqHead":
@@ -1099,6 +1037,82 @@ var app = new Vue({
             config
           )
 
+          setTimeout(function(){
+
+            _this.齐高();
+
+          },300)
+
+        }
+      })
+
+    },
+
+    图表2: function(numberDays){
+
+      $('#图表2_选择>a').removeClass('btn-primary').addClass('btn-default')
+      $('#图表2_选择 .d' + numberDays).addClass('btn-primary')
+
+      var data = {
+        reqHead: {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          numberDays: numberDays
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/registerSourceCount/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+            alert(re.rspHead.retMsg)
+            return
+          }
+
+          if(re.rspBody.scanCount == 0 && re.rspBody.sceneCount == 0){
+            $('#访客来访方式统计').hide()
+            $('#访客来访方式统计2').show()
+          }else{
+            $('#访客来访方式统计').show()
+            $('#访客来访方式统计2').hide()
+          }
+
+          var config = {
+            type: 'doughnut',
+            data: {
+              datasets: [{
+                data: [
+                  re.rspBody.networkAppointments,
+                  re.rspBody.siteRegistration
+                ],
+                backgroundColor: [
+                  "#4DBBE4",
+                  "#B3D9B3"
+                ]
+              }],
+              labels: [
+                "预约登记",
+                "现场登记"
+              ]
+            }
+          };
+
+          new Chart(
+            document.getElementById("访客来访方式统计").getContext("2d"),
+            config
+          )
+
         }
       })
 
@@ -1202,11 +1216,14 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    this.图表1()
+    window.onresize = function(){
+      _this.齐高()
+    }
+
+    this.get人流量分析()
+    this.get布控预警统计()
 
     this.图表2(7)
-
-    this.图表3()
 
   }
 });
