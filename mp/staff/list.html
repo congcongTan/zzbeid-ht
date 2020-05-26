@@ -174,7 +174,7 @@
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增员工</a>
 
-                <a class="btn btn-sm btn-primary" @click="中证宝快速录入员工()">中证宝快速录入员工</a>
+                <a class="btn btn-sm btn-primary" @click="快速录入员工()">快速录入员工</a>
 
               </div>
               <div class="tab-pane" id="搜索">
@@ -418,13 +418,13 @@
     </div>
 
 
-    <div class="modal fade" id="中证宝快速录入员工">
+    <div class="modal fade" id="快速录入员工">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
-              中证宝快速录入员工
+              快速录入员工
             </h4>
           </div>
           <div class="modal-body">
@@ -447,7 +447,7 @@
     <div class="pull-right hidden-xs">
       <b>Version</b> 2.4.0
     </div>
-    <b>中证宝</b> 商户后台
+    商户后台
   </footer>
 
   <!-- Control Sidebar -->
@@ -1294,8 +1294,8 @@ var app = new Vue({
 
     },
 
-    中证宝快速录入员工: function(){
-      $('#中证宝快速录入员工').modal('show')
+    快速录入员工: function(){
+      $('#快速录入员工').modal('show')
     },
 
 
