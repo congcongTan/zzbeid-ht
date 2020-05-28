@@ -419,8 +419,13 @@ var app = new Vue({
 
       // return
 
-      if(admin.softwareVersion == 60001 || admin.softwareVersion == 60002){
-        location.href = '../staff/list.html'
+      if(admin.softwareVersion == 60001){
+        location.href = '../index/visitor.html'
+        return
+      }
+      else if(admin.softwareVersion == 60002){
+        location.href = '../index/visitor.html'
+        return
       }
       else if(admin.type == 1){
         location.href = '../index/agent.html'
