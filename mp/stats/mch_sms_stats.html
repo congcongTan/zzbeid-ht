@@ -67,7 +67,7 @@
                   <!-- <a href="#" class="btn btn-default btn-flat">设置</a> -->
                 </div>
                 <div class="pull-right">
-                  <a href="../account/index.html?logout=1" class="btn btn-default btn-flat">登出</a>
+                  <a class="btn btn-default btn-flat" href="javascript:;" @click="logout()">登出</a>
                 </div>
               </li>
             </ul>
@@ -611,68 +611,6 @@ var app = new Vue({
 
   },
   methods: {
-/*    getList: function(key, val){
-
-      _this = this
-
-      if(key == 'page'){
-
-        if(val == '+1'){
-          if( this.param.page < this.param.page_total ){
-            this.param.page++
-          }else{
-            return;
-          }
-        }
-
-        if(val == '-1'){
-          if( this.param.page > 1 ){
-            this.param.page--
-          }else{
-            return;
-          }
-        }
-
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + this.param.dir,
-        // data: this.param,
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.param = re.param
-          _this.list.data = re.data
-
-          //所有id
-          for( var i in re.data ){
-            var v = re.data[i]
-
-            _this.ids_all.push(v.id)
-          }
-
-          //分页
-          _this.list.prev = []
-          for(var i = _this.param.page - 4; i < _this.param.page; i++){
-            if(i <= 0)continue;
-            _this.list.prev.push(i)
-          }
-
-          _this.list.next = []
-          for(var i = _this.param.page + 1; i < _this.param.page + 5; i++){
-            if(i > re.param.page_total)break;
-            _this.list.next.push(i)
-          }
-
-        }
-      })
-
-    },*/
-
     checkAll: function(){
 
       if( $('#checkAll').prop('checked') ){
@@ -683,151 +621,11 @@ var app = new Vue({
 
     },
 
-/*    getView: function(id){
+    logout: function(){
 
-      _this.view = {}
-
-      if(id == -1){
-        this.view = {}
-        $('#view').modal('show')
-        return;
-      }
-
-      $.ajax({
-        type: 'GET',
-        url: manager_api + 'adm/view',
-        data: {
-          table: this.param.table,
-          id: id,
-        },
-        dataType: 'json',
-        beforeSend: function(request){
-          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.view = re
-
-          $('#view').modal('show')
-
-        }
-      })
-
-    },*/
-
-
-/*    save: function(){
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'adm/save?table=' + this.param.table,
-        data: this.view,
-        dataType: 'text',
-        beforeSend: function(request){
-          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re == '1'){
-            _this.getList()
-            $('#view').modal('hide')
-          }else{
-            alert(re)
-          }
-
-        },
-      })
-
-    },*/
-
-
-    onoff: function(field, value, id){
-
-      //单个
-      if(id != undefined){
-        var ids = [id]
-      }
-      //多个
-      else if(this.ids.length == 0){
-        console.log('一个都没有选中')
-        return void(0)
-      }else{
-
-        var ids = this.ids
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'adm/onoff',
-        data: {
-          table: this.param.table,
-          field: field,
-          value: value,
-          id: ids,
-        },
-        dataType: 'text',
-        beforeSend: function(request){
-          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re == 1){
-            _this.getList()
-
-            _this.ids = []
-          }else{
-            alert(re)
-          }
-
-        }
-      })
-
-    },
-
-
-    del: function(id){
-
-      if(!confirm('确认删除？')){
-        return void(0)
-      }
-
-      //单个
-      if(id != undefined){
-        var ids = [id]
-      }
-      //多个
-      else if(this.ids.length == 0){
-        console.log('一个都没有选中')
-        return void(0)
-      }else{
-
-        var ids = this.ids
-      }
-
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'adm/del',
-        data: {
-          table: this.param.table,
-          id: ids,
-        },
-        dataType: 'text',
-        beforeSend: function(request){
-          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re == 1){
-            _this.getList()
-
-            _this.ids = []
-          }else{
-            alert(re)
-          }
-
-        }
-      })
+      //登出
+      LS.removeItem('admin')
+      location.reload()
 
     },
 
@@ -995,13 +793,16 @@ var app = new Vue({
       //过期
       if(expire < 0){
         //console.log('登录超时跳转')
-        location.href = '../account/index.html?logout=1'
+        this.logout()
       }
 
     }else{
 
       //未登录
-      if(location.hostname == 'iot.longse.cn'){
+      if(location.hostname == 'www.zzb110.cn'){
+        location.href = '../account/index2.html'
+      }
+      else if(location.hostname == 'iot.longse.cn'){
         location.href = '../account/index-longse.html'
       }else{
         location.href = '../account/index.html'
