@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.9, user-scalable=no">
+<meta name="keyword" content="">
+<meta name="description" content="">
+<meta name="author" content="lightuni.com">
+
+<link rel="stylesheet" href="../../css/all.css">
+
+<!-- <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="../../plugins/adminLTE/css/AdminLTE.min.css">
+<link rel="stylesheet" href="../../plugins/adminLTE/css/skins/_all-skins.min.css">
+<link rel="stylesheet" href="../../plugins/Font-Awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/cong/cong.css">
+
+<style>
+body{
+  background: url(../../img/longse/bg.jpg) #012BE2 center no-repeat;
+  background-size: cover;
+}
+.box{
+  position: absolute;
+  top: 20%;
+  right: 100px;
+  width: 350px;
+  height: 420px;
+  padding: 40px;
+}
+.btn-primary{
+  background: #4875DC;
+}
+.form-control{
+  height: 50px;
+  line-height: 50px;
+}
+</style>
+
+<script src="../../js/all.js"></script>
+
+  <title>登录</title>
+
+</head>
+<body class="hold-transition">
+
+  <!-- <div class="pa top30 left30"><img src="../../img/logo.png" height="40"></div> -->
+
+<div id="app">
+
+  <div class="box">
+
+    <div class="mt10 tc"><img src="../../img/longse/logo.png" width="100%"></div>
+
+    <form class="form-horizontal">
+
+      <div class="mt40">
+        <div class="pa mt10 pt3 ml10">
+          <img src="../../img/icon-user.gif">
+        </div>
+        <div>
+          <input type="text" class="form-control pl50" name="account" v-model="account.account">
+        </div>
+      </div>
+
+      <div class="mt20">
+        <div class="pa mt10 pt3 ml10">
+          <img src="../../img/icon-password.gif">
+        </div>
+        <div>
+          <input type="password" class="form-control pl50" name="password" v-model="account.password">
+        </div>
+      </div>
+
+      <label class="mt30">
+        <input type="checkbox"> 记住密码
+      </label>
+
+      <a class="btn btn-primary btn-block mt20" @click="submit">登录</a>
+
+
+    </form>
+
+  </div>
+
+</div>
+
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+	mca: {},
+		admin: {},
+		sidemenu: {},
+
+	list: {},
+	// page: {},
+	ids: [],
+	ids_all: [],
+
+	view: {},
+
+	性别:{
+		1:'男',
+		2:'女',
+	},
+
+	软件版本:{
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家'
+	},
+
+	接口类型: {
+		1:'公安部',
+		2:'海鑫',
+		3:'国政通',
+		4:'上海爱金'
+	},
+
+	接口版本: {
+		1:'标准版',
+		2:'简化版'
+	},
+
+	行业:{
+		1:'旅馆',
+		2:'网吧',
+		3:'汽车站',
+		4:'机场',
+		5:'旅行社',
+		6:'访客',
+		7:'充电',
+		8:'出租屋',
+		9:'足浴'
+	},
+
+	行业软件: {
+		0:'无软件',
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家',
+		6:'恒邦',
+		7:'鼎泰云计费',
+		10000:'中证宝酒店',
+		10001:'中冠PMS',
+		10002:'千里马酒店',
+		10003:'锦江酒店',
+		10004:'广电运通',
+		20000:'佛山曇京',
+		60001:'华舜'
+	},
+
+	旅馆行业: {
+		0:'无软件',
+		10000:'中证宝酒店',
+		10001:'中冠PMS',
+		10002:'千里马酒店',
+		10003:'锦江酒店',
+		10004:'广电运通',
+		20000:'佛山曇京'
+	},
+
+	网吧行业: {
+		0:'无软件',
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家',
+		6:'恒邦',
+		7:'鼎泰云计费',
+	},
+
+	汽车站行业:{
+		0:'无软件'
+	},
+
+	机场行业:{
+		0:'无软件'
+	},
+
+	旅行社行业:{
+		0:'无软件'
+	},
+
+	访客行业:{
+		0:'无软件',
+		20000:'佛山曇京',
+		60001:'园区访客',
+		60002:'酒店访客'
+	},
+
+	充电行业:{
+		0:'无软件'
+	},
+
+	出租屋行业: {
+		0:'无软件',
+		10000:'中证宝酒店'
+	},
+
+	足浴行业: {
+		0:'无软件',
+		10000:'中证宝酒店'
+	},
+
+	状态: {
+		1:'可用',
+		2:'不可用'
+	},
+
+	是否加密: {
+		0:'否',
+		1:'是'
+	},
+
+	同步模式: {
+		1:'在线（云服务器）',
+		2:'xml文件（铃铛）',
+		3:'本地数据库（LockSend）',
+		4:'上海旅业',
+		5:'湖南旅业',
+		6:'身份证硬件',
+	},
+
+	分成基数: {
+		1: '月消费总积分（对冲退款）',
+		// 2: '日均消费总积分（对冲退款）'
+	},
+
+	分成模式: {
+		1: '阶梯式累计分成'
+	},
+
+	支付方式: {
+		0:'全部',
+		1:'电子现金',
+		2:'声波',
+		3:'NFC',
+		4:'扫码',
+		5:'手输',
+	},
+
+	交易模式: {
+		// 0:		'全部',
+		10001:	'担保',
+		10002:	'消费',
+	},
+
+	支付状态: {
+		0:'未生成',
+		1:'已提交担保',
+		2:'担保完成',
+		3:'担保撤销',
+		4:'担保冲正',
+		101:'支付',
+		102:'支付冲正',
+		103:'支付撤销',
+		104:'支付退款'
+	},
+
+	证件类型: {
+		1: '中证宝',
+		2: '二代证',
+	},
+
+	入住状态:[
+		'已预约',
+		'已入住',
+		'已离店'
+	],
+
+    account: {
+      // account: "",
+      // password: "",
+      // type: 2,
+    },
+
+  },
+  methods: {
+/*    getList: function(key, val){
+
+      _this = this
+
+      if(key == 'page'){
+
+        if(val == '+1'){
+          if( this.param.page < this.param.page_total ){
+            this.param.page++
+          }else{
+            return;
+          }
+        }
+
+        if(val == '-1'){
+          if( this.param.page > 1 ){
+            this.param.page--
+          }else{
+            return;
+          }
+        }
+
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + this.param.dir,
+        // data: this.param,
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.param = re.param
+          _this.list.data = re.data
+
+          //所有id
+          for( var i in re.data ){
+            var v = re.data[i]
+
+            _this.ids_all.push(v.id)
+          }
+
+          //分页
+          _this.list.prev = []
+          for(var i = _this.param.page - 4; i < _this.param.page; i++){
+            if(i <= 0)continue;
+            _this.list.prev.push(i)
+          }
+
+          _this.list.next = []
+          for(var i = _this.param.page + 1; i < _this.param.page + 5; i++){
+            if(i > re.param.page_total)break;
+            _this.list.next.push(i)
+          }
+
+        }
+      })
+
+    },*/
+
+    checkAll: function(){
+
+      if( $('#checkAll').prop('checked') ){
+        this.list.checkbox.checked = this.list.checkbox.all
+      }else{
+        this.list.checkbox.checked = []
+      }
+
+    },
+
+/*    getView: function(id){
+
+      _this.view = {}
+
+      if(id == -1){
+        this.view = {}
+        $('#view').modal('show')
+        return;
+      }
+
+      $.ajax({
+        type: 'GET',
+        url: manager_api + 'adm/view',
+        data: {
+          table: this.param.table,
+          id: id,
+        },
+        dataType: 'json',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view = re
+
+          $('#view').modal('show')
+
+        }
+      })
+
+    },*/
+
+
+/*    save: function(){
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'adm/save?table=' + this.param.table,
+        data: this.view,
+        dataType: 'text',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re == '1'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re)
+          }
+
+        },
+      })
+
+    },*/
+
+
+    onoff: function(field, value, id){
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.ids.length == 0){
+        console.log('一个都没有选中')
+        return void(0)
+      }else{
+
+        var ids = this.ids
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'adm/onoff',
+        data: {
+          table: this.param.table,
+          field: field,
+          value: value,
+          id: ids,
+        },
+        dataType: 'text',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re == 1){
+            _this.getList()
+
+            _this.ids = []
+          }else{
+            alert(re)
+          }
+
+        }
+      })
+
+    },
+
+
+    del: function(id){
+
+      if(!confirm('确认删除？')){
+        return void(0)
+      }
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.ids.length == 0){
+        console.log('一个都没有选中')
+        return void(0)
+      }else{
+
+        var ids = this.ids
+      }
+
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'adm/del',
+        data: {
+          table: this.param.table,
+          id: ids,
+        },
+        dataType: 'text',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re == 1){
+            _this.getList()
+
+            _this.ids = []
+          }else{
+            alert(re)
+          }
+
+        }
+      })
+
+    },
+
+    submit: function(){
+
+      var _this = this
+
+      if(this.account.account == undefined || this.account.account == ''){
+        alert('请输入用户名')
+        return
+      }
+      if(this.account.password == undefined || this.account.password == ''){
+        alert('请输入密码')
+        return
+      }
+
+
+      var data = {
+        reqHead: {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "4600D5BC2AACE2929E9CEBB44121B8CF"
+        },
+        reqBody: this.account
+      }
+
+      // console.log(JSON.stringify(data))
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/tokenGenerate/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        success: function(re){
+
+          if(re.rspHead.retCode != 1){
+            alert(re.rspHead.retMsg)
+          }else{
+
+            //装埋入去
+            re.rspBody.adminResponseInfoDTO.token = re.rspBody.token
+
+            //变短变量名
+            var data1 = re.rspBody.adminResponseInfoDTO
+
+            // _this.save(re.rspBody.adminResponseInfoDTO)
+
+            //有老豆信息
+            if(data1.roleFlag == 2){
+
+              var data = {
+                reqHead: {
+                  clientType: 6,
+                  format: "json",
+                  version: "1.0",
+                  sign: "4600D5BC2AACE2929E9CEBB44121B8CF"
+                },
+                reqBody: {
+                  agentId: data1.primaryAccountId
+                }
+              }
+
+              $.ajax({
+                type: 'POST',
+                url: mp_api + 'mp/getParentAgent/interface',
+                data: JSON.stringify(data),
+                dataType: 'json',
+                beforeSend: function(request){
+                  request.setRequestHeader('Authorization', 'Bearer ' + re.rspBody.token )
+                },
+                success: function(re2){
+
+                  if(re2.rspHead.retCode != 1){
+                    alert(re2.rspHead.retMsg)
+                  }else{
+
+                    //变短变量名
+                    var data2 = re2.rspBody
+
+                    _this.save(data1, data2)
+                  }
+
+                }
+              })
+            }else{
+
+              _this.save(data1)
+
+            }
+
+          }
+
+        }
+      })
+
+    },
+    save: function(data, data2){
+
+      // console.log('data1', data)
+      // console.log('data2', data2)
+      // return
+
+      // var admin = {}
+      var admin = data
+      admin.id = admin.primaryAccountId
+      admin.user = admin.account
+      admin.realname = admin.realname
+      admin.type = admin.roleFlag
+
+      if(data2 != undefined){
+        admin.parentAgentId = data2.parentAgentId
+        admin.parentAgentTitle = data2.parentAgentTitle
+      }
+
+      admin.expire = new Date().getTime() + (180 * 60 * 1000)
+      LS.admin = JSON.stringify(admin)
+      // console.log(admin)
+
+      // return
+
+      if(admin.softwareVersion == 60001 || admin.softwareVersion == 60002){
+        location.href = '../staff/list.html'
+      }
+      else if(admin.type == 1){
+        location.href = '../index/agent.html'
+      }
+      else if(admin.type == 2){
+        location.href = '../index/agent.html'
+      }
+      else if(admin.type == 3){
+        location.href = '../index/index.html'
+      }
+      else if(admin.type == 4){
+        location.href = '../stats/sale_group_stats.html'
+      }
+
+    }
+
+  },
+  mounted() {
+
+    //登出
+    if( getUrl('logout') == 1 ){
+      LS.removeItem('admin')
+    }
+
+  }
+})
+</script>
+</body>
+</html>
