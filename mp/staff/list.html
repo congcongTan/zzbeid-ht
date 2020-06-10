@@ -176,6 +176,12 @@
 
                 <a class="btn btn-sm btn-primary" @click="快速录入员工()">快速录入员工</a>
 
+                <a class="btn btn-sm" @click="批量导入员工()">批量导入员工</a>
+
+                <a class="btn btn-sm" @click="批量导入头像()">批量导入头像</a>
+
+                <a class="btn btn-sm" @click="批量下发人员()">批量下发人员</a>
+
               </div>
               <div class="tab-pane" id="搜索">
 
@@ -437,6 +443,98 @@
             </center>
           </div>
 
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="批量导入员工">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              批量导入员工
+            </h4>
+          </div>
+          <div class="modal-body">
+
+<div class="bge6 p20">
+• 请使用模板上传，点击下载：<a href="#" class="u"><i class="fa fa-download"></i> 人员信息模板.xlsx</a><br>
+• 每次最多导入 1000 个员工，超出1000请分批上传<br>
+• 模板所有信息为必填，请认真核对<br>
+• 导入信息后，请继续导入头像
+</div>
+
+<br>
+
+<form class="form-horizontal">
+  <div class="form-group">
+    <label class="col-sm-3 control-label">上传人员信息 <span class="text-danger">*</span></label>
+    <div class="col-sm-5">
+      <input type="file" class="form-control input-sm" id="file1">
+    </div>
+  </div>
+</form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="批量导入员工_提交()">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="批量导入头像">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              批量导入头像
+            </h4>
+          </div>
+          <div class="modal-body">
+
+<div class="bge6 p20">
+• 请上传头像压缩包（RAR或者ZIP格式）<br>
+• 每次最多导入 100 张头像，超出100请分批上传<br>
+• 图片以身份证号码作为命名，格式为jpg<br>
+• 单个头像图片不大于100K<br>
+</div>
+
+<br>
+
+<form class="form-horizontal">
+  <div class="form-group">
+    <label class="col-sm-3 control-label">上传头像压缩包 <span class="text-danger">*</span></label>
+    <div class="col-sm-5">
+      <input type="file" class="form-control input-sm" id="file2">
+    </div>
+  </div>
+</form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="批量导入头像_提交()">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="提示">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title"></h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" data-dismiss="modal">关闭</a>
+          </div>
         </div>
       </div>
     </div>
@@ -1093,10 +1191,113 @@ var app = new Vue({
     },
 
     快速录入员工: function(){
+
       $('#快速录入员工').modal('show')
     },
+    批量导入员工: function(){
 
+      $('#批量导入员工').modal('show')
+    },
+    批量导入员工_提交: function(){
 
+      var formData = new FormData();
+      formData.append('file', $('#file1').get(0).files[0] )
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/personImport?type=STAFF',
+        data: formData,
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+
+            try {
+              var msg = JSON.parse(re.rspHead.retMsg)
+              if(msg && typeof msg == 'object'){
+                msg = msg.join('<br>')
+              }
+            }
+            catch(e){
+              msg = re.rspHead.retMsg
+
+            }
+
+            $('#提示 .modal-body').html(msg)
+          }
+          else{
+
+            $('#提示 .modal-body').html('信息导入成功，本次导入 1000 人')
+            $('#批量导入员工').modal('hide')
+            _this.getList()
+          }
+
+          $('#提示 .modal-title').html('导入结果')
+          $('#提示').modal('show')
+
+        },
+      })
+
+    },
+    批量导入头像: function(){
+
+      $('#批量导入头像').modal('show')
+    },
+    批量导入头像_提交: function(){
+
+      var formData = new FormData();
+      formData.append('file', $('#file2').get(0).files[0] )
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/personImportImg?type=STAFF',
+        data: formData,
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+
+            try {
+              var msg = JSON.parse(re.rspHead.retMsg)
+              if(msg && typeof msg == 'object'){
+                msg = msg.join('<br>')
+              }
+            }
+            catch(e){
+              msg = re.rspHead.retMsg
+
+            }
+
+            $('#提示 .modal-body').html(msg)
+          }
+          else{
+
+            $('#提示 .modal-body').html('头像导入成功，本次导入 1000 人')
+            $('#批量导入员工').modal('hide')
+            _this.getList()
+          }
+
+          $('#提示 .modal-title').html('导入结果')
+          $('#提示').modal('show')
+
+        },
+      })
+
+    },
+    批量下发人员: function(){
+
+      $('#批量下发人员').modal('show')
+    },
     选图: function(){
 
       var file = $('#upload_input')[0].files[0]
