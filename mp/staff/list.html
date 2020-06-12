@@ -553,7 +553,7 @@
         onclick="app.通行设备全选(this.checked)"> 全选 
       </label>
     </div>
-    <div class="checkbox fl w150" v-for="v in 通行设备">
+    <div class="checkbox" v-for="v in 通行设备">
       <label>
         <input type="checkbox" :value="`${v.sn}`" v-model="view.deviceSn" @change="通行设备排序()"> {{v.title}}
       </label>
@@ -1278,12 +1278,8 @@ var app = new Vue({
           $('#提示').modal('show')
 
 
-          if(re.rspHead.retCode == '1'){
+          _this.getList()
 
-            _this.getList()
-            $('#批量导入员工').modal('hide')
-            
-          }
 
         },
       })
@@ -1310,36 +1306,34 @@ var app = new Vue({
         },
         success: function(re){
 
-          if(re.rspHead.retCode != '1'){
-
-            try {
-              var msg = JSON.parse(re.rspHead.retMsg)
-              if(msg && typeof msg == 'object'){
-                msg = msg.join('<br>')
-              }
+          try {
+            var msg = JSON.parse(re.rspHead.retMsg)
+            if(msg && typeof msg == 'object'){
+              msg = msg.join('<br>')
             }
-            catch(e){
-              msg = re.rspHead.retMsg
-
-            }
-
-            $('#提示 .modal-body').html(msg)
           }
-          else{
+          catch(e){
+            msg = re.rspHead.retMsg
 
-            $('#提示 .modal-body').html('头像导入成功，本次导入 1000 人')
-            $('#批量导入员工').modal('hide')
-            _this.getList()
           }
 
           $('#提示 .modal-title').html('导入结果')
+          $('#提示 .modal-body').html(msg)
           $('#提示').modal('show')
+
+
+          _this.getList()
+
 
         },
       })
 
     },
     批量下发人员: function(){
+
+      if ( this.list.checkbox.checked.length == 0 ){
+        return
+      }
 
       this.view.deviceSn = []
 
@@ -1399,16 +1393,11 @@ var app = new Vue({
 
           }
 
-          $('#提示 .modal-body').html(msg)
-
-          if(re.rspHead.retCode == '1'){
-
-            _this.getList()
-            $('#批量下发人员').modal('hide')
-          }
-
           $('#提示 .modal-title').html('下发结果')
+          $('#提示 .modal-body').html(msg)
           $('#提示').modal('show')
+
+          _this.getList()
 
         },
       })
