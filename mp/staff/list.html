@@ -233,6 +233,7 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr class="text-nowrap">
+                    <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
                     <th>头像</th>
                     <th>员工编号</th>
                     <th>员工姓名</th>
@@ -246,6 +247,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
+                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
                     <td><img :src="`http://image.zzb110.cn${v.headimgUrl}`" height="60"></td>
                     <td>{{v.code}}</td>
                     <td>{{v.realName}}</td>
@@ -518,6 +520,50 @@
           </div>
           <div class="modal-footer">
             <a class="btn btn-primary" @click="批量导入头像_提交()">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="批量下发人员">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              批量下发人员
+            </h4>
+          </div>
+          <div class="modal-body">
+
+<div class="bge6 p20">
+• 已选中 {{list.checkbox.checked.length}} 人，请认真核对人员信息是否完整<br>
+• 选择需要下发的设备，点击下发按钮可批量下发<br>
+</div>
+
+<br>
+
+<div class="form-group">
+  <label class="col-sm-3 control-label">通行设备 <span class="text-danger">*</span></label>
+  <div class="col-sm-9">
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" :checked="JSON.stringify(view.deviceSn) === JSON.stringify(通行设备全选时)"
+        onclick="app.通行设备全选(this.checked)"> 全选 
+      </label>
+    </div>
+    <div class="checkbox fl w150" v-for="v in 通行设备">
+      <label>
+        <input type="checkbox" :value="`${v.sn}`" v-model="view.deviceSn" @change="通行设备排序()"> {{v.title}}
+      </label>
+    </div>
+  </div>
+</div>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="批量下发人员_提交()">确定</a>
           </div>
         </div>
       </div>
@@ -1179,11 +1225,12 @@ var app = new Vue({
         },
         success: function(re){
 
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-          }else{
+          if(re.rspHead.retCode != '1'){
             alert(re.rspHead.retMsg)
+            return
           }
+
+          _this.getList()
 
         },
       })
@@ -1296,7 +1343,78 @@ var app = new Vue({
     },
     批量下发人员: function(){
 
+      this.view.deviceSn = []
+
       $('#批量下发人员').modal('show')
+    },
+    批量下发人员_提交: function(){
+
+      var personList = []
+
+      for(var i in this.list.checkbox.checked){
+        var id = this.list.checkbox.checked[i]
+
+        for(var i2 in this.list.data){
+          var v = this.list.data[i2]
+
+          if( v.id == id ){
+            personList.push( v.code )
+            break
+          }
+
+        }
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          type: 'STAFF',
+          personList: personList,
+          snList: this.view.deviceSn,
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/sendPersonInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          try {
+            var msg = JSON.parse(re.rspHead.retMsg)
+            if(msg && typeof msg == 'object'){
+              msg = msg.join('<br>')
+            }
+          }
+          catch(e){
+            msg = re.rspHead.retMsg
+
+          }
+
+          $('#提示 .modal-body').html(msg)
+
+          if(re.rspHead.retCode == '1'){
+
+            _this.getList()
+            $('#批量下发人员').modal('hide')
+          }
+
+          $('#提示 .modal-title').html('下发结果')
+          $('#提示').modal('show')
+
+        },
+      })
+
     },
     选图: function(){
 
