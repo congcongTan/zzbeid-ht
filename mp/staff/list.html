@@ -176,11 +176,11 @@
 
                 <a class="btn btn-sm btn-primary" @click="快速录入员工()">快速录入员工</a>
 
-                <a class="btn btn-sm" @click="批量导入员工()">批量导入员工</a>
+                <a class="btn btn-sm btn-default" @click="批量导入员工()">批量导入员工</a>
 
-                <a class="btn btn-sm" @click="批量导入头像()">批量导入头像</a>
+                <a class="btn btn-sm btn-default" @click="批量导入头像()">批量导入头像</a>
 
-                <a class="btn btn-sm" @click="批量下发人员()">批量下发人员</a>
+                <a class="btn btn-sm btn-default" @click="批量下发人员()">批量下发人员</a>
 
               </div>
               <div class="tab-pane" id="搜索">
@@ -1262,30 +1262,28 @@ var app = new Vue({
         },
         success: function(re){
 
-          if(re.rspHead.retCode != '1'){
-
-            try {
-              var msg = JSON.parse(re.rspHead.retMsg)
-              if(msg && typeof msg == 'object'){
-                msg = msg.join('<br>')
-              }
+          try {
+            var msg = JSON.parse(re.rspHead.retMsg)
+            if(msg && typeof msg == 'object'){
+              msg = msg.join('<br>')
             }
-            catch(e){
-              msg = re.rspHead.retMsg
-
-            }
-
-            $('#提示 .modal-body').html(msg)
           }
-          else{
+          catch(e){
+            msg = re.rspHead.retMsg
 
-            $('#提示 .modal-body').html('信息导入成功，本次导入 1000 人')
-            $('#批量导入员工').modal('hide')
-            _this.getList()
           }
 
           $('#提示 .modal-title').html('导入结果')
+          $('#提示 .modal-body').html(msg)
           $('#提示').modal('show')
+
+
+          if(re.rspHead.retCode == '1'){
+
+            _this.getList()
+            $('#批量导入员工').modal('hide')
+            
+          }
 
         },
       })
