@@ -462,7 +462,7 @@
           <div class="modal-body">
 
 <div class="bge6 p20">
-• 请使用模板上传，点击下载：<a href="#" class="u"><i class="fa fa-download"></i> 人员信息模板.xlsx</a><br>
+• 请使用模板上传，点击下载：<a href="http://update.zzb110.cn/templates/xls/人员信息模板.xls" class="u"><i class="fa fa-download"></i> 人员信息模板.xlsx</a><br>
 • 每次最多导入 1000 个员工，超出1000请分批上传<br>
 • 模板所有信息为必填，请认真核对<br>
 • 导入信息后，请继续导入头像
@@ -1332,6 +1332,11 @@ var app = new Vue({
     批量下发人员: function(){
 
       if ( this.list.checkbox.checked.length == 0 ){
+
+        $('#提示 .modal-title').html('提示')
+        $('#提示 .modal-body').html('请选择至少一个员工')
+        $('#提示').modal('show')
+
         return
       }
 
