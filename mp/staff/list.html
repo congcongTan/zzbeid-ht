@@ -174,7 +174,7 @@
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增员工</a>
 
-                <a class="btn btn-sm btn-primary" @click="快速录入员工()">快速录入员工</a>
+                <a class="btn btn-sm btn-primary" @click="快速录入员工()" id="快速录入员工">快速录入员工</a>
 
                 <a class="btn btn-sm btn-default" @click="批量导入员工()">批量导入员工</a>
 
@@ -462,7 +462,7 @@
           <div class="modal-body">
 
 <div class="bge6 p20">
-• 请使用模板上传，点击下载：<a href="http://update.zzb110.cn/templates/xls/人员信息模板.xls" class="u"><i class="fa fa-download"></i> 人员信息模板.xlsx</a><br>
+• 请使用模板上传，点击下载：<a href="http://update.zzb110.cn/templates/xls/人员信息模板.xls" class="u text-danger"><i class="fa fa-download"></i> 人员信息模板.xls</a><br>
 • 每次最多导入 1000 个员工，超出1000请分批上传<br>
 • 模板所有信息为必填，请认真核对<br>
 • 导入信息后，请继续导入头像
@@ -474,7 +474,7 @@
   <div class="form-group">
     <label class="col-sm-3 control-label">上传人员信息 <span class="text-danger">*</span></label>
     <div class="col-sm-5">
-      <input type="file" class="form-control input-sm" id="file1">
+      <input type="file" class="form-control input-sm" id="file1" @change="批量导入员工_文件检测()">
     </div>
   </div>
 </form>
@@ -512,7 +512,7 @@
   <div class="form-group">
     <label class="col-sm-3 control-label">上传头像压缩包 <span class="text-danger">*</span></label>
     <div class="col-sm-5">
-      <input type="file" class="form-control input-sm" id="file2">
+      <input type="file" class="form-control input-sm" id="file2" @change="批量导入头像_文件检测()">
     </div>
   </div>
 </form>
@@ -1249,6 +1249,30 @@ var app = new Vue({
 
       $('#批量导入员工').modal('show')
     },
+    批量导入员工_文件检测: function(){
+
+      var filePath = $('#file1').val()
+      if(filePath == ''){return}
+
+      // 文件类型
+      var tmp = filePath.split('.')
+      var fileType = tmp[tmp.length - 1].toLowerCase()
+
+      if(fileType != 'xls'){
+        $('#file1').val('')
+        alert('仅支持不大于100M的xls文件，请核对后重新上传')
+        return
+      }
+
+      // 文件大小
+      var fileSize = document.getElementById('file1').files[0].size / 1024 / 1024
+      if(fileSize > 100){
+        $('#file1').val('')
+        alert('仅支持不大于100M的xls文件，请核对后重新上传')
+        return
+      }
+
+    },
     批量导入员工_提交: function(){
 
       var formData = new FormData();
@@ -1292,6 +1316,30 @@ var app = new Vue({
     批量导入头像: function(){
 
       $('#批量导入头像').modal('show')
+    },
+    批量导入头像_文件检测: function(){
+
+      var filePath = $('#file2').val()
+      if(filePath == ''){return}
+
+      // 文件类型
+      var tmp = filePath.split('.')
+      var fileType = tmp[tmp.length - 1].toLowerCase()
+
+      if(fileType != 'zip'){
+        $('#file2').val('')
+        alert("仅支持不大于100M的zip文件，请核对后重新上传")
+        return
+      }
+
+      // 文件大小
+      var fileSize = document.getElementById('file2').files[0].size / 1024 / 1024
+      if(fileSize > 100){
+        $('#file2').val('')
+        alert('仅支持不大于100M的xls文件，请核对后重新上传')
+        return
+      }
+
     },
     批量导入头像_提交: function(){
 
@@ -1715,6 +1763,10 @@ var app = new Vue({
     this.通行设备get()
 
     this.getList()
+
+    if(location.hostname.indexOf('iot.longse.cn') !== -1){
+      $('#快速录入员工').remove()
+    }
 
   }
 })
