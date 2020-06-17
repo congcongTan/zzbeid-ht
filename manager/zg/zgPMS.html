@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>中冠PMS管理</title>
+    <title>PMS配置管理</title>
 
 <style>
 .datepicker{
@@ -155,12 +155,12 @@
 
     <section class="content-header">
       <h1>
-        中冠PMS管理
+        PMS配置管理
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>中冠酒店</li>
-        <li class="active">中冠PMS管理</li>
+        <li>酒店行业配置</li>
+        <li class="active">PMS配置管理</li>
       </ol>
     </section>
 
@@ -171,7 +171,7 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <li class=""><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
+              <!-- <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
               <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
@@ -202,6 +202,9 @@
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
                         查找
                         <i class="fa fa-spinner fa-spin" v-if="list.loading == 1"></i>
+                      </button>
+                      <button class="btn btn-link" disabled>
+                        本功能无须新增，请查询到商户进行处理
                       </button>
                     </div>
                   </div>
@@ -1805,7 +1808,7 @@ var app = new Vue({
     })
 
 
-    this.getList()
+    // this.getList()
 
   }
 })

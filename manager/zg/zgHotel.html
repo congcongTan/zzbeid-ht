@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>中冠酒店管理</title>
+    <title>硬件设备配置</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -150,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        中冠酒店管理
+        硬件设备配置
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>中冠酒店</li>
-        <li class="active">中冠酒店管理</li>
+        <li>酒店行业配置</li>
+        <li class="active">硬件设备配置</li>
       </ol>
     </section>
 
@@ -166,18 +166,17 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
-              <li class=""><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+              <!-- <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
+              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane active" id="操作">
+              <div class="tab-pane" id="操作">
 
                 <!-- <a class="btn btn-sm btn-primary" v-if="权限.indexOf('add') != -1" @click="getView(-1)">新增</a> -->
 
               </div>
-              <div class="tab-pane" id="搜索">
-
+              <div class="tab-pane active" id="搜索">
 
                 <div class="form-horizontal">
                   <div class="form-group">
@@ -195,6 +194,9 @@
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                      <button class="btn btn-link" disabled>
+                        本功能无须新增，请查询到商户进行处理
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1161,7 +1163,7 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    this.getList()
+    // this.getList()
 
   }
 })
