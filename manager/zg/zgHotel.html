@@ -482,7 +482,7 @@
                 <tbody>
                   <tr v-for="(v,i) in view.list">
                     <td>{{v.equipmentIdentifier}}</td>
-                    <td>{{v.bindingStatusTitle}}</td>
+                    <td :class="`${v.bindingStatus == 0 ? 'text-danger':''}`">{{v.bindingStatusTitle}}</td>
                     <td>{{v.updateTime}}</td>
                     <td>
                       <a href="javascript:;" @click="已绑设备save(v.id, i)">{{v.bindingStatus == 1 ? '解除绑定':'重新绑定'}}</a>
@@ -1184,6 +1184,8 @@ var app = new Vue({
             alert(re.rspHead.retMsg)
             return
           }
+
+          alert('操作成功')
 
           if( _this.view.list[i].bindingStatus == 0 ){
 
