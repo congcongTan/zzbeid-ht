@@ -192,6 +192,12 @@
                     </div>
                   </div>
                   <div class="form-group">
+                    <label class="col-sm-2 control-label">设备编号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.equipmentId">
+                    </div>
+                  </div>
+                  <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
                       <button class="btn btn-link" disabled>
@@ -227,7 +233,9 @@
                     <td>{{v.mainPort}}</td>
                     <td :class="{'text-danger': v.status == 0}">{{v.statusTitle}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="getView(v.mchId, v.title, v.identifier)">编辑</a><br>
+                      <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="getView(v.mchId, v.title, v.identifier)">数据库配置</a><br>
+
+                      <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="已绑设备get(v.mchId)">已绑设备</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -431,6 +439,64 @@
         </div>
       </div>
     </div>
+
+
+    <div class="modal fade" id="已绑设备">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              商户管理
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户名称</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.mchTitle" readonly>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户编号</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.mchIdentifier" readonly>
+                </div>
+              </div>
+
+              <hr>
+
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <td>设备id</td>
+                    <td>状态</td>
+                    <td>更新时间</td>
+                    <td>操作</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(v,i) in view.list">
+                    <td>{{v.equipmentIdentifier}}</td>
+                    <td>{{v.bindingStatusTitle}}</td>
+                    <td>{{v.updateTime}}</td>
+                    <td>
+                      <a href="javascript:;" @click="已绑设备save(v.id, i)">{{v.bindingStatus == 1 ? '解除绑定':'重新绑定'}}</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
   </div>
 
@@ -1048,6 +1114,90 @@ var app = new Vue({
           }
 
         },
+      })
+
+    },
+
+    已绑设备get: function(id){
+
+      this.view = {}
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchId: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getMchDeviceInfoList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view = re.rspBody
+
+
+          $('#已绑设备').modal('show')
+
+        }
+      })
+
+    },
+
+    已绑设备save: function(id, i){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/editMchDeviceBindingStatus/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != 1){
+            alert(re.rspHead.retMsg)
+            return
+          }
+
+          if( _this.view.list[i].bindingStatus == 0 ){
+
+            _this.view.list[i].bindingStatus = 1
+            _this.view.list[i].bindingStatusTitle = '已绑定'
+
+          }else{
+
+            _this.view.list[i].bindingStatus = 0
+            _this.view.list[i].bindingStatusTitle = '未绑定'
+
+          }
+
+        }
       })
 
     },
