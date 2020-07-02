@@ -478,26 +478,26 @@
               <table class="table table-bordered">
                 <thead>
                   <tr>
-                    <td>设备id</td>
-                    <td>厂商编号</td>
-                    <td>设备类型</td>
-                    <td>身份证设备</td>
-                    <td>有效期</td>
-                    <td>状态</td>
-                    <td>操作</td>
+                    <th>设备id</th>
+                    <th>厂商编号</th>
+                    <th>设备类型</th>
+                    <th>身份证设备</th>
+                    <th>有效期</th>
+                    <th>状态</th>
+                    <th>操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v,i) in view.list">
                     <td>{{v.equipmentIdentifier}}</td>
-                    <td><input class="form-control w150" type="input" v-model="v.vedorCode"></td>
+                    <td><input class="form-control w120" type="input" v-model="v.vedorCode"></td>
                     <td>
                       <select class="form-control" v-model="v.equipmentType">
                         <option :value="`${i}`" v-for="(v, i) in 设备类型">{{v}}</option>
                       </select>
                     </td>
-                    <td>身份证设备</td>
-                    <td><input class="form-control w150 datepicker2" :id="`日期${i}`" type="input" v-model="v.termOfValidity"></td>
+                    <td>{{身份证设备[v.idCardDevType]}}</td>
+                    <td><input class="form-control w100 datepicker2" :id="`日期${i}`" type="input" v-model="v.termOfValidity"></td>
                     <td>
                       <select class="form-control" v-model="v.bindingStatus">
                         <option :value="`${i}`" v-for="(v,i) in ['未绑定','已绑定']">{{v}}</option>
@@ -851,8 +851,12 @@ var app = new Vue({
     mainJson: {},
     standbyJson: {},
 
+    身份证设备: {
+      1:'ZktecoIdcard',
+      2:'DKCloudIDUart',
+    },
+
     设备类型: {
-      0:'未知',
       3:'人证机',
       4:'人证机简化版',
       5:'人证机PDA',
