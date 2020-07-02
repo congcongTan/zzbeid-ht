@@ -20,6 +20,11 @@
 
     <title>硬件设备配置</title>
 
+<style>
+.datepicker{
+  z-index: 9999;
+}
+</style>
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
 
@@ -442,7 +447,7 @@
 
 
     <div class="modal fade" id="已绑设备">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -474,18 +479,32 @@
                 <thead>
                   <tr>
                     <td>设备id</td>
+                    <td>厂商编号</td>
+                    <td>设备类型</td>
+                    <td>身份证设备</td>
+                    <td>有效期</td>
                     <td>状态</td>
-                    <td>更新时间</td>
                     <td>操作</td>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v,i) in view.list">
                     <td>{{v.equipmentIdentifier}}</td>
-                    <td :class="`${v.bindingStatus == 0 ? 'text-danger':''}`">{{v.bindingStatusTitle}}</td>
-                    <td>{{v.updateTime}}</td>
+                    <td><input class="form-control w150" type="input" v-model="v.vedorCode"></td>
                     <td>
-                      <a href="javascript:;" @click="已绑设备save(v.id, i)">{{v.bindingStatus == 1 ? '解除绑定':'重新绑定'}}</a>
+                      <select class="form-control" v-model="v.equipmentType">
+                        <option :value="`${i}`" v-for="(v, i) in 设备类型">{{v}}</option>
+                      </select>
+                    </td>
+                    <td>身份证设备</td>
+                    <td><input class="form-control w150 datepicker2" :id="`日期${i}`" type="input" v-model="v.termOfValidity"></td>
+                    <td>
+                      <select class="form-control" v-model="v.bindingStatus">
+                        <option :value="`${i}`" v-for="(v,i) in ['未绑定','已绑定']">{{v}}</option>
+                      </select>
+                    </td>
+                    <td>
+                      <button class="btn btn-primary" type="button" @click="已绑设备save(v.id, i)">保存修改</button>
                     </td>
                   </tr>
                 </tbody>
@@ -644,6 +663,9 @@
 <script src="../../plugins/adminLTE/js/adminlte.min.js"></script>
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
+
+<link rel="stylesheet" href="../../plugins/datepicker/datepicker.css">
+<script src="../../plugins/datepicker/datepicker.js"></script>
 
 <script>
 var app = new Vue({
@@ -828,6 +850,13 @@ var app = new Vue({
 
     mainJson: {},
     standbyJson: {},
+
+    设备类型: {
+      0:'未知',
+      3:'人证机',
+      4:'人证机简化版',
+      5:'人证机PDA',
+    },
 
   },
   methods: {
@@ -1147,8 +1176,15 @@ var app = new Vue({
 
           _this.view = re.rspBody
 
-
           $('#已绑设备').modal('show')
+
+          setTimeout(function(){
+
+            $('.datepicker2').datepicker({
+              format: "yyyy-mm-dd",
+            })
+
+          }, 1000)
 
         }
       })
@@ -1166,13 +1202,18 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          id: id
+          mchIdentifier: this.view.mchIdentifier,
+          equipmentIdentifier: this.view.list[i].equipmentIdentifier,
+          vedorCode: this.view.list[i].vedorCode,
+          equipmentType: this.view.list[i].equipmentType,
+          bindingStatus: this.view.list[i].bindingStatus,
+          termOfValidity: $('#日期' + i).val(),
         }
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/editMchDeviceBindingStatus/interface',
+        url: manager_api + 'manager/editMchDeviceBindingStatusOrInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1186,18 +1227,6 @@ var app = new Vue({
           }
 
           alert('操作成功')
-
-          if( _this.view.list[i].bindingStatus == 0 ){
-
-            _this.view.list[i].bindingStatus = 1
-            _this.view.list[i].bindingStatusTitle = '已绑定'
-
-          }else{
-
-            _this.view.list[i].bindingStatus = 0
-            _this.view.list[i].bindingStatusTitle = '未绑定'
-
-          }
 
         }
       })
