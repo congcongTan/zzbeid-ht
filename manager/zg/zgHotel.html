@@ -489,14 +489,14 @@
                 </thead>
                 <tbody>
                   <tr v-for="(v,i) in view.list">
-                    <td>{{v.equipmentIdentifier}}</td>
+                    <td class="mt6">{{v.equipmentIdentifier}}</td>
                     <td><input class="form-control w120" type="input" v-model="v.vedorCode"></td>
                     <td>
                       <select class="form-control" v-model="v.equipmentType">
                         <option :value="`${i}`" v-for="(v, i) in 设备类型">{{v}}</option>
                       </select>
                     </td>
-                    <td>{{身份证设备[v.idCardDevType]}}</td>
+                    <td class="mt6">{{身份证设备[v.idCardDevType]}}</td>
                     <td><input class="form-control w100 datepicker2" :id="`日期${i}`" type="input" v-model="v.termOfValidity"></td>
                     <td>
                       <select class="form-control" v-model="v.bindingStatus">
