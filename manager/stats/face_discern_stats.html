@@ -963,6 +963,10 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
+    $('.datepicker2').datepicker({
+      format: "yyyy-mm-dd",
+    })
+
     var date1 = new Date(new Date().getTime() - 2592000000)
     var date2 = new Date(new Date().getTime())//- 2592000000
 
