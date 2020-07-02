@@ -218,7 +218,7 @@
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
-                      <button class="btn btn-default" onclick="app.导出(this)">导出 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
+<!--                       <button class="btn btn-default" onclick="app.导出(this)">导出 <i class="fa fa-spinner fa-spin" style="display: none"></i></button> -->
                     </div>
                   </div>
                 </div>
@@ -745,7 +745,13 @@ var app = new Vue({
 
       _this = this
 
-      delete this.list.post.isExport
+      //清空
+      _this.total.idCardSuccessNum = 0
+      _this.total.idCardFailNum = 0
+      _this.total.noLicenseSuccessNum = 0
+      _this.total.noLicenseFailNum = 0
+      _this.total.yssSuccessNum = 0
+      _this.total.yssFailNum = 0
 
       //这里用v-model会有大坑
       this.list.post.createTimeStart = $('#startTime').val()
@@ -778,17 +784,15 @@ var app = new Vue({
           for ( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-
             for ( var i2 in v.statisticsVOList ){
               var v2 = v.statisticsVOList[i2]
 
-
-              _this.total.idCardSuccessNum += v2.idCardSuccessNum
-              _this.total.idCardFailNum += v2.idCardFailNum
-              _this.total.noLicenseSuccessNum += v2.noLicenseSuccessNum
-              _this.total.noLicenseFailNum += v2.noLicenseFailNum
-              _this.total.yssSuccessNum += v2.yssSuccessNum
-              _this.total.yssFailNum += v2.yssFailNum
+              _this.total.idCardSuccessNum += Number(v2.idCardSuccessNum)
+              _this.total.idCardFailNum += Number(v2.idCardFailNum)
+              _this.total.noLicenseSuccessNum += Number(v2.noLicenseSuccessNum)
+              _this.total.noLicenseFailNum += Number(v2.noLicenseFailNum)
+              _this.total.yssSuccessNum += Number(v2.yssSuccessNum)
+              _this.total.yssFailNum += Number(v2.yssFailNum)
 
             }
           }

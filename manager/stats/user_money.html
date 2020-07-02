@@ -883,13 +883,13 @@ var app = new Vue({
             var v = _this.list.data[i]
 
             // console.log(v)
-            total.rechargeNum += v.rechargeNum
-            total.rechargeIntegral += v.rechargeIntegral
-            total.consumeNum += v.consumeNum
-            total.consumeIntegral += v.consumeIntegral
-            total.refundNum += v.refundNum
-            total.refundIntegral += v.refundIntegral
-            total.changeImageNum += v.changeImageNum
+            total.rechargeNum += Number(v.rechargeNum)
+            total.rechargeIntegral += Number(v.rechargeIntegral)
+            total.consumeNum += Number(v.consumeNum)
+            total.consumeIntegral += Number(v.consumeIntegral)
+            total.refundNum += Number(v.refundNum)
+            total.refundIntegral += Number(v.refundIntegral)
+            total.changeImageNum += Number(v.changeImageNum)
           }
 
           _this.list.data.push(total)
