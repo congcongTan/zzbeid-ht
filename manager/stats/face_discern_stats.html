@@ -967,12 +967,11 @@ var app = new Vue({
       format: "yyyy-mm-dd",
     })
 
-    var date1 = new Date(new Date().getTime() - 2592000000)
-    var date2 = new Date(new Date().getTime())//- 2592000000
+    var date = new Date()
+    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
 
-    $('#startTime').val(date1.getFullYear() + '-' + (date1.getMonth() + 1) + '-' + date1.getDay())
-
-    $('#endTime').val(date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDay())
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01')
+    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date)
 
 
     this.getList()
