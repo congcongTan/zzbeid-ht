@@ -251,7 +251,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><img :src="`http://image.zzb110.cn${v.headimgUrl}`" height="60"></td>
+                    <td><a class="fancybox" :href="`http://image.zzb110.cn${v.headimgUrl}`"><img :src="`http://image.zzb110.cn${v.headimgUrl}`" height="60"></a></td>
                     <td>{{v.visitorId}}</td>
                     <td>{{v.realName}}</td>
                     <td>{{v.mobile}}</td>
@@ -906,6 +906,10 @@ var app = new Vue({
             if(i > _this.list.info.pages)break;
             _this.list.page.next.push(i)
           }
+
+          setTimeout(function(){
+            $('.fancybox').fancybox()
+          }, 100)
 
         }
       })

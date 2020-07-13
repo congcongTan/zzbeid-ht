@@ -242,7 +242,7 @@
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><img :src="`http://image.zzb110.cn${v.headimgUrl}`" height="60"></td>
+                    <td><a class="fancybox" :href="`http://image.zzb110.cn${v.headimgUrl}`"><img :src="`http://image.zzb110.cn${v.headimgUrl}`" height="60"></a></td>
                     <td>{{v.realName}}</td>
                     <td>{{v.mobile}}</td>
                     <td>{{v.identityCard}}</td>
@@ -690,6 +690,9 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
+<link rel="stylesheet" href="../../plugins/fancybox/fancybox.css">
+<script src="../../plugins/fancybox/fancybox.js"></script>
+
 <link rel="stylesheet" href="../../plugins/datepicker/datepicker.css">
 <script src="../../plugins/datepicker/datepicker.js"></script>
 
@@ -1007,6 +1010,10 @@ var app = new Vue({
             if(i > _this.list.info.pages)break;
             _this.list.page.next.push(i)
           }
+
+          setTimeout(function(){
+            $('.fancybox').fancybox()
+          }, 100)
 
         }
       })
