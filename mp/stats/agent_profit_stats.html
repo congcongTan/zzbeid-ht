@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>商户分成统计</title>
+    <title>代理商分成统计</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -217,7 +217,6 @@
                     <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
                     <th>代理名称</th>
                     <th>代理等级</th>
-                    <th>直属商户总订单</th>
                     <th>直属商户总积分</th>
                     <th>分成基数</th>
                     <th>分润</th>
@@ -231,7 +230,6 @@
                     <td>{{v.agentName}}</td>
                     <td>{{v.level}}</td>
                     <td>{{v.consumeNum}}</td>
-                    <td>{{v.orderCoefficientNum}}</td>
                     <td>{{v.radixTitle}}</td>
                     <td>{{v.agent1ProfitIntegral}}</td>
                     <td>{{v.agent2ProfitIntegral}}</td>
@@ -673,7 +671,6 @@ var app = new Vue({
             level: '-',
             radixTitle: '-',
             consumeNum: 0,
-            orderCoefficientNum: 0,
             agent1ProfitIntegral: 0,
             agent2ProfitIntegral: 0,
           }
@@ -685,9 +682,6 @@ var app = new Vue({
             if(typeof v.consumeNum == 'number')
               total.consumeNum += v.consumeNum
 
-            if(typeof v.orderCoefficientNum == 'number')
-              total.orderCoefficientNum += v.orderCoefficientNum
-
             if(typeof v.agent1ProfitIntegral == 'number')
             total.agent1ProfitIntegral += v.agent1ProfitIntegral
 
@@ -697,7 +691,6 @@ var app = new Vue({
 
 
           total.consumeNum = total.consumeNum.toFixed(2)
-          total.orderCoefficientNum = total.orderCoefficientNum.toFixed(2)
           total.agent1ProfitIntegral = total.agent1ProfitIntegral.toFixed(2)
           total.agent2ProfitIntegral = total.agent2ProfitIntegral.toFixed(2)
 
