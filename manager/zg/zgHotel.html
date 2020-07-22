@@ -490,25 +490,27 @@
                 <tbody>
                   <tr v-for="(v,i) in view.list">
                     <td><div class="mt6">{{v.equipmentIdentifier}}</div></td>
-                    <td><input class="form-control w120" type="input" v-model="v.vedorCode"></td>
+                    <td><input class="form-control input-sm w120" type="input" v-model="v.vedorCode"></td>
                     <td>
-                      <select class="form-control" v-model="v.equipmentType">
+                      <select class="form-control input-sm" v-model="v.equipmentType">
                         <option :value="`${i}`" v-for="(v, i) in 设备类型">{{v}}</option>
                       </select>
                     </td>
                     <td><div class="mt6">{{身份证设备[v.idCardDevType]}}</div></td>
                     <td><div class="mt6">{{v.termOfValidity}}</div></td>
                     <td>
-                      <select class="form-control" v-model="v.bindingStatus">
+                      <select class="form-control input-sm" v-model="v.bindingStatus">
                         <option :value="`${i}`" v-for="(v,i) in ['未绑定','已绑定']">{{v}}</option>
                       </select>
                     </td>
                     <td>
-                      <button class="btn btn-xs btn-primary" type="button" @click="已绑设备save(v.id, i)">保存修改</button>
+                      <div class="mt4">
+                        <button class="btn btn-xs btn-primary" type="button" @click="已绑设备save(v.id, i)">保存修改</button>
 
-                      <button class="btn btn-xs btn-primary" type="button" @click="有效期变更(i)">有效期变更</button>
+                        <button class="btn btn-xs btn-primary" type="button" @click="有效期变更(i)">有效期变更</button>
 
-                      <button class="btn btn-xs btn-primary" type="button" @click="有效期记录(i)">有效期记录</button>
+                        <button class="btn btn-xs btn-primary" type="button" @click="有效期记录(i)">有效期记录</button>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -1331,7 +1333,7 @@ var app = new Vue({
         success: function(re){
 
           _this.view = re.rspBody
-          _this.view.id = id
+          // _this.view.id = id
 
           $('#已绑设备').modal('show')
 
@@ -1392,6 +1394,7 @@ var app = new Vue({
     有效期变更: function(i){
 
       this.有效期变更a = this.view.list[i]
+      this.有效期变更a.i = i
       // console.log(this.有效期变更a)
 
       $('#新有效期').val(this.有效期变更a.termOfValidity)
@@ -1433,10 +1436,12 @@ var app = new Vue({
             return
           }
 
+          _this.view.list[_this.有效期变更a.i].termOfValidity = $('#新有效期').val()
+
           $('#有效期变更').modal('hide')
 
-          $('#已绑设备').modal('hide')
-          _this.已绑设备get(_this.view.id)
+          // $('#已绑设备').modal('hide')
+          // _this.已绑设备get(_this.view.id)
 
         }
       })
