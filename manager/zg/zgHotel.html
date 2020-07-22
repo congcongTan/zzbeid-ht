@@ -497,20 +497,18 @@
                       </select>
                     </td>
                     <td><div class="mt6">{{身份证设备[v.idCardDevType]}}</div></td>
-                    <td><div class="mt6">{{v.termOfValidity}}</div></td>
+                    <td><div class="mt6">
+                      {{v.termOfValidity}}
+                      <a href="javascript:;" @click="有效期变更(i)">[修改]</a>
+                      <a href="javascript:;" @click="有效期记录(i)">[变更记录]</a>
+                    </div></td>
                     <td>
                       <select class="form-control input-sm" v-model="v.bindingStatus">
                         <option :value="`${i}`" v-for="(v,i) in ['未绑定','已绑定']">{{v}}</option>
                       </select>
                     </td>
                     <td>
-                      <div class="mt4">
-                        <button class="btn btn-xs btn-primary" type="button" @click="已绑设备save(v.id, i)">保存修改</button>
-
-                        <button class="btn btn-xs btn-primary" type="button" @click="有效期变更(i)">有效期变更</button>
-
-                        <button class="btn btn-xs btn-primary" type="button" @click="有效期记录(i)">有效期记录</button>
-                      </div>
+                      <button class="btn btn-sm btn-primary" type="button" @click="已绑设备save(v.id, i)">保存</button>
                     </td>
                   </tr>
                 </tbody>
