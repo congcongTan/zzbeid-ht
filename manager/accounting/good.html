@@ -308,6 +308,16 @@
                 </div>
               </div>
 
+              <div class="form-group" v-if="view.type == '3'">
+                <label class="col-sm-3 control-label">可获得时长(月)</label>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control input-sm" v-model="view.renewalDate">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
               <div class="form-group">
                 <label class="col-sm-3 control-label">商品编号</label>
                 <div class="col-sm-4">
@@ -609,12 +619,15 @@ var app = new Vue({
 		2:'旺宝',
 		3:'充电h5',
 		4:'中证宝商户端',
-		5:'认证h5商户端'
+		5:'认证h5商户端',
+		6:'人证机',
+		7:'人证机简化版',
 	},
 
 	商品类型: {
 		1:'积分',
 		2:'卡券',
+		3:'时长',
 	},
 
 	行业:{
@@ -1004,6 +1017,12 @@ var app = new Vue({
       }
 
       var add_or_edit = this.view.goodId == undefined ? 'add':'edit'
+
+      if(data.reqBody.type != '3'){
+        delete data.reqBody.renewalDate
+      }else{
+        data.reqBody.renewalDate = Number(data.reqBody.renewalDate)
+      }
 
       $.ajax({
         type: 'POST',
