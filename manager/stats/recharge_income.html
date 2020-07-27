@@ -224,17 +224,20 @@
                 <thead>
                   <tr>
                     <th>-</th>
-                    <th colspan="2">微信支付</th>
-                    <th colspan="2">支付宝支付</th>
+                    <th colspan="4">微信支付</th>
+                    <th colspan="4">支付宝支付</th>
                     <th colspan="2">小计</th>
                   </tr>
                   <tr class="text-nowrap">
-                    <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
                     <th>日期</th>
                     <th>充值积分次数</th>
                     <th>充值积分总金额</th>
+                    <th>充值时长次数</th>
+                    <th>充值时长总金额</th>
                     <th>充值积分次数</th>
                     <th>充值积分总金额</th>
+                    <th>充值时长次数</th>
+                    <th>充值时长总金额</th>
                     <th>充值积分次数</th>
                     <th>充值积分总金额</th>
                     <!-- <th width="1%">操作</th> -->
@@ -242,12 +245,15 @@
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <!-- <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td> -->
                     <td>{{v.rechargeDate}}</td>
                     <td>{{v.wxNum}}</td>
                     <td>{{v.wxAmount}}</td>
+                    <td>{{v.wxRenewalNum}}</td>
+                    <td>{{v.wxRenewalAmount}}</td>
                     <td>{{v.zfbNum}}</td>
                     <td>{{v.zfbAmount}}</td>
+                    <td>{{v.zfbRenewalNum}}</td>
+                    <td>{{v.zfbRenewalAmount}}</td>
                     <td>{{v.wxNum + v.zfbNum}}</td>
                     <td>{{v.wxzfbAmount}}</td>
 <!--                     <td class="text-nowrap operation">
@@ -815,8 +821,12 @@ var app = new Vue({
             rechargeDate: '总计',
             wxNum: 0,
             wxAmount: 0,
+            wxRenewalNum: 0,
+            wxRenewalAmount: 0,
             zfbNum: 0,
             zfbAmount: 0,
+            zfbRenewalNum: 0,
+            zfbRenewalAmount: 0,
             wxzfbAmount: 0
           }
 
@@ -828,8 +838,12 @@ var app = new Vue({
             // console.log(v)
             total.wxNum += v.wxNum
             total.wxAmount += v.wxAmount
+            total.wxRenewalNum += v.wxRenewalNum
+            total.wxRenewalAmount += v.wxRenewalAmount
             total.zfbNum += v.zfbNum
             total.zfbAmount += v.zfbAmount
+            total.zfbRenewalNum += v.zfbRenewalNum
+            total.zfbRenewalAmount += v.zfbRenewalAmount
             total.wxzfbAmount += v.wxAmount + v.zfbAmount
           }
 
