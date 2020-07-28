@@ -833,7 +833,7 @@ var app = new Vue({
           for ( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-            _this.list.data[i].wxzfbAmount = v.wxAmount + v.zfbAmount
+            _this.list.data[i].wxzfbAmount = v.wxAmount + v.wxRenewalAmount + v.zfbAmount + v.zfbRenewalAmount
 
             // console.log(v)
             total.wxNum += v.wxNum
@@ -844,7 +844,7 @@ var app = new Vue({
             total.zfbAmount += v.zfbAmount
             total.zfbRenewalNum += v.zfbRenewalNum
             total.zfbRenewalAmount += v.zfbRenewalAmount
-            total.wxzfbAmount += v.wxAmount + v.zfbAmount
+            total.wxzfbAmount += v.wxAmount + v.wxRenewalAmount + v.zfbAmount + v.zfbRenewalAmount
           }
 
           total.wxAmount = (parseInt(total.wxAmount * 100 ) / 100).toFixed(2)
