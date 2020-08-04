@@ -224,17 +224,20 @@
                 <thead>
                   <tr>
                     <th>-</th>
-                    <th colspan="2">微信支付</th>
-                    <th colspan="2">支付宝支付</th>
+                    <th colspan="4">微信支付</th>
+                    <th colspan="4">支付宝支付</th>
                     <th colspan="2">小计</th>
                   </tr>
                   <tr class="text-nowrap">
-                    <!-- <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th> -->
                     <th>日期</th>
                     <th>充值积分次数</th>
                     <th>充值积分总金额</th>
+                    <th>充值时长次数</th>
+                    <th>充值时长总金额</th>
                     <th>充值积分次数</th>
                     <th>充值积分总金额</th>
+                    <th>充值时长次数</th>
+                    <th>充值时长总金额</th>
                     <th>充值积分次数</th>
                     <th>充值积分总金额</th>
                     <!-- <th width="1%">操作</th> -->
@@ -242,13 +245,16 @@
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <!-- <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td> -->
                     <td>{{v.rechargeDate}}</td>
                     <td>{{v.wxNum}}</td>
                     <td>{{v.wxAmount}}</td>
+                    <td>{{v.wxRenewalNum}}</td>
+                    <td>{{v.wxRenewalAmount}}</td>
                     <td>{{v.zfbNum}}</td>
                     <td>{{v.zfbAmount}}</td>
-                    <td>{{v.wxNum + v.zfbNum}}</td>
+                    <td>{{v.zfbRenewalNum}}</td>
+                    <td>{{v.zfbRenewalAmount}}</td>
+                    <td>{{v.wxNum + v.wxRenewalNum +  v.zfbNum + v.zfbRenewalNum}}</td>
                     <td>{{v.wxzfbAmount}}</td>
 <!--                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.goodId)">积分明细</a><br>
@@ -496,6 +502,18 @@ var app = new Vue({
 	},
 
 	行业:{
+		1:'旅馆',
+		2:'网吧',
+		3:'汽车站',
+		4:'机场',
+		5:'旅行社',
+		6:'访客',
+		7:'充电',
+		8:'出租屋',
+		9:'足浴'
+	},
+
+	使用行业限制:{
 		0:'通用',
 		1:'旅馆',
 		2:'网吧',
@@ -545,6 +563,7 @@ var app = new Vue({
 		10002:'千里马酒店',
 		10003:'锦江酒店',
 		10004:'广电运通',
+		10005:'金禧租赁',
 		20000:'佛山曇京',
 		60001:'园区访客',
 		60002:'酒店访客'
@@ -815,22 +834,30 @@ var app = new Vue({
             rechargeDate: '总计',
             wxNum: 0,
             wxAmount: 0,
+            wxRenewalNum: 0,
+            wxRenewalAmount: 0,
             zfbNum: 0,
             zfbAmount: 0,
+            zfbRenewalNum: 0,
+            zfbRenewalAmount: 0,
             wxzfbAmount: 0
           }
 
           for ( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-            _this.list.data[i].wxzfbAmount = v.wxAmount + v.zfbAmount
+            _this.list.data[i].wxzfbAmount = v.wxAmount + v.wxRenewalAmount + v.zfbAmount + v.zfbRenewalAmount
 
             // console.log(v)
             total.wxNum += v.wxNum
             total.wxAmount += v.wxAmount
+            total.wxRenewalNum += v.wxRenewalNum
+            total.wxRenewalAmount += v.wxRenewalAmount
             total.zfbNum += v.zfbNum
             total.zfbAmount += v.zfbAmount
-            total.wxzfbAmount += v.wxAmount + v.zfbAmount
+            total.zfbRenewalNum += v.zfbRenewalNum
+            total.zfbRenewalAmount += v.zfbRenewalAmount
+            total.wxzfbAmount += v.wxAmount + v.wxRenewalAmount + v.zfbAmount + v.zfbRenewalAmount
           }
 
           total.wxAmount = (parseInt(total.wxAmount * 100 ) / 100).toFixed(2)
