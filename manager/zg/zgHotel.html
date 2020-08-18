@@ -480,23 +480,26 @@
                   <tr>
                     <th>设备id</th>
                     <th>厂商编号</th>
+                    <th>设备激活码</th>
                     <th>设备类型</th>
-                    <th>身份证设备</th>
+                    <!-- <th>身份证设备</th> -->
                     <th>有效期</th>
                     <th>状态</th>
+                    <th>销售模式</th>
                     <th>操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v,i) in view.list">
                     <td><div class="mt6">{{v.equipmentIdentifier}}</div></td>
-                    <td><input class="form-control input-sm w120" type="input" v-model="v.vedorCode"></td>
+                    <td><input class="form-control input-sm w80" type="input" v-model="v.vedorCode"></td>
+                    <td><input class="form-control input-sm w80" type="input" v-model="v.localComparisonActivationCode"></td>
                     <td>
-                      <select class="form-control input-sm" v-model="v.equipmentType">
+                      <select class="form-control input-sm w80" v-model="v.equipmentType">
                         <option :value="`${i}`" v-for="(v, i) in 设备类型">{{v}}</option>
                       </select>
                     </td>
-                    <td><div class="mt6">{{身份证设备[v.idCardDevType]}}</div></td>
+                    <!-- <td><div class="mt6">{{身份证设备[v.idCardDevType]}}</div></td> -->
                     <td><div class="mt6">
                       {{v.termOfValidity}}
                       <a href="javascript:;" @click="有效期变更(i)">[修改]</a>
@@ -505,6 +508,11 @@
                     <td>
                       <select class="form-control input-sm" v-model="v.bindingStatus">
                         <option :value="`${i}`" v-for="(v,i) in ['未绑定','已绑定']">{{v}}</option>
+                      </select>
+                    </td>
+                    <td>
+                      <select class="form-control input-sm" v-model="v.salesModel">
+                        <option :value="`${i}`" v-for="(v,i) in 销售模式">{{v}}</option>
                       </select>
                     </td>
                     <td>
@@ -859,18 +867,6 @@ var app = new Vue({
 	},
 
 	行业:{
-		1:'旅馆',
-		2:'网吧',
-		3:'汽车站',
-		4:'机场',
-		5:'旅行社',
-		6:'访客',
-		7:'充电',
-		8:'出租屋',
-		9:'足浴'
-	},
-
-	使用行业限制:{
 		0:'通用',
 		1:'旅馆',
 		2:'网吧',
@@ -920,7 +916,6 @@ var app = new Vue({
 		10002:'千里马酒店',
 		10003:'锦江酒店',
 		10004:'广电运通',
-		10005:'金禧租赁',
 		20000:'佛山曇京',
 		60001:'园区访客',
 		60002:'酒店访客'
@@ -1026,9 +1021,16 @@ var app = new Vue({
     },
 
     设备类型: {
+      0:'未知',
       3:'人证机',
       4:'人证机简化版',
       5:'人证机PDA',
+      6:'人证机旷视标准版',
+    },
+
+    销售模式: {
+      1: '出售',
+      2: '出租',
     },
 
   },
@@ -1381,6 +1383,8 @@ var app = new Vue({
           vedorCode: this.view.list[i].vedorCode,
           equipmentType: this.view.list[i].equipmentType,
           bindingStatus: this.view.list[i].bindingStatus,
+          localComparisonActivationCode: this.view.list[i].localComparisonActivationCode,
+          salesModel: this.view.list[i].salesModel,
         }
       }
 
