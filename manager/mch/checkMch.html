@@ -512,7 +512,7 @@
                   </div>
                 </div>
 
-                <span v-if="view.syncType == 3 || view.syncType == 5">
+                <span v-if="view.syncType == 3 || view.syncType == 5 || view.syncType == 7">
 
                   <div class="form-group">
                     <label class="col-sm-3 control-label">酒店注册码</label>
@@ -942,6 +942,7 @@ var app = new Vue({
 		10002:'千里马酒店',
 		10003:'锦江酒店',
 		10004:'广电运通',
+		10005:'金禧租赁',
 		20000:'佛山曇京',
 		60001:'园区访客',
 		60002:'酒店访客'
@@ -975,6 +976,7 @@ var app = new Vue({
 		4:'上海旅业',
 		5:'湖南旅业',
 		6:'身份证硬件',
+		7:'金禧公寓',
 	},
 
 	分成基数: {
