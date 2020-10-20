@@ -196,9 +196,9 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">下发状态</label>
                     <div class="col-sm-5">
-                      <select class="form-control" v-model="list.post.deviceId">
-                        <option value="">--请选择--</option>
-                        <option :value="`${i}`" v-for="(v,i) in {'0':'失败','1':'成功'}">{{v}}</option>
+                      <select class="form-control" v-model="list.post.status">
+                        <option value="10">--请选择--</option>
+                        <option :value="`${i}`" v-for="(v,i) in {'-2':'设备返回失败','-1':'发送失败','0':'未处理','1':'成功'}">{{v}}</option>
                       </select>
                     </div>
                   </div>
@@ -224,6 +224,7 @@
                     <th>设备动作</th>
                     <th>头像</th>
                     <th>姓名</th>
+                    <th>身份证号</th>
                     <th>性别</th>
                     <th>设备sn</th>
                     <th>重发次数</th>
@@ -237,6 +238,7 @@
                     <td>{{v.actionTitle}}</td>
                     <td><a class="fancybox" :href="`http://image.zzb110.cn${v.headimgUrl}`"><img :src="`http://image.zzb110.cn${v.headimgUrl}`" height="60"></a></td>
                     <td>{{v.realName}}</td>
+                    <td>{{v.identityCard}}</td>
                     <td>{{性别[v.sex]}}</td>
                     <td>{{v.deviceSnSingle}}</td>
                     <td>{{v.tryCount}}</td>
@@ -644,10 +646,7 @@ var app = new Vue({
       post: {
         pageNum: 1,
         pageSize: 10,
-        visitorType: 0,//1访客 2员工
-        recogTimeBegin: '',
-        recogTimeEnd: '',
-        deviceId: '',
+        status: 10,
       },
       info: {},
       page: {},
