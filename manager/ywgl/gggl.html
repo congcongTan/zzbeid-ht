@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.9, user-scalable=no">
+<meta name="keyword" content="">
+<meta name="description" content="">
+<meta name="author" content="lightuni.com">
+
+<link rel="stylesheet" href="../../css/all.css">
+
+<!-- <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="../../plugins/adminLTE/css/AdminLTE.min.css">
+<link rel="stylesheet" href="../../plugins/adminLTE/css/skins/_all-skins.min.css">
+<link rel="stylesheet" href="../../plugins/Font-Awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/cong/cong.css">
+
+
+<script src="../../js/all.js"></script>
+
+    <title>广告管理</title>
+
+</head>
+<body class="hold-transition sidebar-mini skin-blue">
+
+<div id="loading">
+  <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+  <span class="sr-only">Loading...</span>
+</div>
+
+<div class="wrapper" id="app" style="display: none">
+
+  <header class="main-header">
+    <!-- Logo -->
+    <a href="../index.html" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini">管理后台</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg">管理后台</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <span class="hidden-xs">{{admin.user}}</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <p>
+                  {{admin.user}}
+                  <small>管理员</small>
+                </p>
+              </li>
+              <!-- Menu Footer-->
+              <li class="user-footer">
+                <div class="pull-left">
+                  <!-- <a href="#" class="btn btn-default btn-flat">设置</a> -->
+                </div>
+                <div class="pull-right">
+                  <a href="../account/index.html?logout=1" class="btn btn-default btn-flat">登出</a>
+                </div>
+              </li>
+            </ul>
+          </li>
+          <!-- Control Sidebar Toggle Button -->
+<!--           <li>
+            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+          </li> -->
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+
+  <aside class="main-sidebar">
+
+    <section class="sidebar">
+
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="../../plugins/adminLTE/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+          <p>{{admin.user}}</p>
+          <i class="fa fa-circle text-success"></i> 在线
+        </div>
+      </div>
+
+<!--       <form action="#" method="get" class="sidebar-form">
+        <div class="input-group">
+          <input type="text" name="q" class="form-control" placeholder="Search...">
+          <span class="input-group-btn">
+            <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div>
+      </form> -->
+
+      <ul class="sidebar-menu" data-widget="tree">
+
+        <li :class="{'treeview': v.menuType == 1, 'active': v.perms == mca.c}" v-for="(v, i) in sidemenu">
+
+          <a :href="`../${v.href == '#' ? v.href : v.href + '.html'}`">
+            <i :class="`fa fa-${v.icon}`"></i> <span>{{v.title}}</span>
+            <span class="pull-right-container" v-if="v.menuList.length != 0">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu" v-if="v.menuList.length != 0">
+
+            <li :class="{'active': v2.perms == mca.a}" v-for="(v2, i2) in v.menuList">
+
+              <a :href="`../${v2.href == '#' ? v2.href : v2.href + '.html'}`">
+                <i :class="`fa fa-${v2.icon}`"></i> <span> {{v2.title}}</span>
+<!--                 <span class="pull-right-container" v-if="v2.menuList != null">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span> -->
+              </a>
+<!--               <ul class="treeview-menu" v-if="v2.menuList != null">
+
+                <li v-for="(v3, i3) in v2.menuList">
+                  <a :href="`../${v3.url == '#' ? v3.url : v3.url + '.html'}`">
+                    <i :class="`fa fa-${v3.icon}`"></i> {{v3.title}}
+                  </a>
+                </li>
+
+              </ul> -->
+            </li>
+
+          </ul>
+        </li>
+
+      </ul>
+    </section>
+
+  </aside>
+
+
+  <div class="content-wrapper">
+
+    <section class="content-header">
+      <h1>
+        广告管理
+      </h1>
+      <ol class="breadcrumb">
+        <li><i class="fa fa-home"></i> 首页</li>
+        <li>业务管理</li>
+        <li class="active">广告管理</li>
+      </ol>
+    </section>
+
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+
+          <div class="nav-tabs-custom">
+
+            <ul class="nav nav-tabs">
+              <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
+              <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
+            </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane" id="操作">
+
+                <!-- <a class="btn btn-sm btn-danger" @click="del()">删除</a> -->
+
+                <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
+
+              </div>
+              <div class="tab-pane active" id="搜索">
+
+                <div class="form-horizontal">
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">广告渠道</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.channelId">
+                        <option :value="`${i}`" v-for="(v, i) in 广告渠道">{{v}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">广告位置</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.spaceId">
+                        <option :value="`${i}`" v-for="(v, i) in 广告位置">{{v}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">广告名称</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.advName">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="clearfix p10 pt0">
+
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr class="text-nowrap">
+                    <th width="1%"><input type="checkbox" onclick="app.checkAll2(this.checked, 'list')"></th>
+                    <th>广告编号</th>
+                    <th>广告名称</th>
+                    <th>广告位置</th>
+                    <th>广告渠道</th>
+                    <th>广告类型</th>
+                    <th>推广方式</th>
+                    <th>状态</th>
+                    <th width="1%">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(v, i) in list.data">
+                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
+                    <td>{{v.advId}}</td>
+                    <td>{{v.advName}}</td>
+                    <td>{{v.spaceName}}</td>
+                    <td>{{v.advTypeTitle}}</td>
+                    <td>{{v.channelName}}</td>
+                    <td>{{v.pushTypeTilet}}</td>
+                    <td>{{v.statusTilet}}</td>
+                    <td class="text-nowrap operation">
+                      <a class="btn btn-xs btn-primary" @click="getView(v.promotionStrategyId)">修改</a><br>
+
+                      <a class="btn btn-xs btn-primary" @click="绑定新商户(v.promotionStrategyId)">推广商户管理</a><br>
+
+                      <a class="btn btn-xs btn-danger" @click="del(v.promotionStrategyId)">删除</a><br>
+                    </td>
+                  </tr>
+                  <tr v-if="list.length == 0">
+                    <td colspan="99">没有数据</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="pull-left mt15">
+                <label>
+                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
+                    <option value="2">每页 2 条</option>
+                    <option value="10">每页 10 条</option>
+                    <option value="25">每页 25 条</option>
+                    <option value="50">每页 50 条</option>
+                    <option value="100">每页 100 条</option>
+                  </select>
+                </label>
+
+                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
+              </div>
+
+              <div class="pull-right" v-if="list.info.pages > 1">
+                <ul class="pagination pagination-sm">
+
+                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
+
+                  <li class="paginate_button" v-for="i in list.page.prev"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+
+                  <li class="paginate_button active"><a href="#">{{list.post.pageNum}}</a></li>
+
+                  <li class="paginate_button" v-for="i in list.page.next"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+
+                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
+                  </li>
+
+                </ul>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <div class="modal fade" id="view">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              <span v-if="view.id == undefined">新增</span>
+              <span v-if="view.id != undefined">编辑</span>
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">广告渠道</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.radix">
+                    <option :value="`${i}`" v-for="(v, i) in {1:'月消费总积分'}">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">广告位置</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.mode">
+                    <option :value="`${i}`" v-for="(v, i) in {1:'阶梯式累积分成'}">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">广告名称</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.orderCoefficient">
+                </div>
+                <div class="col-sm-5 text-danger mt5">
+                  *
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">广告类型</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.mode">
+                    <option :value="`${i}`" v-for="(v, i) in {1:'阶梯式累积分成'}">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <hr>
+
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <tr class="text-nowrap">
+                    <th width="15%">id</th>
+                    <th>上传广告资源 <span class="text-danger">*</span></th>
+                    <th>链接地址</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>
+                      <input type="file" class="form-control">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" placeholder="无链接可留空">
+                    </td>
+                    <td>
+                      <a class="btn btn-sm btn-default" href="javascript:;"
+        @click=""><i class="fa fa-plus"></i><span class="hidden-xs"> 增加一行</span></a>
+                      
+                      <a class="btn btn-sm btn-danger" href="javascript:;"
+        @click="操作确认('确认删除？', 'this.a.线上科目.splice(' + i + ', 1)')"><i class="fa fa-remove"></i><span class="hidden-xs"> 删除</span></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <a class="btn btn-sm btn-default" href="javascript:;"
+        @click=""><i class="fa fa-plus"></i> 增加一行</a>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="saveView">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="绑定新商户">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              推广商户管理
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">广告编号</label>
+                <div class="col-sm-3">
+                  <input type="text" class="form-control input-sm" v-model="list2.post.title">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">广告名称</label>
+                <div class="col-sm-3">
+                  <input type="text" class="form-control input-sm" v-model="list2.post.title">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">推广方式</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.mode">
+                    <option :value="`${i}`" v-for="(v, i) in {1:'阶梯式累积分成'}">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">指定代理</label>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="list2.post.agent1Id" onchange="app.getLV2(this.value, 1)">
+                    <option value="">--请选择--</option>
+                    <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv1">{{v.title}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="list2.post.agent2Id">
+                    <option value="">--请选择--</option>
+                    <option :value="`${v.agentId}`" v-for="(v, i) in 上级代理商.lv2">{{v.title}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">指定区域</label>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="list2.post.province" onchange="app.getC('view', this.value)">
+                    <option value="" selected>--请选择--</option>
+                    <option :value="`${v.code}`" v-for="(v, i) in view_pca.p">{{v.name}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="list2.post.city" onchange="app.getA('view', this.value)">
+                    <option value="" selected>--请选择--</option>
+                    <option :value="`${v.code}`" v-for="(v, i) in view_pca.c">{{v.name}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-3">
+                  <select class="form-control" v-model="list2.post.area">
+                    <option value="" selected>--请选择--</option>
+                    <option :value="`${v.code}`" v-for="(v, i) in view_pca.a">{{v.name}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">自定义商户</label>
+                <div class="col-sm-3">
+                  <input type="text" class="form-control input-sm" placeholder="输入商户名称查询" v-model="list2.post.title">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-3 col-sm-offset-3">
+                  <button type="button" class="btn btn-sm btn-primary" onclick="app.绑定新商户list(this)">查询 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="row">
+
+                <div class="col-xs-8">
+
+                  <div class="oys" style="height:300px;">
+
+                    <div class="col-xs-6 mb5">
+                      <label><input type="checkbox" onclick="app.绑定新商户_全选(this.checked, 'list2')"> 全选</label>
+                    </div>
+
+                    <div class="col-xs-6 mb5" v-for="(v, i) in list2.data">
+                      <label>
+                        <input type="checkbox" :value="`${v.mchId}`" v-model="list2.checkbox.checked">
+                        {{v.title}}
+                      </label>
+                    </div>
+
+                  </div>
+
+                  <hr>
+
+                  <button type="button" class="btn btn-sm btn-primary" @click="绑定新商户_加入绑定()">加入绑定</button>
+                  <button type="button" class="btn btn-link">已选中 {{list2.checkbox.checked.length}} 个</button>
+
+                </div>
+
+                <div class="col-xs-4">
+
+                  <div class="oys" style="height:300px;">
+
+                    <div class="col-xs-6 mb5">
+                      <label><input type="checkbox" onclick="app.绑定新商户_全选(this.checked, 'list3')"> 全选</label>
+                    </div>
+
+                    <div class="col-xs-12 mb5" v-for="v in list3.data">
+                      <label>
+                        <input type="checkbox" :value="`${v.mchId}`" v-model="list3.checkbox.checked">
+                        {{v.title}}
+                      </label>
+                    </div>
+
+                  </div>
+
+                  <hr>
+
+                  <button type="button" class="btn btn-sm btn-primary" @click="绑定新商户_取消绑定()">取消绑定</button>
+                  <button type="button" class="btn btn-link">已加入绑定 {{list3.data.length}} 个</button>
+
+
+                </div>
+
+              </div>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="绑定新商户_保存()">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="查看已绑商户">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              促销政策名称：{{view.title}}
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <div class="mb10">
+              <button class="btn btn-sm btn-danger" @click="查看已绑商户_删除()">移除绑定商户</button>
+              <button class="btn btn-sm btn-primary" onclick="app.查看已绑商户_导出(this)">导出 <i class="fa fa-spinner fa-spin" style="display: none"></i></button>
+            </div>
+
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr class="text-nowrap">
+                  <th width="1%"><input type="checkbox" onclick="app.checkAll2(this.checked,'查看已绑商户list')"></th>
+                  <th>商户名称</th>
+                  <th>资源数量</th>
+                  <th>渗透率</th>
+                  <th>营销组</th>
+                  <th>当月保底量</th>
+                  <th>下月保底量</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(v, i) in 查看已绑商户list.data">
+                  <td><input type="checkbox" :value="`${v.mchId}`" v-model="查看已绑商户list.checkbox.checked"></td>
+                  <td>{{v.title}}</td>
+                  <td>{{v.resourceNumber}}</td>
+                  <td>{{v.permeability}}</td>
+                  <td>{{v.marketingTeamName}}</td>
+                  <td>{{v.thisMonthGuaranteeAmount}}</td>
+                  <td>{{v.nextMonthGuaranteeAmount}}</td>
+                </tr>
+                <tr v-if="list.length == 0">
+                  <td colspan="99">没有数据</td>
+                </tr>
+              </tbody>
+            </table>
+
+            共 {{查看已绑商户list.data.length}} 个商户
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.0
+    </div>
+    <b>中证宝</b> 管理后台
+  </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Create the tabs -->
+    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
+      <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+      <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <!-- Home tab content -->
+      <div class="tab-pane" id="control-sidebar-home-tab">
+        <h3 class="control-sidebar-heading">维护团队</h3>
+        <ul class="control-sidebar-menu">
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-user bg-red"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">韦聪</h4>
+
+                <p>产品设计师</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-phone bg-green"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">电话</h4>
+
+                <p>18902300094</p>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)">
+              <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
+
+              <div class="menu-info">
+                <h4 class="control-sidebar-subheading">邮件</h4>
+
+                <p>57425133@qq.com</p>
+              </div>
+            </a>
+          </li>
+        </ul>
+        <!-- /.control-sidebar-menu -->
+
+      </div>
+      <!-- /.tab-pane -->
+      <!-- Stats tab content -->
+      <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
+      <!-- /.tab-pane -->
+      <!-- Settings tab content -->
+      <div class="tab-pane" id="control-sidebar-settings-tab">
+        <form method="post">
+          <h3 class="control-sidebar-heading">General Settings</h3>
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Report panel usage
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+
+            <p>
+              Some information about this general settings option
+            </p>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Allow mail redirect
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+
+            <p>
+              Other sets of options are available
+            </p>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Expose author name in posts
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+
+            <p>
+              Allow the user to show his name in blog posts
+            </p>
+          </div>
+          <!-- /.form-group -->
+
+          <h3 class="control-sidebar-heading">Chat Settings</h3>
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Show me as online
+              <input type="checkbox" class="pull-right" checked>
+            </label>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Turn off notifications
+              <input type="checkbox" class="pull-right">
+            </label>
+          </div>
+          <!-- /.form-group -->
+
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+              Delete chat history
+              <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
+            </label>
+          </div>
+          <!-- /.form-group -->
+        </form>
+      </div>
+      <!-- /.tab-pane -->
+    </div>
+  </aside>
+  <!-- /.control-sidebar -->
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- <script src="../plugins/jquery/jquery.min.js"></script> -->
+<!-- <script src="../plugins/bootstrap/js/bootstrap.min.js"></script> -->
+<script src="../../plugins/adminLTE/js/adminlte.min.js"></script>
+<script src="../../plugins/adminLTE/js/demo.js"></script>
+<script src="../../plugins/cong/cong.js"></script>
+
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+	mca: {},
+	admin: {},
+	sidemenu: {},
+
+	list: {},
+	// page: {},
+	ids: [],
+	ids_all: [],
+
+	view: {},
+
+	权限: '',
+
+	app系统:{
+		1:'安卓',
+		2:'IOS'
+	},
+
+	app类型:{
+		1:'中证宝APP',
+		2:'旺宝APP',
+	},
+
+	上架渠道:{
+		1:'中证宝',
+		2:'旺宝',
+		3:'充电h5',
+		4:'中证宝商户端',
+		5:'认证h5商户端',
+		6:'人证机',
+		7:'人证机简化版',
+		8:'人证机旷视标准版',
+	},
+
+	商品类型: {
+		1:'积分',
+		2:'卡券',
+		3:'时长',
+	},
+
+	行业:{
+		0:'通用',
+		1:'旅馆',
+		2:'网吧',
+		3:'汽车站',
+		4:'机场',
+		5:'旅行社',
+		6:'访客',
+		7:'充电',
+		8:'出租屋',
+		9:'足浴'
+	},
+
+	软件版本:{
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家'
+	},
+
+	接口类型: {
+		1:'公安部',
+		2:'海鑫',
+		3:'国政通',
+		4:'上海爱金',
+		5:'阿里云',
+		6:'有盾',
+		7:'CTID2.0'
+	},
+
+	接口版本: {
+		1:'标准版',
+		2:'简化版'
+	},
+
+	行业软件: {
+		0:'无软件',
+		1:'佳星',
+		2:'万象',
+		3:'湖南万象(斯雨)',
+		4:'云辰',
+		5:'龙管家',
+		6:'恒邦',
+		7:'鼎泰云计费',
+		10000:'中证宝酒店',
+		10001:'中冠PMS',
+		10002:'千里马酒店',
+		10003:'锦江酒店',
+		10004:'广电运通',
+		10005:'金禧租赁',
+		20000:'佛山曇京',
+		60001:'园区访客',
+		60002:'酒店访客'
+	},
+
+	状态: {
+		1:'可用',
+		2:'不可用'
+	},
+
+	审核状态: {
+		1:'未审核',
+		2:'已审核',
+		3:'审核不通过'
+	},
+
+	是否: {
+		1:'是',
+		2:'否'
+	},
+
+	是否加密: {
+		0:'否',
+		1:'是'
+	},
+
+	同步模式: {
+		1:'在线（云服务器）',
+		2:'xml文件（铃铛）',
+		3:'本地数据库（LockSend）',
+		4:'上海旅业',
+		5:'湖南旅业',
+		6:'身份证硬件',
+		7:'金禧公寓',
+	},
+
+	分成基数: {
+		1:'月消费总积分（对冲退款）',
+		// 2:'日均消费总积分（对冲退款）'
+	},
+
+	分成模式: {
+		1:'阶梯式累计分成'
+	},
+
+	支付方式: {
+		0:'全部',
+		1:'电子现金',
+		2:'声波',
+		3:'NFC',
+		4:'扫码',
+		5:'手输',
+	},
+
+	交易模式: {
+		// 0:		'全部',
+		10001:	'担保',
+		10002:	'消费',
+	},
+
+	支付状态: {
+		0:'未生成',
+		1:'已提交担保',
+		2:'担保完成',
+		3:'担保撤销',
+		4:'担保冲正',
+		101:'支付',
+		102:'支付冲正',
+		103:'支付撤销',
+		104:'支付退款'
+	},
+
+	证件类型: {
+		1: '中证宝',
+		2: '二代证',
+	},
+
+    list: {
+      data: [],
+      post: {
+        pageNum: 1,
+        pageSize: 10,
+        chooseDay: 0,
+        industryId: 0,
+      },
+      info: {},
+      page: {},
+      checkbox: {
+        all: [],
+        checked: [],
+      },
+    },
+
+    //待添加
+    list2: {
+      data: [],
+      post: {
+        agent1Id: '',
+        agent2Id: '',
+        province: '',
+        city: '',
+        area: ''
+      },
+      info: {},
+      checkbox: {
+        all: [],
+        checked: [],
+      },
+    },
+
+    list3: {
+      data: [],
+      checkbox: {
+        all: [],
+        checked: [],
+      },
+    },
+
+    查看已绑商户list: {
+      data: [],
+      checkbox: {
+        all: [],
+        checked: [],
+      },
+    },
+
+
+    search_pca: {
+      p: {},
+      c: {},
+      a: {},
+    },
+
+    view_pca:{
+      p: {},
+      c: {},
+      a: {},
+    },
+
+    上级代理商:{
+      lv1: {},
+      lv2: {},
+    },
+
+    广告渠道: {},
+    广告位置: {},
+
+  },
+  methods: {
+    checkAll: function(){
+
+      if( $('#checkAll').prop('checked') ){
+        this.list.checkbox.checked = this.list.checkbox.all
+      }else{
+        this.list.checkbox.checked = []
+      }
+
+    },
+
+    checkAll2: function(checked, id){
+
+      if( checked ){
+        this[id].checkbox.checked = this[id].checkbox.all
+      }else{
+        this[id].checkbox.checked = []
+      }
+
+    },
+
+    onoff: function(field, value, id){
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.ids.length == 0){
+        console.log('一个都没有选中')
+        return void(0)
+      }else{
+
+        var ids = this.ids
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'adm/onoff',
+        data: {
+          table: this.param.table,
+          field: field,
+          value: value,
+          id: ids,
+        },
+        dataType: 'text',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re == 1){
+            _this.getList()
+
+            _this.ids = []
+          }else{
+            alert(re)
+          }
+
+        }
+      })
+
+    },
+
+
+    del: function(id){
+
+      if(!confirm('确认删除？')){
+        return void(0)
+      }
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.ids.length == 0){
+        console.log('一个都没有选中')
+        return void(0)
+      }else{
+
+        var ids = this.ids
+      }
+
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'adm/del',
+        data: {
+          table: this.param.table,
+          id: ids,
+        },
+        dataType: 'text',
+        beforeSend: function(request){
+          // request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re == 1){
+            _this.getList()
+
+            _this.ids = []
+          }else{
+            alert(re)
+          }
+
+        }
+      })
+
+    },
+
+    getList: function(key, val){
+
+      if(this.权限.indexOf('select') == -1){
+        alert('没有搜索权限')
+      }
+
+      _this = this
+
+      if(key == 'page'){
+
+        if(val == '+1'){
+          if( this.list.post.pageNum < this.list.info.pages ){
+            this.list.post.pageNum++
+          }else{
+            return
+          }
+        }
+
+        if(val == '-1'){
+          if( this.list.post.pageNum > 1 ){
+            this.list.post.pageNum--
+          }else{
+            return
+          }
+        }
+
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        reqBody: this.list.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getAdvertisementList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.list.data = re.rspBody.advList
+          delete re.rspBody.advList
+
+          _this.list.info = re.rspBody          
+
+
+          //id
+          for( var i in _this.list.data ){
+            var v = _this.list.data[i]
+
+            _this.list.checkbox.all.push(v.id)
+          }
+
+          //分页
+          _this.list.page.prev = []
+          for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
+            if(i <= 0)continue;
+            _this.list.page.prev.push(i)
+          }
+
+          _this.list.page.next = []
+          for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
+            if(i > _this.list.info.pages)break;
+            _this.list.page.next.push(i)
+          }
+
+        }
+      })
+
+    },
+    del: function(id){
+
+      if(!confirm('确认删除？')){
+        return
+      }
+
+      //单个
+      if(id != undefined){
+        var ids = [id]
+      }
+      //多个
+      else if(this.list.checkbox.checked.length == 0){
+        alert('一个都没有选中')
+        return
+      }else{
+
+        var ids = this.list.checkbox.checked
+      }
+
+      // console.log(ids)
+
+      for( var i in ids ){
+        var id = ids[i]
+
+
+        var data = {
+          "reqHead":
+          {
+            clientType: 1,
+            format: "json",
+            version: "1.0",
+            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          },
+          reqBody: {
+            promotionStrategyId: id
+          }
+        }
+
+        $.ajax({
+          type: 'POST',
+          url: manager_api + 'manager/deletePromotionStrategy/interface',
+          data: JSON.stringify(data),
+          dataType: 'json',
+          beforeSend: function(request){
+            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+          },
+          success: function(re){
+
+            if(re.rspHead.retCode != '1'){
+              alert(re.rspHead.retMsg)
+            }else{
+              _this.getList()
+            }
+
+          }
+        })
+
+      }
+
+    },
+    getView: function(id){
+
+      this.view = {}
+
+      if(id == -1){
+        this.view.config = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+        this.view.radix = 1
+        this.view.mode = 1
+        this.view.poundage = 1.2
+        $('#view').modal('show')
+        return
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          promotionStrategyId: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getPromotionStrategyInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.view = re.rspBody
+
+/*          _this.getLV2(_this.view.superiorAgentId)
+
+          _this.getC('view', _this.view.province)
+          _this.getA('view', _this.view.city)*/
+
+          _this.view.config = JSON.parse(_this.view.config)
+          // console.log(_this.view.config)
+
+          $('#view').modal('show')
+
+        }
+      })
+
+    },
+
+    saveView: function(){
+
+      //有密码才传
+      if($('#password').val() != ''){
+        this.view.password = $('#password').val()
+      }else{
+        delete this.view.password
+      }
+
+      //转回数组
+      var post = this.view
+      post.config = JSON.stringify(post.config)
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: post
+      }
+
+
+      var add_or_edit = this.view.id == undefined ? 'edit':'edit'
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/' + add_or_edit + 'PromotionStrategy/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+            $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    绑定新商户: function(id){
+
+      //清除上次搜索条件
+      this.list2.data = []
+      this.list2.post = {
+        agent1Id: '',
+        agent2Id: '',
+        province: '',
+        city: '',
+        area: ''
+      },
+
+      this.view = {
+        id: id
+      }
+
+      // this.绑定新商户list()
+
+      $('#绑定新商户').modal('show')
+
+    },
+    绑定新商户list: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
+
+      var _this = this
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: this.list2.post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getCanBindStrategyMchList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+
+          //换变量名
+          _this.list2.data = re.rspBody.simpleMchInfoList
+
+          //清空
+          _this.list2.checkbox.all = []
+          for(var i in _this.list2.data){
+            var v = _this.list2.data[i]
+
+            _this.list2.checkbox.all.push(v.mchId)
+          }
+
+
+          $('#绑定新商户').modal('show')
+
+        }
+      })
+
+    },
+    绑定新商户_全选: function(checked, which_list){
+
+      if(checked){
+        _this[which_list].checkbox.checked = _this.list2.checkbox.all
+      }else{
+        _this[which_list].checkbox.checked = []
+      }
+
+    },
+    绑定新商户_加入绑定: function(){
+
+      for(var i in this.list2.checkbox.checked){
+        var v = this.list2.checkbox.checked[i]
+
+        for(var i2 in this.list2.data){
+          var v2 = this.list2.data[i2]
+
+          //找到对应记录
+          if(v2['mchId'] == v){
+            // console.log(i2)
+
+            //list2 -> list3
+            this.list3.data.push(v2)
+            this.list2.data.splice(i2, 1)
+
+            break
+          }
+        }
+
+      }
+
+      //清除选择
+      this.list2.checkbox.checked = []
+
+    },
+    绑定新商户_取消绑定: function(){
+
+      for(var i in this.list3.checkbox.checked){
+        var v = this.list3.checkbox.checked[i]
+
+        for(var i2 in this.list3.data){
+          var v2 = this.list3.data[i2]
+
+          //找到对应记录
+          if(v2['mchId'] == v){
+            // console.log(i2)
+
+            //list2 -> list3
+            this.list2.data.push(v2)
+            this.list3.data.splice(i2, 1)
+
+            break
+          }
+        }
+
+      }
+
+      //清除选择
+      this.list3.checkbox.checked = []
+
+    },
+    绑定新商户_保存: function(){
+
+      // console.log(this.list3.data)
+
+      var ids = []
+      for(var i in this.list3.data){
+        var v = this.list3.data[i]
+
+        ids.push(v.mchId)
+      }
+      // console.log(ids)
+
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          promotionStrategyId: this.view.id,
+          mchIdList: ids
+        }
+      }
+
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/mchTiedStrategy/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.list3.data = []
+            _this.getList()
+            $('#绑定新商户').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    查看已绑商户: function(id, title){
+
+      this.view = {
+        id: id,
+        title: title
+      }
+
+      //清空上次结果
+      this.查看已绑商户list.data = []
+
+      var _this = this
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          promotionStrategyId: id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getBindThisStrategyMchList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspBody.bindStrategOfMchInfoList != null){
+            _this.查看已绑商户list.data = re.rspBody.bindStrategOfMchInfoList
+          }
+
+          //id
+          for( var i in _this.查看已绑商户list.data ){
+            var v = _this.查看已绑商户list.data[i]
+
+            _this.查看已绑商户list.checkbox.all.push(v.mchId)
+          }
+
+
+          $('#查看已绑商户').modal('show')
+
+        }
+      })
+
+    },
+    查看已绑商户_删除: function(){
+
+      // console.log(this.查看已绑商户list.checkbox.checked)
+
+      var _this = this
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          mchIdList: this.查看已绑商户list.checkbox.checked
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/removTiedStrategOfMch/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+            alert(re.rspHead.retMsg)
+          }else{
+            _this.查看已绑商户(_this.view.id, _this.view.title)
+          }
+
+        }
+      })
+
+    },
+    查看已绑商户_导出: function(obj){
+
+      $(obj).prop('disabled', true)
+      $(obj).children('i').show()
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          promotionStrategyId: this.view.id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/exporBindThisStrategyMchList/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          $(obj).prop('disabled', false)
+          $(obj).children('i').hide()
+
+          if(re.rspHead.retCode != '1'){
+            alert(re.rspHead.retMsg)
+          }else{
+            location.href = re.rspBody.file
+          }
+
+        }
+      })
+
+    },
+
+
+    getLV2: function(fid, clean_lv2){
+
+      // console.log(this.view.一级代理)
+
+      if ( clean_lv2 != undefined ){
+        this.view.agentId = ''
+      }
+
+      //上级代理商
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {
+          agentId: fid
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getSecondAgent/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.上级代理商.lv2 = re.rspBody.secondAgentList
+
+        }
+      })
+
+    },
+
+    getP: function(){
+
+      // console.log('getP')
+      // return
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {}
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/allProvince/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this.search_pca.p = re.rspBody.areaRspDTOList
+          _this.view_pca.p = re.rspBody.areaRspDTOList
+
+        }
+      })
+
+    },
+
+    getC: function(who, pid){
+
+      // console.log('getC', pid)
+
+      var _this = this
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {
+          parentId: pid
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/allCity/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this[who + '_pca'].c = re.rspBody.allCityResponseDTOList
+          _this[who + '_pca'].a = {}
+
+        }
+      })
+
+    },
+
+    getA: function(who, pid){
+
+      // console.log('getA', pid)
+      // return
+
+      var _this = this
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 6,
+          format: "json",
+          version: "1.0",
+          sign: "30C7398578F1F7C995BAF67D18F89B33"
+        },
+        reqBody: {
+          parentId: pid
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/allRegion/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          _this[who + '_pca'].a = re.rspBody.allCityResponseDTOList
+
+        }
+      })
+
+      // console.log(who, parent)
+
+    },
+
+  },
+  mounted() {
+    _this = this
+
+    // console.log(LS.admin)
+
+    // 登录信息
+    if(LS.admin != undefined){
+      this.admin = JSON.parse(LS.admin)
+
+      var expire = ((this.admin.expire - new Date().getTime() ) / 1000 / 60).toFixed(0)
+
+      console.log('登录超时剩余', expire)
+
+      //过期
+      if(expire < 0){
+        //console.log('登录超时跳转')
+        location.href = '../account/index.html?logout=1'
+      }
+
+    }else{
+
+      //未登录
+      location.href = '../account/index.html'
+    }
+
+
+    // 侧栏菜单
+/*    $.ajax({
+      type: 'GET',
+      url: '../../db/menu-manager.json',
+      dataType: 'json',
+      success: function(re){
+
+        _this.sidemenu = re
+
+      }
+    })*/
+
+    // 显示主体
+    $('#loading').hide()
+    $('#app').show()
+
+    // mca
+    var tmp = location.pathname.split('/')
+    this.mca = {
+      m: decodeURI(tmp[1]),
+      c: decodeURI(tmp[2]),
+      a: decodeURI(tmp[3].split('.html')[0]),
+    }
+
+    //菜单
+    this.sidemenu = JSON.parse(LS.menu)
+    // console.log(this.sidemenu)
+
+    //当前页面权限
+    var enter = 0 //本页可否进入
+    for(var i in this.sidemenu){
+      var v = this.sidemenu[i]
+
+      //lv1找到
+      if(v.perms == this.mca.c){
+        // console.log('lv1', v.perms)
+
+        for(var i2 in v.menuList){
+          var v2 = v.menuList[i2]
+
+          //lv2找到
+          if(v2.perms == this.mca.a){
+            // console.log('lv2', v2.perms)
+            // console.log(v2.menuList)
+
+            // this.权限 += 'enter,'
+            enter = 1 //本页可否进入 可以
+
+            for(var i3 in v2.menuList){
+              var v3 = v2.menuList[i3]
+
+              //menu:add 只要 add
+              var tmp = v3.perms.split(':')
+
+              this.权限 += tmp[1] + ','
+
+            }
+
+            break
+          }
+        }
+
+        break
+      }
+    }
+    console.log('权限', this.权限)
+
+
+    //本页有无权进入
+    if(
+        !( enter
+          || (this.mca.c == 'index') //首页
+          || (this.mca.c == 'member' && this.mca.a == 'integral' )
+        )
+      ){
+      alert('你无权访问本页面')
+    }
+
+
+    // console.log(this.mca)
+
+    $('[data-toggle="tooltip"]').tooltip()
+
+
+    this.getP()
+
+    //上级代理商
+    var data = {
+      "reqHead":
+      {
+        clientType: 1,
+        format: "json",
+        version: "1.0",
+        sign: "30C7398578F1F7C995BAF67D18F89B33"
+      },
+      reqBody: {}
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: manager_api + 'manager/getFirstAgentAll/interface',
+      data: JSON.stringify(data),
+      dataType: 'json',
+      beforeSend: function(request){
+        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+      },
+      success: function(re){
+
+        _this.上级代理商.lv1 = re.rspBody.firstAgentList
+
+      }
+    })
+
+    //广告渠道
+    var data = {
+      "reqHead":
+      {
+        version: "1.1",
+        sign: "38fadc9d33ff1572f97bbcbd83b196c6"
+      },
+      reqBody: {}
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: manager_api + 'manager/getAdvChannelList/interface',
+      data: JSON.stringify(data),
+      dataType: 'json',
+      beforeSend: function(request){
+        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+      },
+      success: function(re){
+
+        if(re.rspHead.retCode == '1'){
+
+          for(var i in re.rspBody.advChannelList){
+            var v = re.rspBody.advChannelList[i]
+
+            _this.广告渠道[v.channelId] = v.channelName
+          }
+        }else{
+          alert(re.rspHead.retMsg)
+        }
+
+      },
+    })
+
+    //广告位置
+    var data = {
+      "reqHead":
+      {
+        version: "1.1",
+        sign: "38fadc9d33ff1572f97bbcbd83b196c6"
+      },
+      reqBody: {}
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: manager_api + 'manager/getAdvSpaceIList/interface',
+      data: JSON.stringify(data),
+      dataType: 'json',
+      beforeSend: function(request){
+        request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+      },
+      success: function(re){
+
+        if(re.rspHead.retCode == '1'){
+
+          for(var i in re.rspBody.advSpaceList){
+            var v = re.rspBody.advSpaceList[i]
+
+            _this.广告位置[v.spaceId] = v.spaceName
+          }
+        }else{
+          alert(re.rspHead.retMsg)
+        }
+
+      },
+    })
+
+    this.getList()
+
+  }
+})
+</script>
+</body>
+</html>
