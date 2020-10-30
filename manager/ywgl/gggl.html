@@ -318,7 +318,7 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">广告渠道</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.channelId">
+                  <select class="form-control" v-model="view.channelId" onchange="app.get广告位置(this.value, 'view')">
                     <option :value="`${i}`" v-for="(v, i) in 广告渠道">{{v}}</option>
                   </select>
                 </div>
@@ -387,7 +387,8 @@
                 <tbody>
                   <tr v-for="(v,i) in view.advResourceUrl">
                     <td>
-                      <img :src="`${v.file}`" width="120" height="80" v-if="v.file.indexOf('.jpg') != -1">
+                      <img :src="`${v.file}`" width="120" height="80" v-if="v.file.indexOf('.jpg') != -1 || v.file.indexOf('.png') != -1 || v.file.indexOf('.gif') != -1">
+
                       <video :src="`${v.file}`" width="120" height="80" controls v-if="v.file.indexOf('.mp4') != -1"></video>
                     </td>
                     <td>
@@ -581,7 +582,7 @@
               <template v-if="!see">
                 <div class="oys" style="height:300px;">
 
-                  <div class="col-xs-4 mb5" v-for="(v, i) in view.mchList">
+                  <div class="col-xs-4 mb5" v-for="(v, i) in seeList">
                       {{v.title}}
                   </div>
 
@@ -1053,7 +1054,38 @@ var app = new Vue({
     },
 
     see: false,//推广商户查看
+    seeList: [],
 
+  },
+  computed: {
+    pushType() {
+      return this.view.pushType
+    }
+  },
+  watch: {
+    pushType(val){
+
+      // console.log(val)
+
+      if( val == 1 ){
+        delete this.list2.post.province
+        delete this.list2.post.city
+        delete this.list2.post.area
+        delete this.list2.post.title
+      }
+      else if( val == 2 ){
+        delete this.list2.post.agent1Id
+        delete this.list2.post.agent2Id
+        delete this.list2.post.title
+      }else{
+        delete this.list2.post.agent1Id
+        delete this.list2.post.agent2Id
+        delete this.list2.post.province
+        delete this.list2.post.city
+        delete this.list2.post.area
+      }
+
+    }
   },
   methods: {
     checkAll: function(){
@@ -1306,9 +1338,20 @@ var app = new Vue({
     },
     getView: function(id){
 
-      this.view = {}
+      this.view = {
+        advResourceUrl: [{file:'', link:''}]
+      }
 
       if(id == -1){
+
+        setTimeout(function(){
+          console.log('datepicker2')
+          $('.datepicker2').datepicker({
+            format: "yyyy-mm-dd",
+          })
+        }, 100)
+
+
         $('#view').modal('show')
         return
       }
@@ -1378,7 +1421,7 @@ var app = new Vue({
       }
 
 
-      var add_or_edit = this.view.id == undefined ? 'edit':'edit'
+      var add_or_edit = this.view.advId == undefined ? 'add':'edit'
 
       $.ajax({
         type: 'POST',
@@ -1403,6 +1446,8 @@ var app = new Vue({
     },
 
     绑定新商户: function(id, is_see){
+
+      this.list2.data = []
 
       var data = {
         "reqHead":
@@ -1435,6 +1480,8 @@ var app = new Vue({
           if(is_see == undefined){
             _this.see = true
 
+            $('#绑定新商户').modal('show')
+
           }else{
             _this.see = false
 
@@ -1463,7 +1510,11 @@ var app = new Vue({
               },
               success: function(re){
 
-                _this.view.mchList = re.rspBody.simpleMchInfoList
+                _this.seeList = re.rspBody.simpleMchInfoList
+
+                setTimeout(function(){
+                  $('#绑定新商户').modal('show')
+                }, 100)
 
               }
             })
@@ -1473,7 +1524,7 @@ var app = new Vue({
           // $('#日期start').val(re.rspBody.validStart)
           // $('#日期ended').val(re.rspBody.validEnd)
 
-          $('#绑定新商户').modal('show')
+          
 
 /*          setTimeout(function(){
             console.log('datepicker2')
