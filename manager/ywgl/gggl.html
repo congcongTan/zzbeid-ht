@@ -400,7 +400,7 @@
 
                     </td>
                     <td>
-                      <input type="text" class="form-control" placeholder="无链接可留空" :value="`${v.link}`">
+                      <input type="text" class="form-control" placeholder="无链接可留空" v-model="v.link">
                     </td>
                     <td class="noenter">
         <a class="btn btn-sm btn-default" href="javascript:;"
@@ -1390,7 +1390,6 @@ var app = new Vue({
           $('#view').modal('show')
 
           setTimeout(function(){
-            console.log('datepicker2')
             $('.datepicker2').datepicker({
               format: "yyyy-mm-dd",
             })
