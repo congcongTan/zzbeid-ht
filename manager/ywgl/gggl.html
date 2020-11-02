@@ -803,6 +803,8 @@
 <link rel="stylesheet" href="../../plugins/datepicker/datepicker.css">
 <script src="../../plugins/datepicker/datepicker.js"></script>
 
+<script src="../../js/spark-md5.min.js"></script>
+
 <script>
 var app = new Vue({
   el: '#app',
@@ -2075,6 +2077,48 @@ var app = new Vue({
 
     },
     上传广告资源_提交: function(i){
+
+      //计算md5
+      var md5 = ''
+      var blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice,
+          file = $('#file' + i).get(0).files[0],
+          chunkSize = 2097152,                             // Read in chunks of 2MB
+          chunks = Math.ceil(file.size / chunkSize),
+          currentChunk = 0,
+          spark = new SparkMD5.ArrayBuffer(),
+          fileReader = new FileReader();
+
+      fileReader.onload = function (e) {
+          console.log('read chunk nr', currentChunk + 1, 'of', chunks);
+          spark.append(e.target.result);                   // Append array buffer
+          currentChunk++;
+
+          if (currentChunk < chunks) {
+              loadNext();
+          } else {
+              // console.log('finished loading');
+              // console.info('computed hash', spark.end());  // Compute hash
+              md5 = spark.end()
+              console.log('文件md5', md5)
+          }
+      };
+
+      fileReader.onerror = function () {
+          console.warn('oops, something went wrong.');
+      };
+
+      function loadNext() {
+          var start = currentChunk * chunkSize,
+              end = ((start + chunkSize) >= file.size) ? file.size : start + chunkSize;
+
+          fileReader.readAsArrayBuffer(blobSlice.call(file, start, end));
+      }
+
+      loadNext();
+
+      var _this = this
+
+      //发送
       var formData = new FormData();
       formData.append('file', $('#file' + i).get(0).files[0] )
 
@@ -2093,29 +2137,11 @@ var app = new Vue({
           if(re.rspHead.retCode == '1'){
 
             _this.view.advResourceUrl[i].file = re.rspBody.file
+            _this.view.advResourceUrl[i].md5  = md5
 
           }else{
             alert(re.rspHead.retMsg)
           }
-
-/*          try {
-            var msg = JSON.parse(re.rspHead.retMsg)
-            if(msg && typeof msg == 'object'){
-              msg = msg.join('<br>')
-            }
-          }
-          catch(e){
-            msg = re.rspHead.retMsg
-
-          }
-
-          $('#提示 .modal-title').html('导入结果')
-          $('#提示 .modal-body').html(msg)
-          $('#提示').modal('show')
-
-
-          _this.getList()*/
-
 
         },
       })
