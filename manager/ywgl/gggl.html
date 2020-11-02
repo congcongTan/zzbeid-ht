@@ -392,12 +392,7 @@
                       <video :src="`${v.file}`" width="120" height="80" controls v-if="v.file.indexOf('.mp4') != -1"></video>
                     </td>
                     <td>
-
-<div class="input-group">
-  <input type="file" class="form-control" :id="`file${i}`" @change="上传广告资源_文件检测(i)">
-  <span class="input-group-addon" @click="上传广告资源_提交(i)">上传</span>
-</div>
-
+                      <input type="file" class="form-control" :id="`file${i}`" @change="上传广告资源_提交(i)">
                     </td>
                     <td>
                       <input type="text" class="form-control" placeholder="无链接可留空" v-model="v.link">
