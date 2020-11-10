@@ -467,7 +467,7 @@
 
             <template v-if="see">
 
-              <div class="form-group" v-if="view.pushType == 1">
+              <div class="form-group">
                 <label class="col-sm-3 control-label">指定代理</label>
                 <div class="col-sm-3">
                   <select class="form-control" v-model="list2.post.agent1Id" onchange="app.getLV2(this.value, 1)">
@@ -483,7 +483,7 @@
                 </div>
               </div>
 
-              <div class="form-group" v-if="view.pushType == 2">
+              <div class="form-group">
                 <label class="col-sm-3 control-label">指定区域</label>
                 <div class="col-sm-3">
                   <select class="form-control" v-model="list2.post.province" onchange="app.getC('view', this.value)">
@@ -505,7 +505,7 @@
                 </div>
               </div>
 
-              <div class="form-group" v-if="view.pushType == 3">
+              <div class="form-group">
                 <label class="col-sm-3 control-label">自定义商户</label>
                 <div class="col-sm-3">
                   <input type="text" class="form-control input-sm" placeholder="输入商户名称查询" v-model="list2.post.title">
