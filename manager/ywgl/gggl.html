@@ -527,7 +527,7 @@
                   <div class="oys" style="height:300px;">
 
                     <div class="col-xs-6 mb5">
-                      <label><input type="checkbox" onclick="app.绑定新商户_全选(this.checked, 'list2')"> 全选</label>
+                      <label><input type="checkbox" id="全选list2" onclick="app.绑定新商户_全选(this.checked, 'list2')"> 全选</label>
                     </div>
 
                     <div class="col-xs-6 mb5" v-for="(v, i) in list2.data">
@@ -551,7 +551,7 @@
                   <div class="oys" style="height:300px;">
 
                     <div class="col-xs-6 mb5">
-                      <label><input type="checkbox" onclick="app.绑定新商户_全选(this.checked, 'list3')"> 全选</label>
+                      <label><input type="checkbox" id="全选list3" onclick="app.绑定新商户_全选(this.checked, 'list3')"> 全选</label>
                     </div>
 
                     <div class="col-xs-12 mb5" v-for="v in list3.data">
@@ -566,7 +566,7 @@
                   <hr>
 
                   <button type="button" class="btn btn-sm btn-primary" @click="绑定新商户_取消绑定()">取消绑定</button>
-                  <button type="button" class="btn btn-link">已加入绑定 {{list3.data.length}} 个</button>
+                  <button type="button" class="btn btn-link">已加入绑定 {{list3.checkbox.all.length}} 个</button>
 
 
                 </div>
@@ -990,7 +990,7 @@ var app = new Vue({
 
     //待添加
     list2: {
-      data: [],
+      data: {},
       post: {
         agent1Id: '',
         agent2Id: '',
@@ -1006,7 +1006,7 @@ var app = new Vue({
     },
 
     list3: {
-      data: [],
+      data: {},
       checkbox: {
         all: [],
         checked: [],
@@ -1060,7 +1060,7 @@ var app = new Vue({
     }
   },
   watch: {
-    pushType(val){
+/*    pushType(val){
 
       // console.log(val)
 
@@ -1082,7 +1082,7 @@ var app = new Vue({
         delete this.list2.post.area
       }
 
-    }
+    }*/
   },
   methods: {
     checkAll: function(){
@@ -1446,7 +1446,7 @@ var app = new Vue({
 
     绑定新商户: function(id, is_see){
 
-      this.list2.data = []
+      this.list2.data = {}
 
       var data = {
         "reqHead":
@@ -1479,12 +1479,53 @@ var app = new Vue({
           if(is_see == undefined){
             _this.see = true
 
+            var data = {
+              "reqHead":
+              {
+                clientType: 6,
+                format: "json",
+                version: "1.0",
+                sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+              },
+              reqBody: {
+                advId: id
+              }
+            }
+
+            $.ajax({
+              type: 'POST',
+              url: manager_api + 'manager/showAdvPushMch/interface',
+              data: JSON.stringify(data),
+              dataType: 'json',
+              beforeSend: function(request){
+                request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+              },
+              success: function(re){
+
+                // console.log(re.rspBody.simpleMchInfoList)
+                // _this.list3.data = re.rspBody.simpleMchInfoList
+
+                _this.list3.checkbox.all = []
+                _this.list3.data = {}
+
+                //整理
+                for( let i in re.rspBody.simpleMchInfoList ){
+                  var v = re.rspBody.simpleMchInfoList[i]
+
+                  //插入全选
+                  _this.list3.checkbox.all.push(v.mchId)
+
+                  //插入数据
+                  _this.list3.data[v.mchId] = v
+                }
+
+              }
+            })
+
             $('#绑定新商户').modal('show')
 
           }else{
             _this.see = false
-
-            console.log('纯睇')
 
             var data = {
               "reqHead":
@@ -1519,18 +1560,6 @@ var app = new Vue({
             })
 
           }
-
-          // $('#日期start').val(re.rspBody.validStart)
-          // $('#日期ended').val(re.rspBody.validEnd)
-
-          
-
-/*          setTimeout(function(){
-            console.log('datepicker2')
-            $('.datepicker2').datepicker({
-              format: "yyyy-mm-dd",
-            })
-          }, 100)*/
 
         }
       })
@@ -1567,15 +1596,19 @@ var app = new Vue({
           $(obj).prop('disabled', false)
           $(obj).children('i').hide()
 
-          //换变量名
-          _this.list2.data = re.rspBody.simpleMchInfoList
-
           //清空
           _this.list2.checkbox.all = []
-          for(var i in _this.list2.data){
-            var v = _this.list2.data[i]
+          _this.list2.data = {}
 
+          //整理
+          for( let i in re.rspBody.simpleMchInfoList ){
+            var v = re.rspBody.simpleMchInfoList[i]
+
+            //插入全选
             _this.list2.checkbox.all.push(v.mchId)
+
+            //插入数据
+            _this.list2.data[v.mchId] = v
           }
 
 
@@ -1588,7 +1621,7 @@ var app = new Vue({
     绑定新商户_全选: function(checked, which_list){
 
       if(checked){
-        _this[which_list].checkbox.checked = _this.list2.checkbox.all
+        _this[which_list].checkbox.checked = JSON.parse(JSON.stringify(_this[which_list].checkbox.all))
       }else{
         _this[which_list].checkbox.checked = []
       }
@@ -1597,54 +1630,64 @@ var app = new Vue({
     绑定新商户_加入绑定: function(){
 
       for(var i in this.list2.checkbox.checked){
-        var v = this.list2.checkbox.checked[i]
+        var v = this.list2.checkbox.checked[i] // v = mchId
 
-        for(var i2 in this.list2.data){
-          var v2 = this.list2.data[i2]
+        if(this.list3.data[v] == undefined){
 
-          //找到对应记录
-          if(v2['mchId'] == v){
-            // console.log(i2)
+          //转移checkbox.all
+          this.list3.checkbox.all.push(v)
+          // this.list2.checkbox.all.splice(i, 1)//有bug
 
-            //list2 -> list3
-            this.list3.data.push(v2)
-            this.list2.data.splice(i2, 1)
+          //list2 -> list3
+          this.list3.data[v] = JSON.parse(JSON.stringify(this.list2.data[v]))
 
-            break
-          }
         }
 
+        delete this.list2.data[v]
+      }
+
+      // 重做checkbox.all
+      this.list2.checkbox.all = []
+      for(var i in this.list2.data){
+        var v = this.list2.data[i]
+
+        this.list2.checkbox.all.push(v.mchId)
       }
 
       //清除选择
       this.list2.checkbox.checked = []
-
+      $('#全选list2').prop('checked', false)
     },
     绑定新商户_取消绑定: function(){
 
       for(var i in this.list3.checkbox.checked){
         var v = this.list3.checkbox.checked[i]
 
-        for(var i2 in this.list3.data){
-          var v2 = this.list3.data[i2]
+        if(this.list2.data[v] == undefined){
 
-          //找到对应记录
-          if(v2['mchId'] == v){
-            // console.log(i2)
+          //转移checkbox.all
+          this.list2.checkbox.all.push(v)
+          // this.list3.checkbox.all.splice(i, 1)//有bug
 
-            //list2 -> list3
-            this.list2.data.push(v2)
-            this.list3.data.splice(i2, 1)
+          //list2 -> list3
+          this.list2.data[v] = JSON.parse(JSON.stringify(this.list3.data[v]))
 
-            break
-          }
         }
 
+        delete this.list3.data[v]
+      }
+
+      // 重做checkbox.all
+      this.list3.checkbox.all = []
+      for(var i in this.list3.data){
+        var v = this.list3.data[i]
+
+        this.list3.checkbox.all.push(v.mchId)
       }
 
       //清除选择
       this.list3.checkbox.checked = []
-
+      $('#全选list3').prop('checked', false)
     },
     绑定新商户_保存: function(){
 
