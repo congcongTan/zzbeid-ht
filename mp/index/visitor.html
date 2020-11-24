@@ -156,6 +156,7 @@
 
       <button class="btn btn-primary" @click="志峰测试()">志峰测试</button>
 
+      <div id="zflink"></div>
       <div id="qrcode">
             <!--二维码容器-->
         </div>
@@ -606,6 +607,7 @@ var app = new Vue({
           );
 
           //根据input框的值生成二维码
+          $('#zflink').html('<a href="' + re + '">链接</a>')
           qrcode.makeCode(re)
 
         }
