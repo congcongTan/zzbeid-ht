@@ -482,6 +482,8 @@
                     <th>厂商编号</th>
                     <th>设备激活码</th>
                     <th>设备类型</th>
+                    <th>身份证设备类型</th>
+                    <th>中国护照设备类型</th>
                     <!-- <th>身份证设备</th> -->
                     <th>有效期</th>
                     <th>状态</th>
@@ -497,6 +499,16 @@
                     <td>
                       <select class="form-control input-sm w80" v-model="v.equipmentType">
                         <option :value="`${i}`" v-for="(v, i) in 设备类型">{{v}}</option>
+                      </select>
+                    </td>
+                    <td>
+                      <select class="form-control input-sm w80" v-model="v.idCardDevType">
+                        <option :value="`${i}`" v-for="(v, i) in {1:'ZktecoIdcard',2:'DKCloudIDUart'}">{{v}}</option>
+                      </select>
+                    </td>
+                    <td>
+                      <select class="form-control input-sm w80" v-model="v.chinaPassportDevType">
+                        <option :value="`${i}`" v-for="(v, i) in {0:'无',1:'SHUNCCM舜鑫科技'}">{{v}}</option>
                       </select>
                     </td>
                     <!-- <td><div class="mt6">{{身份证设备[v.idCardDevType]}}</div></td> -->
