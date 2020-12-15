@@ -485,19 +485,6 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">APP类型</label>
-                <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.clientType">
-                    <option value="1">中证宝APP</option>
-                    <option value="2">旺宝APP</option>
-                  </select>
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 影响商户码的下载地址
-                </div>
-              </div>
-
-              <div class="form-group">
                 <label class="col-sm-3 control-label">第三方标识</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="view.otherIdentifier">
@@ -752,7 +739,7 @@
 
               <hr>
 
-              <div class="form-group">
+<!--               <div class="form-group">
                 <label class="col-sm-3 control-label">客控系统</label>
                 <div class="col-sm-4">
                   <select class="form-control input-sm" v-model="view.guestControl">
@@ -760,21 +747,21 @@
                     <option value="1">杰龙</option>
                   </select>
                 </div>
-              </div>
+              </div> -->
 
-              <div class="form-group">
+<!--               <div class="form-group">
                 <label class="col-sm-3 control-label">客控系统AppId</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="view.appId">
                 </div>
-              </div>
+              </div> -->
 
-              <div class="form-group">
+<!--               <div class="form-group">
                 <label class="col-sm-3 control-label">客控系统AppKey</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="view.appKey">
                 </div>
-              </div>
+              </div> -->
 
             </form>
 
@@ -1391,7 +1378,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 1,
           format: "json",
           version: "1.0",
           sign: "2A71F91102AE746493B3CDF67FCCDCF3"
@@ -1455,7 +1441,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 1,
           format: "json",
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
@@ -1500,7 +1485,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 1,
           format: "json",
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
@@ -1555,7 +1539,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 1,
           format: "json",
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
@@ -1618,7 +1601,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 1,
           format: "json",
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
@@ -1702,7 +1684,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 6,
           format: "json",
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
@@ -1736,7 +1717,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 6,
           format: "json",
           version: "1.0",
           sign: "401E79DEC2E7AA1F645D67924E6EE0F3"
@@ -1802,7 +1782,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 1,
           format: "json",
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
@@ -1862,7 +1841,6 @@ var app = new Vue({
         var data = {
           "reqHead":
           {
-            clientType: 1,
             format: "json",
             version: "1.0",
             sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
@@ -1907,7 +1885,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 6,
           format: "json",
           version: "1.0",
           sign: "30C7398578F1F7C995BAF67D18F89B33"
@@ -1942,7 +1919,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 6,
           format: "json",
           version: "1.0",
           sign: "30C7398578F1F7C995BAF67D18F89B33"
@@ -1977,7 +1953,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 6,
           format: "json",
           version: "1.0",
           sign: "30C7398578F1F7C995BAF67D18F89B33"
@@ -2015,7 +1990,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 6,
           format: "json",
           version: "1.0",
           sign: "30C7398578F1F7C995BAF67D18F89B33"
@@ -2054,7 +2028,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 1,
           format: "json",
           version: "1.0",
           sign: "2A71F91102AE746493B3CDF67FCCDCF3"
@@ -2090,7 +2063,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 1,
           format: "json",
           version: "1.0",
           sign: "2A71F91102AE746493B3CDF67FCCDCF3"
@@ -2125,7 +2097,6 @@ var app = new Vue({
       var data = {
         "reqHead":
         {
-          clientType: 1,
           format: "json",
           version: "1.0",
           sign: "2A71F91102AE746493B3CDF67FCCDCF3"
@@ -2275,7 +2246,6 @@ var app = new Vue({
     var data = {
       "reqHead":
       {
-        clientType: 1,
         format: "json",
         version: "1.0",
         sign: "30C7398578F1F7C995BAF67D18F89B33"
