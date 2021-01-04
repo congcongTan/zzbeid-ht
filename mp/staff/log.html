@@ -934,8 +934,8 @@ var app = new Vue({
     var date = new Date()
     var now_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 
-    $('#日期时间开始').val(now_date + ' 00:00:00')
-    $('#日期时间结束').val(now_date + ' 23:59:59')
+    $('#日期时间开始').val(now_date + ' 00:00')
+    $('#日期时间结束').val(now_date + ' 23:59')
 
     $(".datetimepicker").datetimepicker()
 

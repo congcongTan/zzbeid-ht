@@ -1245,8 +1245,8 @@ var app = new Vue({
     var 月头 = date.getFullYear() + '-' + (date.getMonth() + 1) + '-01'
     var 月尾 = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 
-    $('#考勤日期开始').val(月头 + ' 00:00:00')
-    $('#考勤日期结束').val(月尾 + ' 23:59:59')
+    $('#考勤日期开始').val(月头 + ' 00:00')
+    $('#考勤日期结束').val(月尾 + ' 23:59')
 
     $(".datetimepicker").datetimepicker()
 
