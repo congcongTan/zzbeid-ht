@@ -154,8 +154,6 @@
     <!-- Main content -->
     <section class="content">
 
-      <button class="btn btn-primary" @click="志峰测试()">志峰测试</button>
-
       <div id="zflink"></div>
       <div id="qrcode">
             <!--二维码容器-->
@@ -581,37 +579,6 @@ var app = new Vue({
       //登出
       LS.removeItem('admin')
       location.reload()
-
-    },
-
-    志峰测试: function(){
-
-      console.log('志峰测试')
-      //mp.stage.zzbeid.cn/zzb/mp/waChatPlatform/qrCode
-
-      $.ajax({
-        type: 'POST',
-        url: 'http://mp.stage.zzbeid.cn/zzb/mp/waChatPlatform/qrCode',
-        // data: JSON.stringify(data),
-        dataType: 'text',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          var qrcode = new QRCode(
-            document.getElementById("qrcode"), {
-              width: 256, //设置宽高
-              height: 256
-            }
-          );
-
-          //根据input框的值生成二维码
-          $('#zflink').html('<a href="' + re + '">链接</a>')
-          qrcode.makeCode(re)
-
-        }
-      })
 
     },
 
