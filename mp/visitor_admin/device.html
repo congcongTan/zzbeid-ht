@@ -214,7 +214,7 @@
                   <tr v-for="(v, i) in list.data">
                     <td>{{v.title}}</td>
                     <td>{{v.sn}}</td>
-                    <td>{{设备厂商[v.type]}}</td>
+                    <td>{{设备厂商[v.type]}} <a href="javascript:;" v-if="v.type == 10003" @click="绑定token()">[绑定token]</a></td>
                     <td>{{v.createTimeTitle}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
@@ -927,6 +927,32 @@ var app = new Vue({
         },
       })
 
+    },
+
+    绑定token: function(){
+
+      console.log('绑定token')
+
+      $.ajax({
+        type: 'POST',
+        url: 'http://device.zzb110.cn:12390/api/v1/device/mq/bind?device_id=7101834860535',
+        data: {
+          url: ["","http://47.99.148.103:12390","http://device.zzb110.cn:12390"]
+        },
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
     },
 
   },
