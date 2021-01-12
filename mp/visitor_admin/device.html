@@ -597,7 +597,8 @@ var app = new Vue({
 		0:'无软件',
 		20000:'佛山曇京',
 		60001:'园区访客',
-		60002:'酒店访客'
+		60002:'酒店访客',
+		60003:'重点单位来访系统',
 	},
 
 	充电行业:{
@@ -933,9 +934,15 @@ var app = new Vue({
 
       console.log('绑定token')
 
+      if(location.href.indexOf('stage') != -1){
+        var url = 'http://47.99.148.103:12390/api/v1/'
+      }else{
+        var url = 'http://device.zzb110.cn:12390/api/v1/'
+      }
+
       $.ajax({
         type: 'POST',
-        url: 'http://47.99.148.103:12390/api/v1/device/mq/bind?device_id=7101834860535',
+        url: url + 'device/mq/bind?device_id=7101834860535',
         data: {
           url: ["","http://47.99.148.103:12390","http://device.zzb110.cn:12390"]
         },
