@@ -935,7 +935,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: 'http://47.99.101.132:12390/api/v1/device/mq/bind?device_id=7101834860535',
+        url: 'http://47.99.148.103:12390/api/v1/device/mq/bind?device_id=7101834860535',
         data: {
           url: ["","http://47.99.148.103:12390","http://device.zzb110.cn:12390"]
         },
@@ -945,11 +945,7 @@ var app = new Vue({
         },
         success: function(re){
 
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-          }else{
-            alert(re.rspHead.retMsg)
-          }
+          alert(re.msg)
 
         },
       })
