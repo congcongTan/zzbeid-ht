@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>楼层管理</title>
+    <title>设备列表</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -142,12 +142,12 @@
 
     <section class="content-header">
       <h1>
-        楼层管理
+        设备列表
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>系统管理</li>
-        <li class="active">楼层管理</li>
+        <li>楼层管理</li>
+        <li class="active">设备列表</li>
       </ol>
     </section>
 
@@ -159,7 +159,7 @@
 
             <ul class="nav nav-tabs">
               <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
-              <!-- <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li> -->
+              <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
@@ -203,17 +203,19 @@
               <table class="table table-bordered table-hover">
                 <thead>
                   <tr class="text-nowrap">
-                    <th>楼层名称</th>
-                    <th>所属楼栋</th>
-                    <th>排序</th>
+                    <th>设备名称</th>
+                    <th>设备编号</th>
+                    <th>设备厂商</th>
+                    <th>添加时间</th>
                     <th width="1%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
                     <td>{{v.title}}</td>
-                    <td>{{v.buildingTitle}}</td>
-                    <td>{{v.sort}}</td>
+                    <td>{{v.sn}}</td>
+                    <td>{{设备厂商[v.type]}} <a href="javascript:;" v-if="v.type == 10003" @click="绑定token()">[绑定token]</a></td>
+                    <td>{{v.createTimeTitle}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
 
@@ -283,26 +285,48 @@
             <form class="form-horizontal">
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">楼层名称</label>
+                <label class="col-sm-3 control-label">设备名称</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="view.title">
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">所属楼栋</label>
+                <label class="col-sm-3 control-label">设备编号</label>
                 <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.buildingId">
+                  <input type="text" class="form-control input-sm" v-model="view.sn">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">设备厂商</label>
+                <div class="col-sm-4">
+                  <select class="form-control input-sm" v-model="view.type">
                     <option value="">请选择</option>
-                    <option :value="`${v.id}`" v-for="v in 楼栋">{{v.title}}</option>
+                    <option :value="`${i}`" v-for="(v,i) in 设备厂商">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">设备通行模式</label>
+                <div class="col-sm-4">
+                  <select class="form-control input-sm" v-model="view.mode">
+                    <option value="">请选择</option>
+                    <option :value="`${i}`" v-for="(v,i) in 设备通行模式">{{v}}</option>
                   </select>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">排序</label>
+                <label class="col-sm-3 control-label">设备类型</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.sort">
+                  <select class="form-control input-sm" v-model="view.deviceType">
+                    <option value="">请选择</option>
+                    <option :value="`${i}`" v-for="(v,i) in 设备类型">{{v}}</option>
+                  </select>
                 </div>
               </div>
 
@@ -676,11 +700,26 @@ var app = new Vue({
       },
     },
 
-    楼栋:{},
-
-    硬件厂商:{
+    设备厂商:{
       0:'其它',
       10001:'华舜',
+      10002:'梦派',
+      10003:'长视',
+      10004:'广电运通',
+      10005:'安居宝',
+      10006:'曇京',
+      20001:'中证宝访客机',
+    },
+
+    设备通行模式:{
+      0: '进入',
+      1: '签离',
+      2: '不区分',
+    },
+
+    设备类型:{
+      1: '访客机',
+      2: '门禁',
     },
 
   },
@@ -742,7 +781,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsFloorList/interface',
+        url: mp_api + 'mp/getNaShaDeviceList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -753,8 +792,8 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.hsFloorInfoList
-          delete re.rspBody.hsFloorInfoList
+          _this.list.data = re.rspBody.naShaDeviceList
+          delete re.rspBody.naShaDeviceList
 
           _this.list.info = re.rspBody
 
@@ -807,7 +846,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsFloorInfo/interface',
+        url: mp_api + 'mp/getNaShaDeviceInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -845,7 +884,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/' + add_or_edit + 'HsFloor/interface',
+        url: mp_api + 'mp/' + add_or_edit + 'NaShaDevice/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -886,7 +925,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/deleteHsFloor/interface',
+        url: mp_api + 'mp/deleteNaShaDevice/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -905,34 +944,32 @@ var app = new Vue({
 
     },
 
-    get楼栋: function(){
+    绑定token: function(){
 
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
-        },
-        reqBody: this.list.post
+      console.log('绑定token')
+
+      if(location.href.indexOf('stage') != -1){
+        var url = 'http://47.99.148.103:12390/api/v1/'
+      }else{
+        var url = 'http://device.zzb110.cn:12390/api/v1/'
       }
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsBuildingList/interface',
-        data: JSON.stringify(data),
+        url: url + 'device/mq/bind?device_id=7101834860535',
+        data: {
+          url: ["","http://47.99.148.103:12390","http://device.zzb110.cn:12390"]
+        },
         dataType: 'json',
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
         success: function(re){
 
-          _this.楼栋 = re.rspBody.hsBuildingInfoList
+          alert(re.msg)
 
-        }
+        },
       })
-
     },
 
   },
@@ -1048,9 +1085,8 @@ var app = new Vue({
     this.list.post.userId = this.admin.userId
     // this.list.post.type = this.admin.type
 
-    this.getList()
 
-    this.get楼栋()
+    this.getList()
 
   }
 })
