@@ -750,10 +750,10 @@ var app = new Vue({
 
           //初始化开关状态，必需
           for(var i in re.rspBody.nashaDepartList){
-            re.rspBody.nashaDepartList[i]['open'] = 0
+            re.rspBody.nashaDepartList[i]['open'] = 1
 
             for(var i2 in re.rspBody.nashaDepartList[i]['nashaDepartList']){
-              re.rspBody.nashaDepartList[i]['nashaDepartList'][i2]['open'] = 0
+              re.rspBody.nashaDepartList[i]['nashaDepartList'][i2]['open'] = 1
 
             }
           }
