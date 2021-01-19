@@ -205,7 +205,8 @@
                   <tr class="text-nowrap">
                     <th>设备名称</th>
                     <th>设备编号</th>
-                    <th>设备厂商</th>
+                    <th>硬件厂商</th>
+                    <th>设备类型</th>
                     <th>添加时间</th>
                     <th width="1%">操作</th>
                   </tr>
@@ -214,7 +215,8 @@
                   <tr v-for="(v, i) in list.data">
                     <td>{{v.title}}</td>
                     <td>{{v.sn}}</td>
-                    <td>{{设备厂商[v.type]}} <a href="javascript:;" v-if="v.type == 10003" @click="绑定token()">[绑定token]</a></td>
+                    <td>{{v.typeTitle}}</td>
+                    <td>{{v.deviceTypeTitle}}</td>
                     <td>{{v.createTimeTitle}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
