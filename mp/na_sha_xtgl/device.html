@@ -18,7 +18,7 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>组织架构</title>
+    <title>设备列表</title>
 
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
@@ -142,11 +142,12 @@
 
     <section class="content-header">
       <h1>
-        组织架构
+        设备列表
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li class="active">组织架构</li>
+        <li>楼层管理</li>
+        <li class="active">设备列表</li>
       </ol>
     </section>
 
@@ -158,7 +159,7 @@
 
             <ul class="nav nav-tabs">
               <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
-              <!-- <li class=""><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li> -->
+              <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
@@ -169,7 +170,30 @@
               </div>
               <div class="tab-pane" id="搜索">
 
-                <a class="btn btn-sm btn-primary" @click="getList">查找</a>
+                <div class="form-horizontal">
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">设备名称</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.title">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">设备编号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.sn">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
+                        查找
+                        <i class="fa fa-spinner fa-spin" v-if="list.loading == 1"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
               </div>
             </div>
@@ -178,64 +202,64 @@
 
               <table class="table table-bordered table-hover">
                 <thead>
-                  <tr class="noenter">
-                    <th>部门名称</th>
-                    <th>排序</th>
-                    <th width="1%" class="noenter">操作</th>
+                  <tr class="text-nowrap">
+                    <th>设备名称</th>
+                    <th>设备编号</th>
+                    <th>硬件厂商</th>
+                    <th>设备类型</th>
+                    <th>添加时间</th>
+                    <th width="1%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <template v-for="(v, i) in list.data">
-                    <tr>
-                      <td>
-                        <div class="fl w20">
-                          <a href="javascript:;" @click="open(v.id)">
-                            <i v-if="v.nashaDepartList == null" :class="`fa fa-square-o`"></i>
-                            <i v-if="v.nashaDepartList != null" :class="`fa fa-${v.open == 1 ? 'minus':'plus'}-square-o`"></i>
-                          </a>
-                        </div>
-                        {{v.title}}
-                      </td>
-                      <td>{{v.sort}}</td>
-                      <td class="text-nowrap">
-                        <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a>
-                        <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a>
-                      </td>
-                    </tr>
-                    <template v-if="v.open === 1" v-for="(v2, i2) in v.nashaDepartList">
-                      <tr>
-                        <td>
-                          <div class="fl ml20 w20">
-                            <a href="javascript:;" @click="open(v2.id)">
-                              <i v-if="v2.nashaDepartList == null" :class="`fa fa-square-o`"></i>
-                              <i v-if="v2.nashaDepartList != null" :class="`fa fa-${v2.open == 1 ? 'minus':'plus'}-square-o`"></i>
-                            </a>
-                          </div>
-                          {{v2.title}}
-                        </td>
-                        <td>{{v2.sort}}</td>
-                        <td class="text-nowrap">
-                          <a class="btn btn-xs btn-primary" @click="getView(v2.id)">编辑</a>
-                          <a class="btn btn-xs btn-danger" @click="del(v2.id)">删除</a>
-                        </td>
-                      </tr>
-                      <template v-if="v2.open === 1" v-for="(v3, i3) in v2.nashaDepartList">
-                        <tr>
-                          <td><div class="fl ml40 w20"><i :class="`fa fa-square-o`"></i></div>{{v3.title}}</td>
-                          <td>{{v3.sort}}</td>
-                          <td class="text-nowrap">
-                            <a class="btn btn-xs btn-primary" @click="getView(v3.id)">编辑</a>
-                            <a class="btn btn-xs btn-danger" @click="del(v3.id)">删除</a>
-                          </td>
-                        </tr>
-                      </template>
-                    </template>
-                  </template>
-                  <tr v-if="list.data.length == 0">
+                  <tr v-for="(v, i) in list.data">
+                    <td>{{v.title}}</td>
+                    <td>{{v.sn}}</td>
+                    <td>{{v.typeTitle}}</td>
+                    <td>{{v.deviceTypeTitle}}</td>
+                    <td>{{v.createTimeTitle}}</td>
+                    <td class="text-nowrap operation">
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
+
+                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
+                    </td>
+                  </tr>
+                  <tr v-if="list.length == 0">
                     <td colspan="99">没有数据</td>
                   </tr>
                 </tbody>
               </table>
+
+              <div class="pull-left mt15">
+                <label>
+                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
+                    <option value="2">每页 2 条</option>
+                    <option value="10">每页 10 条</option>
+                    <option value="25">每页 25 条</option>
+                    <option value="50">每页 50 条</option>
+                    <option value="100">每页 100 条</option>
+                  </select>
+                </label>
+
+                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
+              </div>
+
+              <div class="pull-right" v-if="list.info.pages > 1">
+                <ul class="pagination pagination-sm">
+
+                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
+
+                  <li class="paginate_button" v-for="i in list.page.prev"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+
+                  <li class="paginate_button active"><a href="#">{{list.post.pageNum}}</a></li>
+
+                  <li class="paginate_button" v-for="i in list.page.next"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+
+                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
+                  </li>
+
+                </ul>
+              </div>
 
             </div>
 
@@ -263,29 +287,48 @@
             <form class="form-horizontal">
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">部门名称</label>
+                <label class="col-sm-3 control-label">设备名称</label>
                 <div class="col-sm-4">
                   <input type="text" class="form-control input-sm" v-model="view.title">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">上级部门</label>
+                <label class="col-sm-3 control-label">设备编号</label>
                 <div class="col-sm-4">
-                  <select class="form-control" v-model="view.pid">
-                    <option value="0">--请选择--</option>
-                    <option :value="`${v.id}`" v-for="(v, i) in 上级菜单">{{v.title}}</option>
+                  <input type="text" class="form-control input-sm" v-model="view.sn">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">设备厂商</label>
+                <div class="col-sm-4">
+                  <select class="form-control input-sm" v-model="view.type">
+                    <option value="">请选择</option>
+                    <option :value="`${i}`" v-for="(v,i) in 设备厂商">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">设备通行模式</label>
+                <div class="col-sm-4">
+                  <select class="form-control input-sm" v-model="view.mode">
+                    <option value="">请选择</option>
+                    <option :value="`${i}`" v-for="(v,i) in 设备通行模式">{{v}}</option>
                   </select>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="col-sm-3 control-label">排序</label>
+                <label class="col-sm-3 control-label">设备类型</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.sort">
+                  <select class="form-control input-sm" v-model="view.deviceType">
+                    <option value="">请选择</option>
+                    <option :value="`${i}`" v-for="(v,i) in 设备类型">{{v}}</option>
+                  </select>
                 </div>
               </div>
 
@@ -647,25 +690,39 @@ var app = new Vue({
     list: {
       data: [],
       post: {
-        title: '',
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
       },
       info: {},
       page: {},
+      loading: 0,
       checkbox: {
         all: [],
         checked: [],
       },
     },
 
-    类型: {
-      1: '目录',
-      2: '菜单',
-      3: '功能',
+    设备厂商:{
+      0:'其它',
+      10001:'华舜',
+      10002:'梦派',
+      10003:'长视',
+      10004:'广电运通',
+      10005:'安居宝',
+      10006:'曇京',
+      20001:'中证宝访客机',
     },
 
-    上级菜单: [],
+    设备通行模式:{
+      0: '进入',
+      1: '签离',
+      2: '不区分',
+    },
+
+    设备类型:{
+      1: '访客机',
+      2: '门禁',
+    },
 
   },
   methods: {
@@ -688,6 +745,8 @@ var app = new Vue({
     },
 
     getList: function(key, val){
+
+      this.list.loading = 1
 
       _this = this
 
@@ -717,36 +776,28 @@ var app = new Vue({
           clientType: 1,
           format: "json",
           version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
         },
         reqBody: this.list.post
       }
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getNaShaDepartList/interface',
+        url: mp_api + 'mp/getNaShaDeviceList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
+        complete: function(){
+          _this.list.loading = 0
+        },
         success: function(re){
 
-          //初始化开关状态，必需
-          for(var i in re.rspBody.nashaDepartList){
-            re.rspBody.nashaDepartList[i]['open'] = 1
+          _this.list.data = re.rspBody.naShaDeviceList
+          delete re.rspBody.naShaDeviceList
 
-            for(var i2 in re.rspBody.nashaDepartList[i]['nashaDepartList']){
-              re.rspBody.nashaDepartList[i]['nashaDepartList'][i2]['open'] = 1
-
-            }
-          }
-
-          _this.list.data = re.rspBody.nashaDepartList
-          delete re.rspBody.nashaDepartList
-
-          _this.list.info = re.rspBody          
-
+          _this.list.info = re.rspBody
 
           //id
           for( var i in _this.list.data ){
@@ -773,79 +824,11 @@ var app = new Vue({
 
     },
 
-    open: function(id){
-
-      for(var i in this.list.data){
-        var v = this.list.data[i]
-
-        //lv1
-        if(v['id'] == id){
-          if(v['open'] == 1){
-            this.list.data[i]['open'] = 0
-          }else{
-            this.list.data[i]['open'] = 1
-          }
-
-          // console.log('lv1找到了', i)
-          break
-        }
-
-        for(var i2 in v.nashaDepartList){
-          var v2 = v.nashaDepartList[i2]
-
-          //lv2
-          if(v2['id'] == id){
-            if(v2['open'] == 1){
-              this.list.data[i].nashaDepartList[i2].open = 0
-            }else{
-              this.list.data[i].nashaDepartList[i2].open = 1
-            }
-
-            // console.log('lv2找到了', i + '-' + i2)
-            break
-          }
-
-        }
-
-      }
-
-    },
-
     getView: function(id){
 
-      //上级菜单
-      this.上级菜单 = []//清空
-
-
-      for(var i in this.list.data){
-        var v = this.list.data[i]
-
-        //lv1
-        this.上级菜单.push({
-          'id': v.id,
-          'title': v.title
-        })
-
-        for(var i2 in v['nashaDepartList']){
-          var v2 = v['nashaDepartList'][i2]
-
-          //lv2
-          this.上级菜单.push({
-            'id': v2.id,
-            'title': '　' + v2.title
-          })
-
-        }
-
-      }
+      this.view = {}
 
       if(id == -1){
-
-        this.view = {
-          status: 1,
-          parentId: 0,
-        }
-
         $('#view').modal('show')
         return
       }
@@ -865,7 +848,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getNaShaDepartInfo/interface',
+        url: mp_api + 'mp/getNaShaDeviceInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -873,9 +856,13 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.view = re.rspBody
-
-          $('#view').modal('show')
+          if(re.rspHead.retCode == '0'){
+            alert(re.rspHead.retMsg)
+          }
+          else{
+            _this.view = re.rspBody
+            $('#view').modal('show')
+          }
 
         }
       })
@@ -899,7 +886,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/' + add_or_edit + 'NaShaDepart/interface',
+        url: mp_api + 'mp/' + add_or_edit + 'NaShaDevice/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -909,7 +896,6 @@ var app = new Vue({
 
           if(re.rspHead.retCode == '1'){
             _this.getList()
-            _this.reloadMenu()
             $('#view').modal('hide')
           }else{
             alert(re.rspHead.retMsg)
@@ -926,88 +912,22 @@ var app = new Vue({
         return
       }
 
-      //单个
-      if(id != undefined){
-        var ids = [id]
-      }
-      //多个
-      else if(this.list.checkbox.checked.length == 0){
-        alert('一个都没有选中')
-        return
-      }else{
-
-        var ids = this.list.checkbox.checked
-      }
-
-      // console.log(ids)
-
-      for( var i in ids ){
-        var id = ids[i]
-
-
-        var data = {
-          "reqHead":
-          {
-            clientType: 1,
-            format: "json",
-            version: "1.0",
-            sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-          },
-          reqBody: {
-            id: id
-          }
-        }
-
-        $.ajax({
-          type: 'POST',
-          url: manager_api + 'manager/deleteMenu/interface',
-          data: JSON.stringify(data),
-          dataType: 'json',
-          beforeSend: function(request){
-            request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-          },
-          success: function(re){
-
-            if(re.rspHead.retMsg != '成功'){
-              alert(re.rspHead.retMsg)
-            }else{
-
-              _this.getList()
-              _this.reloadMenu()
-
-            }
-
-          }
-        })
-
-        
-
-      }
-
-    },
-
-    reloadMenu: function(){
-
-      var _this = this
-
-      //侧栏菜单
       var data = {
         "reqHead":
         {
-          clientType: 6,
+          clientType: 1,
           format: "json",
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          id: this.admin.id
+          id: id
         }
       }
-      // console.log(data)
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getManagerAuthority/interface',
+        url: mp_api + 'mp/deleteNaShaDevice/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1015,19 +935,44 @@ var app = new Vue({
         },
         success: function(re){
 
-          // console.log(re)
-          // return
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+          }else{
+            alert(re.rspHead.retMsg)
+          }
 
-          //更新ls
-          LS.menu = JSON.stringify(re.rspBody.nashaDepartList)
-
-          //更新当前
-          _this.sidemenu = re.rspBody.nashaDepartList
-
-        }
+        },
       })
 
-    }
+    },
+
+    绑定token: function(){
+
+      console.log('绑定token')
+
+      if(location.href.indexOf('stage') != -1){
+        var url = 'http://47.99.148.103:12390/api/v1/'
+      }else{
+        var url = 'http://device.zzb110.cn:12390/api/v1/'
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: url + 'device/mq/bind?device_id=7101834860535',
+        data: {
+          url: ["","http://47.99.148.103:12390","http://device.zzb110.cn:12390"]
+        },
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          alert(re.msg)
+
+        },
+      })
+    },
 
   },
   mounted() {
@@ -1139,10 +1084,14 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
+    this.list.post.userId = this.admin.userId
+    // this.list.post.type = this.admin.type
+
+
     this.getList()
 
   }
-});
+})
 </script>
 </body>
 </html>
