@@ -836,9 +836,9 @@ var app = new Vue({
             this.list.data[i]['open'] = 1
           }
 
-          // console.log('lv1找到了', i)
           break
         }
+
 
         for(var i2 in v.nashaDepartList){
           var v2 = v.nashaDepartList[i2]
@@ -851,11 +851,10 @@ var app = new Vue({
               this.list.data[i].nashaDepartList[i2].open = 1
             }
 
-            // console.log('lv2找到了', i + '-' + i2)
             break
           }
-
         }
+
 
       }
 
@@ -981,7 +980,7 @@ var app = new Vue({
 
           if(re.rspHead.retCode == '1'){
             _this.getList()
-            _this.reloadMenu()
+            // _this.reloadMenu()
             $('#view').modal('hide')
           }else{
             alert(re.rspHead.retMsg)
@@ -1029,10 +1028,12 @@ var app = new Vue({
             id: id
           }
         }
+        // console.log(data)
+        // return;
 
         $.ajax({
           type: 'POST',
-          url: manager_api + 'manager/deleteNaShaDepart/interface',
+          url: mp_api + 'mp/deleteNaShaDepart/interface',
           data: JSON.stringify(data),
           dataType: 'json',
           beforeSend: function(request){
@@ -1045,7 +1046,7 @@ var app = new Vue({
             }else{
 
               _this.getList()
-              _this.reloadMenu()
+              // _this.reloadMenu()
 
             }
 
@@ -1079,7 +1080,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getManagerAuthority/interface',
+        url: mp_api + 'mp/getManagerAuthority/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
