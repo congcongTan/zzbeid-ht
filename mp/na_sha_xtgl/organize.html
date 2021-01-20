@@ -205,7 +205,7 @@
                     <template v-if="v.open === 1" v-for="(v2, i2) in v.nashaDepartList">
                       <tr>
                         <td>
-                          <div class="fl ml20 w20">
+                          <div class="fl w20" style="margin-left: 20px">
                             <a href="javascript:;" @click="open(v2.id)">
                               <i v-if="v2.nashaDepartList == null" :class="`fa fa-square-o`"></i>
                               <i v-if="v2.nashaDepartList != null" :class="`fa fa-${v2.open == 1 ? 'minus':'plus'}-square-o`"></i>
@@ -221,13 +221,33 @@
                       </tr>
                       <template v-if="v2.open === 1" v-for="(v3, i3) in v2.nashaDepartList">
                         <tr>
-                          <td><div class="fl ml40 w20"><i :class="`fa fa-square-o`"></i></div>{{v3.title}}</td>
+                          <td><div class="fl w20" style="margin-left: 40px">
+                            <a href="javascript:;" @click="open(v3.id)">
+                              <i v-if="v3.nashaDepartList == null" :class="`fa fa-square-o`"></i>
+                              <i v-if="v3.nashaDepartList != null" :class="`fa fa-${v3.open == 1 ? 'minus':'plus'}-square-o`"></i>
+                            </a>
+                          </div>{{v3.title}}</td>
                           <td>{{v3.sort}}</td>
                           <td class="text-nowrap">
                             <a class="btn btn-xs btn-primary" @click="getView(v3.id)">编辑</a>
                             <a class="btn btn-xs btn-danger" @click="del(v3.id)">删除</a>
                           </td>
                         </tr>
+                        <template v-if="v3.open === 1" v-for="(v4, i4) in v3.nashaDepartList">
+                          <tr>
+                            <td><div class="fl w20" style="margin-left: 60px">
+                              <a href="javascript:;" @click="open(v4.id)">
+                                <i v-if="v4.nashaDepartList == null" :class="`fa fa-square-o`"></i>
+                                <i v-if="v4.nashaDepartList != null" :class="`fa fa-${v4.open == 1 ? 'minus':'plus'}-square-o`"></i>
+                              </a>
+                            </div>{{v4.title}}</td>
+                            <td>{{v4.sort}}</td>
+                            <td class="text-nowrap">
+                              <a class="btn btn-xs btn-primary" @click="getView(v4.id)">编辑</a>
+                              <a class="btn btn-xs btn-danger" @click="del(v4.id)">删除</a>
+                            </td>
+                          </tr>
+                        </template>
                       </template>
                     </template>
                   </template>
@@ -733,14 +753,44 @@ var app = new Vue({
         success: function(re){
 
           //初始化开关状态，必需
+
+          // re.rspBody.nashaDepartList = _this.addOpen(re.rspBody.nashaDepartList)
+
+          //lv1
           for(var i in re.rspBody.nashaDepartList){
+            var v = re.rspBody.nashaDepartList[i]
             re.rspBody.nashaDepartList[i]['open'] = 1
 
-            for(var i2 in re.rspBody.nashaDepartList[i]['nashaDepartList']){
-              re.rspBody.nashaDepartList[i]['nashaDepartList'][i2]['open'] = 1
+            //lv2
+            for(var i2 in v.nashaDepartList){
+              var v2 = v.nashaDepartList[i2]
+              re.rspBody.nashaDepartList[i].nashaDepartList[i2].open = 1
 
+              //lv3
+              for(var i3 in v2.nashaDepartList){
+                var v3 = v2.nashaDepartList[i3]
+                re.rspBody.nashaDepartList[i].nashaDepartList[i2].nashaDepartList[i3].open = 1
+
+                //lv4
+                for(var i4 in v3.nashaDepartList){
+                  var v4 = v3.nashaDepartList[i3]
+                  re.rspBody.nashaDepartList[i].nashaDepartList[i2].nashaDepartList[i3].nashaDepartList[i4].open = 1
+
+                  //lv5
+                  for(var i5 in v4.nashaDepartList){
+                    var v5 = v4.nashaDepartList[i4]
+                    re.rspBody.nashaDepartList[i].nashaDepartList[i2].nashaDepartList[i3].nashaDepartList[i4].nashaDepartList[i5].open = 1
+
+                  }
+
+                }
+
+              }
             }
           }
+
+          console.log(re.rspBody.nashaDepartList)
+
 
           _this.list.data = re.rspBody.nashaDepartList
           delete re.rspBody.nashaDepartList
@@ -834,6 +884,28 @@ var app = new Vue({
             'id': v2.id,
             'title': '　' + v2.title
           })
+
+          for(var i3 in v2['nashaDepartList']){
+            var v3 = v2['nashaDepartList'][i3]
+
+            //lv3
+            this.上级菜单.push({
+              'id': v3.id,
+              'title': '　' + v3.title
+            })
+
+            for(var i4 in v3['nashaDepartList']){
+              var v4 = v3['nashaDepartList'][i4]
+
+              //lv4
+              this.上级菜单.push({
+                'id': v4.id,
+                'title': '　' + v4.title
+              })
+
+            }
+
+          }
 
         }
 
@@ -960,7 +1032,7 @@ var app = new Vue({
 
         $.ajax({
           type: 'POST',
-          url: manager_api + 'manager/deleteMenu/interface',
+          url: manager_api + 'manager/deleteNaShaDepart/interface',
           data: JSON.stringify(data),
           dataType: 'json',
           beforeSend: function(request){
