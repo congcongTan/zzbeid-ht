@@ -1549,6 +1549,34 @@ var app = new Vue({
 
     },
 
+    addopen: function(obj, level){
+
+      for (var a in obj) {
+        if (typeof(obj[a]) == "object") {
+
+          if(a == 'nashaDepartList'){
+
+            obj['open'] = 1
+
+            var depart = {
+              id: obj['id'],
+              title: '',
+            }
+
+            if(level < 20){
+              for(var i=1; i<level; i++){
+                depart.title += '-'
+              }
+              depart.title += ' ' + obj.title
+
+              this.组织架构.push(depart)
+            }
+          }
+
+          this.addopen(obj[a], level+1)
+        }
+      }
+    },
 
     组织架构get: function(){
       var that = this
@@ -1572,95 +1600,14 @@ var app = new Vue({
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
         success: function(re){
+
           if(re.rspHead.retCode != '1'){
             alert(re.rspHead.retMsg)
             return
           }
 
-          // console.log(re.rspBody.nashaDepartList)
-          // this.组织架构 = re.rspBody.nashaDepartList
+          _this.addopen(re.rspBody.nashaDepartList, 0)
 
-          for(var i0 in re.rspBody.nashaDepartList){
-            var v1 = re.rspBody.nashaDepartList[i0]
-
-            that.组织架构.push({
-              id: v1.id,
-              title: v1.title
-            })
-
-            if(v1.nashaDepartList.length != 0){
-
-              for(var i1 in v1.nashaDepartList){
-                var v2 = v1.nashaDepartList[i1]
-
-                that.组织架构.push({
-                  id: v2.id,
-                  title: '-- ' + v2.title
-                })
-
-                if(v2.nashaDepartList.length != 0){
-
-                  for(var i2 in v2.nashaDepartList){
-                    var v3 = v2.nashaDepartList[i2]
-
-                    that.组织架构.push({
-                      id: v3.id,
-                      title: '---- ' + v3.title
-                    })
-
-                    if(v3.nashaDepartList.length != 0){
-
-                      for(var i3 in v3.nashaDepartList){
-                        var v4 = v3.nashaDepartList[i3]
-
-                        that.组织架构.push({
-                          id: v4.id,
-                          title: '------ ' + v4.title
-                        })
-
-                        if(v4.nashaDepartList.length != 0){
-
-                          for(var i4 in v4.nashaDepartList){
-                            var v5 = v4.nashaDepartList[i4]
-
-                            that.组织架构.push({
-                              id: v5.id,
-                              title: '--------- ' + v5.title
-                            })
-
-                            if(v5.nashaDepartList.length != 0){
-
-                              for(var i5 in v5.nashaDepartList){
-                                var v6 = v5.nashaDepartList[i4]
-
-                                that.组织架构.push({
-                                  id: v6.id,
-                                  title: '--------- ' + v6.title
-                                })
-
-                              }
-
-                            }
-
-                          }
-
-                        }
-
-                      }
-
-                    }
-
-                  }
-
-                }
-
-              }
-
-            }
-
-          }
-
-          // console.log(that.组织架构)
         }
       })
     },

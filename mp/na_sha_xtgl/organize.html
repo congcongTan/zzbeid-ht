@@ -189,9 +189,9 @@
                     <tr>
                       <td>
                         <div class="fl w20">
-                          <a href="javascript:;" @click="open(v.id)">
+                          <a href="javascript:;">
                             <i v-if="v.nashaDepartList == null" :class="`fa fa-square-o`"></i>
-                            <i v-if="v.nashaDepartList != null" :class="`fa fa-${v.open == 1 ? 'minus':'plus'}-square-o`"></i>
+                            <i v-if="v.nashaDepartList != null" :class="`fa fa-${v.open == 1 ? 'minus':'plus'}-square-o`" @click="v.open = !v.open"></i>
                           </a>
                         </div>
                         {{v.title}}
@@ -202,13 +202,13 @@
                         <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a>
                       </td>
                     </tr>
-                    <template v-if="v.open === 1" v-for="(v2, i2) in v.nashaDepartList">
+                    <template v-if="v.open" v-for="(v2, i2) in v.nashaDepartList">
                       <tr>
                         <td>
                           <div class="fl w20" style="margin-left: 20px">
-                            <a href="javascript:;" @click="open(v2.id)">
+                            <a href="javascript:;">
                               <i v-if="v2.nashaDepartList == null" :class="`fa fa-square-o`"></i>
-                              <i v-if="v2.nashaDepartList != null" :class="`fa fa-${v2.open == 1 ? 'minus':'plus'}-square-o`"></i>
+                              <i v-if="v2.nashaDepartList != null" :class="`fa fa-${v2.open == 1 ? 'minus':'plus'}-square-o`" @click="v2.open = !v2.open"></i>
                             </a>
                           </div>
                           {{v2.title}}
@@ -219,12 +219,12 @@
                           <a class="btn btn-xs btn-danger" @click="del(v2.id)">删除</a>
                         </td>
                       </tr>
-                      <template v-if="v2.open === 1" v-for="(v3, i3) in v2.nashaDepartList">
+                      <template v-if="v2.open" v-for="(v3, i3) in v2.nashaDepartList">
                         <tr>
                           <td><div class="fl w20" style="margin-left: 40px">
-                            <a href="javascript:;" @click="open(v3.id)">
+                            <a href="javascript:;">
                               <i v-if="v3.nashaDepartList == null" :class="`fa fa-square-o`"></i>
-                              <i v-if="v3.nashaDepartList != null" :class="`fa fa-${v3.open == 1 ? 'minus':'plus'}-square-o`"></i>
+                              <i v-if="v3.nashaDepartList != null" :class="`fa fa-${v3.open == 1 ? 'minus':'plus'}-square-o`" @click="v3.open = !v3.open"></i>
                             </a>
                           </div>{{v3.title}}</td>
                           <td>{{v3.sort}}</td>
@@ -233,12 +233,12 @@
                             <a class="btn btn-xs btn-danger" @click="del(v3.id)">删除</a>
                           </td>
                         </tr>
-                        <template v-if="v3.open === 1" v-for="(v4, i4) in v3.nashaDepartList">
+                        <template v-if="v3.open" v-for="(v4, i4) in v3.nashaDepartList">
                           <tr>
                             <td><div class="fl w20" style="margin-left: 60px">
-                              <a href="javascript:;" @click="open(v4.id)">
+                              <a href="javascript:;">
                                 <i v-if="v4.nashaDepartList == null" :class="`fa fa-square-o`"></i>
-                                <i v-if="v4.nashaDepartList != null" :class="`fa fa-${v4.open == 1 ? 'minus':'plus'}-square-o`"></i>
+                                <i v-if="v4.nashaDepartList != null" :class="`fa fa-${v4.open == 1 ? 'minus':'plus'}-square-o`" @click="v4.open = !v4.open"></i>
                               </a>
                             </div>{{v4.title}}</td>
                             <td>{{v4.sort}}</td>
@@ -247,6 +247,95 @@
                               <a class="btn btn-xs btn-danger" @click="del(v4.id)">删除</a>
                             </td>
                           </tr>
+                          <template v-if="v4.open" v-for="(v5, i5) in v4.nashaDepartList">
+                            <tr>
+                              <td><div class="fl w20" style="margin-left: 80px">
+                                <a href="javascript:;">
+                                  <i v-if="v5.nashaDepartList == null" :class="`fa fa-square-o`"></i>
+                                  <i v-if="v5.nashaDepartList != null" :class="`fa fa-${v5.open == 1 ? 'minus':'plus'}-square-o`" @click="v5.open = !v5.open"></i>
+                                </a>
+                              </div>{{v5.title}}</td>
+                              <td>{{v5.sort}}</td>
+                              <td class="text-nowrap">
+                                <a class="btn btn-xs btn-primary" @click="getView(v5.id)">编辑</a>
+                                <a class="btn btn-xs btn-danger" @click="del(v5.id)">删除</a>
+                              </td>
+                            </tr>
+                            <template v-if="v5.open" v-for="(v6, i6) in v5.nashaDepartList">
+                              <tr>
+                                <td><div class="fl w20" style="margin-left: 100px">
+                                  <a href="javascript:;">
+                                    <i v-if="v5.nashaDepartList == null" :class="`fa fa-square-o`"></i>
+                                    <i v-if="v5.nashaDepartList != null" :class="`fa fa-${v6.open == 1 ? 'minus':'plus'}-square-o`" @click="v6.open = !v6.open"></i>
+                                  </a>
+                                </div>{{v6.title}}</td>
+                                <td>{{v6.sort}}</td>
+                                <td class="text-nowrap">
+                                  <a class="btn btn-xs btn-primary" @click="getView(v6.id)">编辑</a>
+                                  <a class="btn btn-xs btn-danger" @click="del(v6.id)">删除</a>
+                                </td>
+                              </tr>
+                              <template v-if="v6.open" v-for="(v7, i7) in v6.nashaDepartList">
+                                <tr>
+                                  <td><div class="fl w20" style="margin-left: 120px">
+                                    <a href="javascript:;">
+                                      <i v-if="v6.nashaDepartList == null" :class="`fa fa-square-o`"></i>
+                                      <i v-if="v6.nashaDepartList != null" :class="`fa fa-${v7.open == 1 ? 'minus':'plus'}-square-o`" @click="v7.open = !v7.open"></i>
+                                    </a>
+                                  </div>{{v7.title}}</td>
+                                  <td>{{v7.sort}}</td>
+                                  <td class="text-nowrap">
+                                    <a class="btn btn-xs btn-primary" @click="getView(v7.id)">编辑</a>
+                                    <a class="btn btn-xs btn-danger" @click="del(v7.id)">删除</a>
+                                  </td>
+                                </tr>
+                                <template v-if="v7.open" v-for="(v8, i8) in v7.nashaDepartList">
+                                  <tr>
+                                    <td><div class="fl w20" style="margin-left: 140px">
+                                      <a href="javascript:;">
+                                        <i v-if="v7.nashaDepartList == null" :class="`fa fa-square-o`"></i>
+                                        <i v-if="v7.nashaDepartList != null" :class="`fa fa-${v8.open == 1 ? 'minus':'plus'}-square-o`" @click="v8.open = !v8.open"></i>
+                                      </a>
+                                    </div>{{v8.title}}</td>
+                                    <td>{{v8.sort}}</td>
+                                    <td class="text-nowrap">
+                                      <a class="btn btn-xs btn-primary" @click="getView(v8.id)">编辑</a>
+                                      <a class="btn btn-xs btn-danger" @click="del(v8.id)">删除</a>
+                                    </td>
+                                  </tr>
+                                  <template v-if="v8.open" v-for="(v9, i9) in v8.nashaDepartList">
+                                    <tr>
+                                      <td><div class="fl w20" style="margin-left: 160px">
+                                        <a href="javascript:;">
+                                          <i v-if="v8.nashaDepartList == null" :class="`fa fa-square-o`"></i>
+                                          <i v-if="v8.nashaDepartList != null" :class="`fa fa-${v9.open == 1 ? 'minus':'plus'}-square-o`" @click="v9.open = !v9.open"></i>
+                                        </a>
+                                      </div>{{v9.title}}</td>
+                                      <td>{{v9.sort}}</td>
+                                      <td class="text-nowrap">
+                                        <a class="btn btn-xs btn-primary" @click="getView(v9.id)">编辑</a>
+                                        <a class="btn btn-xs btn-danger" @click="del(v9.id)">删除</a>
+                                      </td>
+                                    </tr>
+                                    <template v-if="v9.open" v-for="(v10, i10) in v9.nashaDepartList">
+                                      <tr>
+                                        <td><div class="fl w20" style="margin-left: 180px">
+                                          <a href="javascript:;">
+                                            <i :class="`fa fa-square-o`"></i>
+                                          </a>
+                                        </div>{{v10.title}}</td>
+                                        <td>{{v10.sort}}</td>
+                                        <td class="text-nowrap">
+                                          <a class="btn btn-xs btn-primary" @click="getView(v10.id)">编辑</a>
+                                          <a class="btn btn-xs btn-danger" @click="del(v10.id)">删除</a>
+                                        </td>
+                                      </tr>
+                                    </template>
+                                  </template>
+                                </template>
+                              </template>
+                            </template>
+                          </template>
                         </template>
                       </template>
                     </template>
@@ -297,7 +386,7 @@
                 <div class="col-sm-4">
                   <select class="form-control" v-model="view.pid">
                     <option value="0">--请选择--</option>
-                    <option :value="`${v.id}`" v-for="(v, i) in 上级菜单">{{v.title}}</option>
+                    <option :value="`${v.id}`" v-for="(v, i) in 上级部门">{{v.title}}</option>
                   </select>
                 </div>
               </div>
@@ -685,7 +774,7 @@ var app = new Vue({
       3: '功能',
     },
 
-    上级菜单: [],
+    上级部门: [],
 
   },
   methods: {
@@ -705,6 +794,35 @@ var app = new Vue({
       LS.removeItem('admin')
       location.reload()
 
+    },
+
+    addopen: function(obj, level){
+
+      for (var a in obj) {
+        if (typeof(obj[a]) == "object") {
+
+          if(a == 'nashaDepartList'){
+
+            obj['open'] = 1
+
+            var depart = {
+              id: obj['id'],
+              title: '',
+            }
+
+            if(level < 19){
+              for(var i=1; i<level; i++){
+                depart.title += '-'
+              }
+              depart.title += ' ' + obj.title
+
+              this.上级部门.push(depart)
+            }
+          }
+
+          this.addopen(obj[a], level+1)
+        }
+      }
     },
 
     getList: function(key, val){
@@ -754,42 +872,8 @@ var app = new Vue({
 
           //初始化开关状态，必需
 
-          // re.rspBody.nashaDepartList = _this.addOpen(re.rspBody.nashaDepartList)
-
-          //lv1
-          for(var i in re.rspBody.nashaDepartList){
-            var v = re.rspBody.nashaDepartList[i]
-            re.rspBody.nashaDepartList[i]['open'] = 1
-
-            //lv2
-            for(var i2 in v.nashaDepartList){
-              var v2 = v.nashaDepartList[i2]
-              re.rspBody.nashaDepartList[i].nashaDepartList[i2].open = 1
-
-              //lv3
-              for(var i3 in v2.nashaDepartList){
-                var v3 = v2.nashaDepartList[i3]
-                re.rspBody.nashaDepartList[i].nashaDepartList[i2].nashaDepartList[i3].open = 1
-
-                //lv4
-                for(var i4 in v3.nashaDepartList){
-                  var v4 = v3.nashaDepartList[i3]
-                  re.rspBody.nashaDepartList[i].nashaDepartList[i2].nashaDepartList[i3].nashaDepartList[i4].open = 1
-
-                  //lv5
-                  for(var i5 in v4.nashaDepartList){
-                    var v5 = v4.nashaDepartList[i4]
-                    re.rspBody.nashaDepartList[i].nashaDepartList[i2].nashaDepartList[i3].nashaDepartList[i4].nashaDepartList[i5].open = 1
-
-                  }
-
-                }
-
-              }
-            }
-          }
-
-          console.log(re.rspBody.nashaDepartList)
+          //加open
+          _this.addopen(re.rspBody.nashaDepartList, 0)
 
 
           _this.list.data = re.rspBody.nashaDepartList
@@ -823,92 +907,24 @@ var app = new Vue({
 
     },
 
-    open: function(id){
+/*    tree2list: function(obj){
+      for (var a in obj) {
+        if (typeof(obj[a]) == "object") {
 
-      for(var i in this.list.data){
-        var v = this.list.data[i]
+          this.tree2list(obj[a])
 
-        //lv1
-        if(v['id'] == id){
-          if(v['open'] == 1){
-            this.list.data[i]['open'] = 0
-          }else{
-            this.list.data[i]['open'] = 1
-          }
+          if(a == 'nashaDepartList'){
 
-          break
-        }
+            console.log(obj[a])
 
 
-        for(var i2 in v.nashaDepartList){
-          var v2 = v.nashaDepartList[i2]
 
-          //lv2
-          if(v2['id'] == id){
-            if(v2['open'] == 1){
-              this.list.data[i].nashaDepartList[i2].open = 0
-            }else{
-              this.list.data[i].nashaDepartList[i2].open = 1
-            }
-
-            break
           }
         }
-
-
       }
-
-    },
+    },*/
 
     getView: function(id){
-
-      //上级菜单
-      this.上级菜单 = []//清空
-
-
-      for(var i in this.list.data){
-        var v = this.list.data[i]
-
-        //lv1
-        this.上级菜单.push({
-          'id': v.id,
-          'title': v.title
-        })
-
-        for(var i2 in v['nashaDepartList']){
-          var v2 = v['nashaDepartList'][i2]
-
-          //lv2
-          this.上级菜单.push({
-            'id': v2.id,
-            'title': '　' + v2.title
-          })
-
-          for(var i3 in v2['nashaDepartList']){
-            var v3 = v2['nashaDepartList'][i3]
-
-            //lv3
-            this.上级菜单.push({
-              'id': v3.id,
-              'title': '　' + v3.title
-            })
-
-            for(var i4 in v3['nashaDepartList']){
-              var v4 = v3['nashaDepartList'][i4]
-
-              //lv4
-              this.上级菜单.push({
-                'id': v4.id,
-                'title': '　' + v4.title
-              })
-
-            }
-
-          }
-
-        }
-
-      }
 
       if(id == -1){
 
