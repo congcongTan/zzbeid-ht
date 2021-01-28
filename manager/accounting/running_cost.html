@@ -642,7 +642,7 @@ var app = new Vue({
       data: [],
       post: {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 9999,
       },
       info: {},
       page: {},
@@ -858,7 +858,19 @@ var app = new Vue({
 
           _this.list.info = re.rspBody          
 
-          _this.list.info.text = '合计 充值明细: ' + re.rspBody.totalMoney + '，充值失败或未支付￥' + re.rspBody.losingMoney
+          var 已支付 = 0, 未支付 = 0, 总金额 = 0
+          for(var i in _this.list.data){
+            var v = _this.list.data[i]
+            if(v.status == 0){
+              未支付++
+            }
+            if(v.status == 1){
+              已支付++
+            }
+            总金额 += v.totalPrice * 1000
+          }
+
+          _this.list.info.text = '已支付 ' + 已支付 + '，未支付 ' + 未支付 + '，支付总金额 ￥' + 总金额 / 1000
 
           //id
           for( var i in _this.list.data ){
