@@ -18,13 +18,8 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>硬件设备配置</title>
+    <title>硬件设备列表</title>
 
-<style>
-.datepicker{
-  z-index: 9999;
-}
-</style>
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
 
@@ -155,12 +150,12 @@
 
     <section class="content-header">
       <h1>
-        硬件设备配置
+        硬件设备列表
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
         <li>酒店行业配置</li>
-        <li class="active">硬件设备配置</li>
+        <li class="active">硬件设备列表</li>
       </ol>
     </section>
 
@@ -171,43 +166,100 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <!-- <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
+              <!-- <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li> -->
               <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
               <div class="tab-pane" id="操作">
 
-                <!-- <a class="btn btn-sm btn-primary" v-if="权限.indexOf('add') != -1" @click="getView(-1)">新增</a> -->
+                <a class="btn btn-sm btn-danger" v-if="权限.indexOf('del') != -1" @click="del()">删除</a>
+
+                <a class="btn btn-sm btn-primary" v-if="权限.indexOf('add') != -1" @click="getView(-1)">新增</a>
 
               </div>
               <div class="tab-pane active" id="搜索">
 
                 <div class="form-horizontal">
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">有效期截止日期</label>
+                    <div class="col-sm-10">
+                      <div class="row">
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control datepicker2" id="startTime">
+                        </div>
+                        <div class="fl w20 mt8 tc">
+                          ~
+                        </div>
+                        <div class="col-xs-5 col-sm-3">
+                          <input type="text" class="form-control datepicker2" id="endTime">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div class="form-group">
                     <label class="col-sm-2 control-label">商户名称</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.title">
+                      <input type="text" class="form-control" v-model="list.post.mchTitle">
                     </div>
                   </div>
+
                   <div class="form-group">
                     <label class="col-sm-2 control-label">商户编号</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.identifier">
+                      <input type="text" class="form-control" v-model="list.post.mchIdentifier">
                     </div>
                   </div>
+
                   <div class="form-group">
                     <label class="col-sm-2 control-label">设备编号</label>
                     <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.equipmentId">
+                      <input type="text" class="form-control" v-model="list.post.equipmentIdentifier">
                     </div>
                   </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">厂商编号</label>
+                    <div class="col-sm-3">
+                      <input type="text" class="form-control" v-model="list.post.vedorCode">
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">设备类型</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.equipmentType">
+                        <option value="0">--请选择--</option>
+                        <option :value="`${i}`" v-for="(v, i) in 设备类型">{{v}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">销售模式</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.salesModel">
+                        <option value="1">--请选择--</option>
+                        <option :value="`${i}`" v-for="(v, i) in 销售模式">{{v}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">绑定状态</label>
+                    <div class="col-sm-3">
+                      <select class="form-control" v-model="list.post.bindingStatus">
+                        <option value="1">--请选择--</option>
+                        <option :value="`${i}`" v-for="(v, i) in 绑定状态">{{v}}</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">查找</button>
-                      <button class="btn btn-link" disabled>
-                        本功能无须新增，请查询到商户进行处理
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -221,29 +273,39 @@
                 <thead>
                   <tr class="text-nowrap">
                     <th width="1%"><input type="checkbox" @click="checkAll" id="checkAll"></th>
+                    <th>设备ID</th>
                     <th>商户名称</th>
                     <th>商户编号</th>
-                    <th>主数据库IP</th>
-                    <th>主数据库端口</th>
+                    <th>设备类型</th>
+                    <th>有效期截止日期</th>
+                    <th>销售模式</th>
+                    <th>月度维护费</th>
+                    <th>年度维护费</th>
                     <th>状态</th>
                     <th width="1%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(v, i) in list.data">
-                    <td><input type="checkbox" :value="`${v.id}`" v-model="list.checkbox.checked"></td>
-                    <td>{{v.title}}</td>
-                    <td>{{v.identifier}}</td>
-                    <td>{{v.mainHost}}</td>
-                    <td>{{v.mainPort}}</td>
-                    <td :class="{'text-danger': v.status == 0}">{{v.statusTitle}}</td>
+                    <td><input type="checkbox" :value="`${v.goodId}`" v-model="list.checkbox.checked"></td>
+                    <td>{{v.equipmentIdentifier}}</td>
+                    <td>{{v.mchTitle}}</td>
+                    <td>{{v.mchIdentifier}}</td>
+                    <td>{{设备类型[v.equipmentType]}}</td>
+                    <td>
+                      {{v.termOfValidity}}
+                      [<a href="javascript:;" @click="有效期变更(i)">修改</a>]
+                      [<a href="javascript:;" @click="有效期记录(i)">变更记录</a>]
+                    </td>
+                    <td>{{销售模式[v.salesModel]}}</td>
+                    <td>{{v.monthlyMaintenanceCostOfEquipment}}</td>
+                    <td>{{v.annualMaintenanceCostOfEquipment}}</td>
+                    <td>{{绑定状态[v.bindingStatus]}}</td>
                     <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="getView(v.mchId, v.title, v.identifier)">数据库配置</a><br>
-
-                      <a class="btn btn-xs btn-primary" v-if="权限.indexOf('edit') != -1" @click="已绑设备get(v.mchId)">已绑设备</a><br>
+                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
                     </td>
                   </tr>
-                  <tr v-if="list.length == 0">
+                  <tr v-if="list.data.length == 0">
                     <td colspan="99">没有数据</td>
                   </tr>
                 </tbody>
@@ -297,162 +359,8 @@
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">
-              编辑
-            </h4>
-          </div>
-          <div class="modal-body">
-
-            <form class="form-horizontal">
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">商户名称</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.title" readonly>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">商户编号</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.identifier" readonly>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">状态</label>
-                <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.status">
-                    <option value="1">可用</option>
-                    <option value="0">不可用</option>
-                  </select>
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">主数据库IP</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="mainJson.host">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">主数据库端口</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="mainJson.port">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">主数据库名称</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="mainJson.datebase">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">主数据库账号</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="mainJson.account">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">主数据库密码</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="mainJson.password">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">副数据库IP</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="standbyJson.host">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">副数据库端口</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="standbyJson.port">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">副数据库名称</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="standbyJson.datebase">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  *
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">副数据库账号</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="standbyJson.account">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">副数据库密码</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="standbyJson.password">
-                </div>
-                <div class="col-sm-5 text-danger mt5">
-                  * 
-                </div>
-              </div>
-
-            </form>
-
-          </div>
-          <div class="modal-footer">
-            <a class="btn btn-primary" @click="saveView">确定</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="modal fade" id="已绑设备">
-      <div class="modal-dialog modal-lg" style="width: 98%">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">
-              商户管理
+              <span v-if="view.goodId == undefined">新增</span>
+              <span v-if="view.goodId != undefined">编辑</span>
             </h4>
           </div>
           <div class="modal-body">
@@ -473,68 +381,107 @@
                 </div>
               </div>
 
+              <div class="form-group">
+                <label class="col-sm-3 control-label">设备ID</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.equipmentIdentifier" readonly>
+                </div>
+              </div>
+
               <hr>
 
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>设备id</th>
-                    <th>厂商编号</th>
-                    <th>设备激活码</th>
-                    <th>设备类型</th>
-                    <th>身份证设备类型</th>
-                    <th>中国护照设备类型</th>
-                    <!-- <th>身份证设备</th> -->
-                    <th>有效期</th>
-                    <th>状态</th>
-                    <th>销售模式</th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(v,i) in view.list">
-                    <td><div class="mt6">{{v.equipmentIdentifier}}</div></td>
-                    <td><input class="form-control input-sm w80" type="input" v-model="v.vedorCode"></td>
-                    <td><input class="form-control input-sm w80" type="input" v-model="v.localComparisonActivationCode"></td>
-                    <td>
-                      <select class="form-control input-sm w80" v-model="v.equipmentType">
-                        <option :value="`${i}`" v-for="(v, i) in 设备类型">{{v}}</option>
-                      </select>
-                    </td>
-                    <td>
-                      <select class="form-control input-sm w80" v-model="v.idCardDevType">
-                        <option :value="`${i}`" v-for="(v, i) in {1:'ZktecoIdcard',2:'DKCloudIDUart'}">{{v}}</option>
-                      </select>
-                    </td>
-                    <td>
-                      <select class="form-control input-sm w80" v-model="v.chinaPassportDevType">
-                        <option :value="`${i}`" v-for="(v, i) in {0:'无',1:'SHUNCCM舜鑫科技'}">{{v}}</option>
-                      </select>
-                    </td>
-                    <!-- <td><div class="mt6">{{身份证设备[v.idCardDevType]}}</div></td> -->
-                    <td><div class="mt6">
-                      {{v.termOfValidity}}
-                      <a href="javascript:;" @click="有效期变更(i)">[修改]</a>
-                      <a href="javascript:;" @click="有效期记录(i)">[变更记录]</a>
-                    </div></td>
-                    <td>
-                      <select class="form-control input-sm" v-model="v.bindingStatus">
-                        <option :value="`${i}`" v-for="(v,i) in ['未绑定','已绑定']">{{v}}</option>
-                      </select>
-                    </td>
-                    <td>
-                      <select class="form-control input-sm" v-model="v.salesModel">
-                        <option :value="`${i}`" v-for="(v,i) in 销售模式">{{v}}</option>
-                      </select>
-                    </td>
-                    <td>
-                      <button class="btn btn-sm btn-primary" type="button" @click="已绑设备save(v.id, i)">保存</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="form-group">
+                <label class="col-sm-3 control-label">厂商编号</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.vedorCode">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">本地设备激活码</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.localComparisonActivationCode">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">设备类型</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.equipmentType">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 设备类型">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">护照设备类型</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.chinaPassportDevType">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 中国护照设备类型">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">身份证设备</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.idCardDevType">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 身份证设备类型">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <hr>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">有效期</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.termOfValidity" readonly>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">绑定状态</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.bindingStatus">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 绑定状态">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">销售模式</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.salesModel">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 销售模式">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">月度维护费</label>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control input-sm" v-model="view.monthlyMaintenanceCostOfEquipment">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">年度维护费</label>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control input-sm" v-model="view.annualMaintenanceCostOfEquipment">
+                </div>
+              </div>
 
             </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="saveView">确定</a>
           </div>
         </div>
       </div>
@@ -557,14 +504,14 @@
               <div class="form-group">
                 <label class="col-sm-3 control-label">商户名称</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.mchTitle" readonly>
+                  <input type="text" class="form-control input-sm" v-model="有效期变更a.mchTitle" readonly>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-3 control-label">商户编号</label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.mchIdentifier" readonly>
+                  <input type="text" class="form-control input-sm" v-model="有效期变更a.mchIdentifier" readonly>
                 </div>
               </div>
 
@@ -1017,8 +964,11 @@ var app = new Vue({
     list: {
       data: [],
       post: {
+        equipmentType: 0,
+        salesModel: 1,
+        bindingStatus: 1,
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       info: {},
       page: {},
@@ -1028,32 +978,39 @@ var app = new Vue({
       },
     },
 
+    设备类型: {
+      0: '未知',
+      3: '人证机标准版',
+      4: '人证机简化版',
+      5: '人证机PDA',
+      10003: '人证机网吧标准版',
+    },
+
+    销售模式: {
+      1: '出售模式',
+      2: '出租模式',
+    },
+
+    绑定状态: {
+      0: '解绑',
+      1: '绑定',
+    },
+
+    身份证设备类型: {
+      1: 'ZktecoIdcard',
+      2: 'DKCloudIDUart',
+    },
+
+    中国护照设备类型: {
+      0: '无',
+      1: 'SHUNCCM舜鑫科技',
+    },
+
     view: {},
 
     有效期变更a: {},
 
     有效期记录a: {},
-
-    mainJson: {},
-    standbyJson: {},
-
-    身份证设备: {
-      1:'ZktecoIdcard',
-      2:'DKCloudIDUart',
-    },
-
-    设备类型: {
-      0:'未知',
-      3:'人证机标准版',
-      4:'人证机简化版',
-      5:'人证机PDA',
-      10003:'人证机网吧标准版',
-    },
-
-    销售模式: {
-      1: '出售',
-      2: '出租',
-    },
 
   },
   methods: {
@@ -1169,9 +1126,13 @@ var app = new Vue({
 
     getList: function(key, val){
 
-      if(this.权限.indexOf('select') == -1){
+/*      if(this.权限.indexOf('select') == -1){
         alert('没有搜索权限')
-      }
+      }*/
+
+      //这里用v-model会有大坑
+      this.list.post.termOfValidityStart = $('#startTime').val()
+      this.list.post.termOfValidityEnd = $('#endTime').val()
 
       _this = this
 
@@ -1201,14 +1162,14 @@ var app = new Vue({
           clientType: 1,
           format: "json",
           version: "1.0",
-          sign: "30C7398578F1F7C995BAF67D18F89B33"
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: this.list.post
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getYousuHotelInfoList/interface',
+        url: manager_api + 'manager/getMchDeviceInfoList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1216,8 +1177,14 @@ var app = new Vue({
         },
         success: function(re){
 
-          _this.list.data = re.rspBody.hotelInfoList
-          delete re.rspBody.hotelInfoList
+          if(re.rspBody.list == null){
+
+            _this.list.data = []
+            return
+          }
+
+          _this.list.data = re.rspBody.list
+          delete re.rspBody.list
 
           _this.list.info = re.rspBody          
 
@@ -1226,7 +1193,7 @@ var app = new Vue({
           for( var i in _this.list.data ){
             var v = _this.list.data[i]
 
-            _this.list.checkbox.all.push(v.id)
+            _this.list.checkbox.all.push(v.goodId)
           }
 
           //分页
@@ -1247,26 +1214,31 @@ var app = new Vue({
 
     },
 
-    getView: function(id, title, identifier){
+    getView: function(id){
 
       this.view = {}
+
+      if(id == -1){
+        $('#view').modal('show')
+        return
+      }
 
       var data = {
         "reqHead":
         {
-          clientType: 6,
+          clientType: 1,
           format: "json",
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          mchId: id
+          id: id
         }
       }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/getMiddleCrownMchInfo/interface',
+        url: manager_api + 'manager/getMchDeviceInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1275,25 +1247,6 @@ var app = new Vue({
         success: function(re){
 
           _this.view = re.rspBody
-          _this.view.id = id
-          _this.view.title = title
-          _this.view.identifier = identifier
-
-          if(_this.view.status == null){
-            _this.view.status = 1
-          }
-
-          if(re.rspBody.mainJson != null){
-            _this.mainJson = JSON.parse(re.rspBody.mainJson)
-          }else{
-            _this.mainJson = {}
-          }
-
-          if(re.rspBody.standbyJson != null){
-            _this.standbyJson = JSON.parse(re.rspBody.standbyJson)
-          }else{
-            _this.standbyJson = {}
-          }
 
           $('#view').modal('show')
 
@@ -1312,19 +1265,20 @@ var app = new Vue({
           version: "1.0",
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
-        reqBody: {
-          mchId: this.view.id,
-          status: this.view.status,
-          mainJson: this.mainJson,
-          standbyJson: this.standbyJson
-        }
+        reqBody: this.view
       }
 
-      console.log(data)
+      var add_or_edit = this.view.id == undefined ? 'add':'edit'
+
+      if(data.reqBody.type != '3'){
+        delete data.reqBody.renewalDate
+      }else{
+        data.reqBody.renewalDate = Number(data.reqBody.renewalDate)
+      }
 
       $.ajax({
         type: 'POST',
-        url: manager_api + 'manager/saveMiddleCrownMchInfo/interface',
+        url: manager_api + 'manager/' + add_or_edit + 'MchDeviceBindingStatusOrInfo/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -1332,7 +1286,7 @@ var app = new Vue({
         },
         success: function(re){
 
-          if(re.rspHead.retCode == '1'){
+          if(re.rspHead.retMsg == '成功'){
             _this.getList()
             $('#view').modal('hide')
           }else{
@@ -1344,99 +1298,9 @@ var app = new Vue({
 
     },
 
-    已绑设备get: function(id){
-
-      this.view = {}
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          mchId: id
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/getMchDeviceInfoList/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          _this.view = re.rspBody
-          // _this.view.id = id
-
-          $('#已绑设备').modal('show')
-
-          setTimeout(function(){
-
-            $('.datepicker2').datepicker({
-              format: "yyyy-mm-dd",
-            })
-
-          }, 1000)
-
-        }
-      })
-
-    },
-
-    已绑设备save: function(id, i){
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 6,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          mchIdentifier: this.view.mchIdentifier,
-          equipmentIdentifier: this.view.list[i].equipmentIdentifier,
-          vedorCode: this.view.list[i].vedorCode,
-          equipmentType: this.view.list[i].equipmentType,
-          idCardDevType: this.view.list[i].idCardDevType,
-          chinaPassportDevType: this.view.list[i].chinaPassportDevType,
-          bindingStatus: this.view.list[i].bindingStatus,
-          localComparisonActivationCode: this.view.list[i].localComparisonActivationCode,
-          salesModel: this.view.list[i].salesModel,
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/editMchDeviceBindingStatusOrInfo/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode != 1){
-            alert(re.rspHead.retMsg)
-            return
-          }
-
-          alert('操作成功')
-
-        }
-      })
-
-    },
-
     有效期变更: function(i){
 
-      this.有效期变更a = this.view.list[i]
+      this.有效期变更a = this.list.data[i]
       this.有效期变更a.i = i
       // console.log(this.有效期变更a)
 
@@ -1457,7 +1321,7 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          mchIdentifier: this.view.mchIdentifier,
+          mchIdentifier: this.有效期变更a.mchIdentifier,
           equipmentIdentifier: this.有效期变更a.equipmentIdentifier,
           newTermOfValidity: $('#新有效期').val(),
           reasonChange: this.有效期变更a.变更原因 == '其它原因' ? $('#变更原因').val() : this.有效期变更a.变更原因,
@@ -1479,7 +1343,7 @@ var app = new Vue({
             return
           }
 
-          _this.view.list[_this.有效期变更a.i].termOfValidity = $('#新有效期').val()
+          _this.list.data[_this.有效期变更a.i].termOfValidity = $('#新有效期').val()
 
           $('#有效期变更').modal('hide')
 
@@ -1493,6 +1357,8 @@ var app = new Vue({
 
     有效期记录: function(i){
 
+      this.view = this.list.data[i]
+
       var data = {
         "reqHead":
         {
@@ -1502,7 +1368,7 @@ var app = new Vue({
           sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
         },
         reqBody: {
-          mchIdentifier: this.view.mchIdentifier,
+          mchIdentifier: this.list.data[i].mchIdentifier,
           equipmentId: this.有效期记录a.equipmentId,
         }
       }
@@ -1518,7 +1384,7 @@ var app = new Vue({
         success: function(re){
 
           _this.有效期记录a = re.rspBody
-          _this.有效期记录a.equipmentIdentifier = _this.view.list[i].equipmentIdentifier
+          _this.有效期记录a.equipmentIdentifier = _this.list.data[i].equipmentIdentifier
 
           $('#有效期记录').modal('show')
 
@@ -1638,7 +1504,17 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    // this.getList()
+    $('.datepicker2').datepicker({
+      format: "yyyy-mm-dd",
+    })
+
+    var date = new Date()
+    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
+
+    $('#startTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + '01')
+    $('#endTime').val(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + last_date)
+
+    this.getList()
 
   }
 })
