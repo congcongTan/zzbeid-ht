@@ -806,8 +806,8 @@ var app = new Vue({
 
 
       //这里用v-model会有大坑
-      this.list.post.startTime = $('#startTime').val()
-      this.list.post.endTime = $('#endTime').val()
+      this.list.post.payTimeStart = $('#startTime').val()
+      this.list.post.payTimeEnd = $('#endTime').val()
 
 
       if(key == 'page'){
@@ -853,8 +853,12 @@ var app = new Vue({
 
           _this.list.loading = 0
 
-          _this.list.data = re.rspBody.list
-          delete re.rspBody.list
+          if(re.rspBody.list == null){
+            _this.list.data = []
+          }else{
+            _this.list.data = re.rspBody.list
+            delete re.rspBody.list
+          }
 
           _this.list.info = re.rspBody          
 
