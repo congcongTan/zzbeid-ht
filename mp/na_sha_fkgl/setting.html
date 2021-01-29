@@ -18,8 +18,22 @@
 
 <script src="../../js/all.js"></script>
 
-    <title>设备列表</title>
+    <title>访客预约管理</title>
 
+<style>
+.blue{
+  color: #3C74F5;
+}
+.red{
+  color: #C35252;
+}
+.gray{
+  color: #CCC;
+}
+.datepicker{
+  z-index: 9999;
+}
+</style>
 </head>
 <body class="hold-transition sidebar-mini skin-blue">
 
@@ -142,239 +156,101 @@
 
     <section class="content-header">
       <h1>
-        设备列表
+        访客预约管理
       </h1>
       <ol class="breadcrumb">
         <li><i class="fa fa-home"></i> 首页</li>
-        <li>楼层管理</li>
-        <li class="active">设备列表</li>
+        <li>访客管理</li>
+        <li class="active">访客预约管理</li>
       </ol>
     </section>
 
     <section class="content">
-      <div class="row">
-        <div class="col-xs-12">
 
-          <div class="nav-tabs-custom">
 
-            <ul class="nav nav-tabs">
-              <li class="active"><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
-              <li><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
-            </ul>
+      <div class="nav-tabs-custom p30">
 
-            <div class="tab-content">
-              <div class="tab-pane active" id="操作">
+        <div class="row lh300">
+          <div class="col-xs-6">
 
-                <a class="btn btn-sm btn-primary" @click="getView(-1)">新增</a>
+            <label>
+              <input type="radio" name="模式" value="1" v-model="a.examine" @change="提交()"> 模式1：现场签到登记（主访人+来访信息核验+人证对比）
+            </label>
 
-              </div>
-              <div class="tab-pane" id="搜索">
+            <hr>
 
-                <div class="form-horizontal">
+            <div class="mb20 f18 b i blue">01 预约登记 --------------------</div>
 
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">设备名称</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.title">
-                    </div>
-                  </div>
+            <button class="btn btn-sm btn-default">扫码预约</button><br>
 
-                  <div class="form-group">
-                    <label class="col-sm-2 control-label">设备编号</label>
-                    <div class="col-sm-3">
-                      <input type="text" class="form-control" v-model="list.post.sn">
-                    </div>
-                  </div>
+            <button class="btn btn-sm btn-default">填写信息</button>　　　　主访人信息/来访信息/被访人信息<br>
 
-                  <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                      <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
-                        查找
-                        <i class="fa fa-spinner fa-spin" v-if="list.loading == 1"></i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+            <button class="btn btn-sm btn-default">信息提交</button>
 
-              </div>
-            </div>
+            <hr>
 
-            <div class="clearfix p10 pt0">
+            <div class="mb20 f18 b i blue">02 信息审核 --------------------</div>
 
-              <table class="table table-bordered table-hover">
-                <thead>
-                  <tr class="text-nowrap">
-                    <th>设备名称</th>
-                    <th>设备编号</th>
-                    <th>硬件厂商</th>
-                    <th>设备类型</th>
-                    <th>添加时间</th>
-                    <th width="1%">操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(v, i) in list.data">
-                    <td>{{v.title}}</td>
-                    <td>{{v.sn}}</td>
-                    <td>{{v.typeTitle}}</td>
-                    <td>{{v.deviceTypeTitle}}</td>
-                    <td>{{v.createTimeTitle}}</td>
-                    <td class="text-nowrap operation">
-                      <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
+            <button class="btn btn-sm btn-default red">管理员审核信息</button>　不通过将保留预约记录<br>
 
-                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
-                    </td>
-                  </tr>
-                  <tr v-if="list.length == 0">
-                    <td colspan="99">没有数据</td>
-                  </tr>
-                </tbody>
-              </table>
+            <button class="btn btn-sm btn-default">发放预约通知</button>　　人员信息下发到道闸<br>
 
-              <div class="pull-left mt15">
-                <label>
-                  <select class="form-control input-sm" v-model="list.post.pageSize" @change="list.post.pageNum = 1; getList()">
-                    <option value="2">每页 2 条</option>
-                    <option value="10">每页 10 条</option>
-                    <option value="25">每页 25 条</option>
-                    <option value="50">每页 50 条</option>
-                    <option value="100">每页 100 条</option>
-                  </select>
-                </label>
+            <hr>
 
-                &nbsp;&nbsp;共 {{list.info.total}} 条记录 {{list.info.text}}
-              </div>
+            <div class="mb20 f18 b i blue">03 来访验证 --------------------</div>
 
-              <div class="pull-right" v-if="list.info.pages > 1">
-                <ul class="pagination pagination-sm">
+            <button class="btn btn-sm btn-default">人脸核验</button>　　　　核验失败将由前台人员协助登记<br>
 
-                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','-1')">&lt;</a></li>
+            <hr>
 
-                  <li class="paginate_button" v-for="i in list.page.prev"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
+            <div class="mb20 f18 b i blue">04 登记成功 --------------------</div>
 
-                  <li class="paginate_button active"><a href="#">{{list.post.pageNum}}</a></li>
-
-                  <li class="paginate_button" v-for="i in list.page.next"><a href="javascript:;" @click="list.post.pageNum = i; getList()">{{i}}</a></li>
-
-                  <li class="paginate_button"><a href="javascript:;" @click="getList('page','+1')">&gt;</a>
-                  </li>
-
-                </ul>
-              </div>
-
-            </div>
+            <button class="btn btn-sm btn-default">过门禁</button>
 
           </div>
+          <div class="col-xs-6">
 
+            <label>
+              <input type="radio" name="模式" value="2" v-model="a.examine" @change="提交()"> 模式2：现场签到登记（主访人+人证对比）
+            </label>
+
+            <hr>
+
+            <div class="mb20 f18 b i blue">01 预约登记 --------------------</div>
+
+            <button class="btn btn-sm btn-default">扫码预约</button><br>
+
+            <button class="btn btn-sm btn-default">填写信息</button>　　　　主访人<br>
+
+            <button class="btn btn-sm btn-default">信息提交</button>
+
+            <hr>
+
+            <div class="mb20 f18 b i blue">02 信息审核 --------------------</div>
+
+            <button class="btn btn-sm btn-default gray">管理员审核信息</button>　来访信息记录，不审核来访信息<br>
+
+            <button class="btn btn-sm btn-default">发放预约通知</button>　　人员信息下发到道闸<br>
+
+            <hr>
+
+            <div class="mb20 f18 b i blue">03 来访验证 --------------------</div>
+
+            <button class="btn btn-sm btn-default">人脸核验</button>　　　　核验失败将由前台人员协助登记<br>
+
+            <hr>
+
+            <div class="mb20 f18 b i blue">04 登记成功 --------------------</div>
+
+            <button class="btn btn-sm btn-default">过门禁</button>
+
+          </div>
         </div>
 
       </div>
+
 
     </section>
-
-
-    <div class="modal fade" id="view">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">
-              <span v-if="view.id == undefined">新增</span>
-              <span v-if="view.id != undefined">编辑</span>
-            </h4>
-          </div>
-          <div class="modal-body">
-
-            <form class="form-horizontal">
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">设备名称</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.title">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">设备编号</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.sn">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">设备厂商</label>
-                <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.type">
-                    <option value="">请选择</option>
-                    <option :value="`${i}`" v-for="(v,i) in 设备厂商">{{v}}</option>
-                  </select>
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">设备通行模式</label>
-                <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.mode">
-                    <option value="">请选择</option>
-                    <option :value="`${i}`" v-for="(v,i) in 设备通行模式">{{v}}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">设备类型</label>
-                <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.deviceType">
-                    <option value="">请选择</option>
-                    <option :value="`${i}`" v-for="(v,i) in 设备类型">{{v}}</option>
-                  </select>
-                </div>
-              </div>
-
-              <hr>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">对拉监管部门</label>
-                <div class="col-sm-4">
-                  <select class="form-control input-sm" v-model="view.dockingDepartmentType">
-                    <option :value="`${i}`" v-for="(v,i) in 对拉监管部门">{{v}}</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">customer_id</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.customerId">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">AppID</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.appId">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-sm-3 control-label">AppSecret</label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control input-sm" v-model="view.appSecret">
-                </div>
-              </div>
-
-
-            </form>
-
-          </div>
-          <div class="modal-footer">
-            <a class="btn btn-primary" @click="saveView">确定</a>
-          </div>
-        </div>
-      </div>
-    </div>
 
   </div>
 
@@ -523,6 +399,10 @@
 <script src="../../plugins/adminLTE/js/demo.js"></script>
 <script src="../../plugins/cong/cong.js"></script>
 
+<link rel="stylesheet" href="../../plugins/datepicker/datepicker.css">
+<script src="../../plugins/datepicker/datepicker.js"></script>
+
+<script src="../../js/exif.min.js"></script>
 <script>
 var app = new Vue({
   el: '#app',
@@ -721,48 +601,9 @@ var app = new Vue({
 		'已离店'
 	],
 
-    list: {
-      data: [],
-      post: {
-        pageNum: 1,
-        pageSize: 10,
-      },
-      info: {},
-      page: {},
-      loading: 0,
-      checkbox: {
-        all: [],
-        checked: [],
-      },
-    },
-
-    设备厂商:{
-      0:'其它',
-      10001:'华舜',
-      10002:'梦派',
-      10003:'长视',
-      10004:'广电运通',
-      10005:'安居宝',
-      10006:'曇京',
-      20001:'中证宝访客机',
-    },
-
-    设备通行模式:{
-      0: '进入',
-      1: '签离',
-      2: '不区分',
-    },
-
-    设备类型:{
-      1: '访客机',
-      2: '门禁',
-    },
-
-    对拉监管部门: {
-      0:'不同步',
-      1:'南沙可信人员公共服务',
-      2:'省厅重点单位保卫系统',
-    },
+    a:{
+      examine: 0
+    }
 
   },
   methods: {
@@ -784,111 +625,31 @@ var app = new Vue({
 
     },
 
-    getList: function(key, val){
-
-      this.list.loading = 1
-
-      _this = this
-
-      if(key == 'page'){
-
-        if(val == '+1'){
-          if( this.list.post.pageNum < this.list.info.pages ){
-            this.list.post.pageNum++
-          }else{
-            return
-          }
-        }
-
-        if(val == '-1'){
-          if( this.list.post.pageNum > 1 ){
-            this.list.post.pageNum--
-          }else{
-            return
-          }
-        }
-
-      }
+    getView: function(){
 
       var data = {
         "reqHead":
         {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
-        },
-        reqBody: this.list.post
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/getNaShaDeviceList/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        complete: function(){
-          _this.list.loading = 0
-        },
-        success: function(re){
-
-          _this.list.data = re.rspBody.naShaDeviceList
-          delete re.rspBody.naShaDeviceList
-
-          _this.list.info = re.rspBody
-
-          //id
-          for( var i in _this.list.data ){
-            var v = _this.list.data[i]
-
-            _this.list.checkbox.all.push(v.id)
-          }
-
-          //分页
-          _this.list.page.prev = []
-          for(var i = _this.list.info.pageNum - 4; i < _this.list.info.pageNum; i++){
-            if(i <= 0)continue;
-            _this.list.page.prev.push(i)
-          }
-
-          _this.list.page.next = []
-          for(var i = _this.list.info.pageNum + 1; i < _this.list.info.pageNum + 5; i++){
-            if(i > _this.list.info.pages)break;
-            _this.list.page.next.push(i)
-          }
-
-        }
-      })
-
-    },
-
-    getView: function(id){
-
-      this.view = {}
-
-      if(id == -1){
-        $('#view').modal('show')
-        return
-      }
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          "clientType": 10,
+          "appVersion": "1.0",
+          "osVersion": "安卓4.2.1",
+          "imei": "设备号",
+          "mobileModel": "S1",
+          "mobileManufacturer": "小米",
+          "identificationCode": "KSJALFAJIEALJF1212321",
+          "lat": "1",
+          "lng": "1",
+          "format": "json",
+          "version": "1.0",
+          "sign": "e3db102d38419ee4eb6626325757682d"
         },
         reqBody: {
-          id: id
         }
       }
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getNaShaDeviceInfo/interface',
+        url: mp_api + 'mp/getHsConfig/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -896,12 +657,11 @@ var app = new Vue({
         },
         success: function(re){
 
-          if(re.rspHead.retCode == '0'){
-            alert(re.rspHead.retMsg)
+          if(re.rspHead.retCode == '1'){
+            _this.a = re.rspBody
           }
           else{
-            _this.view = re.rspBody
-            $('#view').modal('show')
+            alert(re.rspBody.retMsg)
           }
 
         }
@@ -909,65 +669,33 @@ var app = new Vue({
 
     },
 
-    saveView: function(){
+    提交: function(){
+
 
       var data = {
         "reqHead":
         {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: this.view
-      }
-
-      var add_or_edit = this.view.id == undefined ? 'add':'edit'
-
-      $.ajax({
-        type: 'POST',
-        url: mp_api + 'mp/' + add_or_edit + 'NaShaDevice/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
-            $('#view').modal('hide')
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
-      })
-
-    },
-
-    del: function(id){
-
-      if(!confirm('确认删除？')){
-        return
-      }
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+          "clientType": 10,
+          "appVersion": "1.0",
+          "osVersion": "安卓4.2.1",
+          "imei": "设备号",
+          "mobileModel": "S1",
+          "mobileManufacturer": "小米",
+          "identificationCode": "KSJALFAJIEALJF1212321",
+          "lat": "1",
+          "lng": "1",
+          "format": "json",
+          "version": "1.0",
+          "sign": "e3db102d38419ee4eb6626325757682d"
         },
         reqBody: {
-          id: id
+          examine: this.a.examine
         }
       }
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/deleteNaShaDevice/interface',
+        url: mp_api + 'mp/editHsConfig/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -976,7 +704,7 @@ var app = new Vue({
         success: function(re){
 
           if(re.rspHead.retCode == '1'){
-            _this.getList()
+            alert('修改成功')
           }else{
             alert(re.rspHead.retMsg)
           }
@@ -984,34 +712,6 @@ var app = new Vue({
         },
       })
 
-    },
-
-    绑定token: function(){
-
-      console.log('绑定token')
-
-      if(location.href.indexOf('stage') != -1){
-        var url = 'http://47.99.148.103:12390/api/v1/'
-      }else{
-        var url = 'http://device.zzb110.cn:12390/api/v1/'
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: url + 'device/mq/bind?device_id=7101834860535',
-        data: {
-          url: ["","http://47.99.148.103:12390","http://device.zzb110.cn:12390"]
-        },
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          alert(re.msg)
-
-        },
-      })
     },
 
   },
@@ -1124,11 +824,7 @@ var app = new Vue({
     $('[data-toggle="tooltip"]').tooltip()
 
 
-    this.list.post.userId = this.admin.userId
-    // this.list.post.type = this.admin.type
-
-
-    this.getList()
+    this.getView()
 
   }
 })
