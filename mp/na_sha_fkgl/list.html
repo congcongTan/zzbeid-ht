@@ -204,7 +204,7 @@
                     <label class="col-sm-2 control-label">授权状态</label>
                     <div class="col-sm-5">
                       <select class="form-control" v-model="list.post.status">
-                        <option value="0">--请选择--</option>
+                        <option value="">--请选择--</option>
                         <option :value="`${i}`" v-for="(v,i) in 审核状态">{{v}}</option>
                       </select>
                     </div>
@@ -856,6 +856,7 @@ var app = new Vue({
       post: {
         pageNum: 1,
         pageSize: 10,
+        status: '',
         // deviceSn: '',
       },
       info: {},
