@@ -205,7 +205,7 @@
 </div>
 
 
-<!-- <div class="box box-primary">
+<div class="box box-primary">
   <div class="box-header with-border">
     <h3 class="box-title">场所二维码</h3>
   </div>
@@ -223,7 +223,7 @@
     </div>
 
   </div>
-</div> -->
+</div>
 
     </section>
 
@@ -618,7 +618,7 @@ var app = new Vue({
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/getHsDeviceList/interface',
+        url: mp_api + 'mp/getNaShaDeviceList/interface',
         data: JSON.stringify(data),
         dataType: 'json',
         beforeSend: function(request){
@@ -631,7 +631,7 @@ var app = new Vue({
             return
           }
 
-          _this.list = re.rspBody.hsDeviceInfoList
+          _this.list = re.rspBody.naShaDeviceList
 
           for(let i in _this.list){
             let v = _this.list[i]
