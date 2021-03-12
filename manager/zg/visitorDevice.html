@@ -246,8 +246,6 @@
                     <td>{{v.createTimeTitle}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
-
-                      <a class="btn btn-xs btn-danger" @click="del(v.id)">删除</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -1078,46 +1076,6 @@ var app = new Vue({
           if(re.rspHead.retCode == '1'){
             _this.getList()
             $('#view').modal('hide')
-          }else{
-            alert(re.rspHead.retMsg)
-          }
-
-        },
-      })
-
-    },
-
-    del: function(id){
-
-      if(!confirm('确认删除？')){
-        return
-      }
-
-      var data = {
-        "reqHead":
-        {
-          clientType: 1,
-          format: "json",
-          version: "1.0",
-          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
-        },
-        reqBody: {
-          id: id
-        }
-      }
-
-      $.ajax({
-        type: 'POST',
-        url: manager_api + 'manager/deleteNaShaDevice/interface',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        beforeSend: function(request){
-          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
-        },
-        success: function(re){
-
-          if(re.rspHead.retCode == '1'){
-            _this.getList()
           }else{
             alert(re.rspHead.retMsg)
           }
