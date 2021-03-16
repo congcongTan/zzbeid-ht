@@ -249,7 +249,7 @@
                     <td>{{v.departTitle}}</td>
                     <td>{{v.empName}}</td>
                     <td>{{v.visitTemperature}}</td>
-                    <td>{{['进入','签离'][v.deviceMode]}}</td>
+                    <td>{{['未知','预约','授权','进入','签离'][v.dataState]}}</td>
                     <td>{{{1:'绿码',2:'黄码',3:'红码'}[v.healthyStaus]}}</td>
                     <td>{{v.visitTime}}</td>
                   </tr>
