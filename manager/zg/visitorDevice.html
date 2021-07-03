@@ -246,6 +246,8 @@
                     <td>{{v.createTimeTitle}}</td>
                     <td class="text-nowrap operation">
                       <a class="btn btn-xs btn-primary" @click="getView(v.id)">编辑</a><br>
+
+                      <a class="btn btn-xs btn-primary" @click="功能配置(v)">功能配置</a><br>
                     </td>
                   </tr>
                   <tr v-if="list.length == 0">
@@ -421,11 +423,118 @@
               </div>
 
 
+              <div class="mt30 p10 bgf1">
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">内保云</label>
+                  <div class="col-sm-9 mt6">
+                    <input type="checkbox" value="3" v-model="view.dockingDepartmentType"> 开通
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">内保云参数</label>
+                  <div class="col-sm-6">
+                    <textarea rows="8" class="form-control" v-model="view.nbyunParameter"></textarea>
+                  </div>
+                </div>
+
+              </div>
+
             </form>
 
           </div>
           <div class="modal-footer">
             <a class="btn btn-primary" @click="saveView">确定</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="功能配置">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">
+              功能配置
+            </h4>
+          </div>
+          <div class="modal-body">
+
+            <form class="form-horizontal">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">商户名称</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.mchTitle" disabled>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">设备编号</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.sn" disabled>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">设备名称</label>
+                <div class="col-sm-4">
+                  <input type="text" class="form-control input-sm" v-model="view.title" disabled>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">硬件厂商</label>
+                <div class="col-sm-4">
+                  <select class="form-control input-sm" v-model="view.type" disabled>
+                    <option value="">请选择</option>
+                    <option :value="`${i}`" v-for="(v,i) in 硬件厂商">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <hr>
+
+              数据同步
+              <div class="p20 bge6">
+                同步时间：每隔 <input type="text" class="w50" v-model="view2.syncTime"> 秒，请求同步
+              </div>
+
+              <br>
+
+              业务开关
+              <div class="p20 bge6">
+                <label>
+                  <input type="checkbox" value="1" v-model="view2.quickRegisterSwitch"> 开启快速登记
+                </label><br>
+                <label>
+                  <input type="checkbox" value="1" v-model="view2.cloudVisitorsSwitch"> 开启云端访客
+                </label>
+              </div>
+
+              <br>
+
+              健康码
+              <div class="p20 bge6">
+                <label>
+                  <input type="radio" name="健康码" value="0" v-model="view2.healthCodeSwitch"> 不开启
+                </label><br>
+                <label>
+                  <input type="radio" name="健康码" value="1" v-model="view2.healthCodeSwitch"> 国康码1.0
+                </label><br>
+                <label>
+                  <input type="radio" name="健康码" value="2" v-model="view2.healthCodeSwitch"> 国康码2.0
+                </label><br>
+              </div>
+
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <a class="btn btn-primary" @click="功能配置save()">确定</a>
           </div>
         </div>
       </div>
@@ -606,6 +715,8 @@ var app = new Vue({
 		10:'人证机网吧标准版',
 		1001:'访客机标准版',
 		1002:'访客机简化版',
+		1003:'访客机大竖屏版',
+		1004:'人证机双屏版',
 	},
 
 	app类型:{
@@ -641,7 +752,8 @@ var app = new Vue({
 		6:'访客',
 		7:'充电',
 		8:'出租屋',
-		9:'足浴'
+		9:'足浴',
+		10:'安保',
 	},
 
 	软件版本:{
@@ -684,10 +796,13 @@ var app = new Vue({
 		10005:'金禧租赁',
 		10006:'Xhotel',
 		10007:'湛江公寓',
+		10008:'黑龙江旅业',
 		20000:'佛山曇京',
 		60001:'园区访客',
 		60002:'酒店访客',
 		60003:'重点单位来访系统',
+		60004:'大型展会活动系统',
+		70001:'内保智感安防',
 	},
 
 	状态: {
@@ -762,6 +877,8 @@ var app = new Vue({
 		2: '二代证',
 	},
 
+    view2: {},
+
     list: {
       data: [],
       post: {
@@ -781,10 +898,11 @@ var app = new Vue({
       0:'其它',
       10001:'华舜',
       10002:'梦派',
-      10003:'长视',
+      10003:'长视EMQ',
       10004:'广电运通',
       10005:'安居宝',
       10006:'曇京',
+      10007:'天波门禁',
       20001:'中证宝访客机',
     },
 
@@ -1076,6 +1194,111 @@ var app = new Vue({
           if(re.rspHead.retCode == '1'){
             _this.getList()
             $('#view').modal('hide')
+          }else{
+            alert(re.rspHead.retMsg)
+          }
+
+        },
+      })
+
+    },
+
+    功能配置: function(json){
+
+      // console.log(json)
+
+      this.view = json
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: {
+          id: json.id
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/getNaShaDeviceConfigInfo/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '0'){
+            alert(re.rspHead.retMsg)
+          }
+          else{
+
+            _this.view2 = re.rspBody
+
+            if(_this.view2.quickRegisterSwitch == 1){
+              _this.view2.quickRegisterSwitch = [1]
+            }else{
+              _this.view2.quickRegisterSwitch = []
+            }
+            
+            if(_this.view2.cloudVisitorsSwitch == 1){
+              _this.view2.cloudVisitorsSwitch = [1]
+            }else{
+              _this.view2.cloudVisitorsSwitch = []
+            }
+
+            $('#功能配置').modal('show')
+          }
+
+        }
+      })
+
+    },
+
+    功能配置save(){
+
+      var post = JSON.parse(JSON.stringify(this.view2))
+
+      if(post.quickRegisterSwitch.length == 0){
+        post.quickRegisterSwitch = 0
+      }else{
+        post.quickRegisterSwitch = 1
+      }
+
+      if(post.cloudVisitorsSwitch.length == 0){
+        post.cloudVisitorsSwitch = 0
+      }else{
+        post.cloudVisitorsSwitch = 1
+      }
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "UCR1fIQ9lyUCR1fIQ9lyUCR1fIQ9lyUCR1y"
+        },
+        reqBody: post
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: manager_api + 'manager/editNaShaDeviceConfig/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode == '1'){
+            _this.getList()
+            $('#功能配置').modal('hide')
           }else{
             alert(re.rspHead.retMsg)
           }

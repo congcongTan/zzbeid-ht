@@ -108,7 +108,8 @@ var app = new Vue({
 		6:'访客',
 		7:'充电',
 		8:'出租屋',
-		9:'足浴'
+		9:'足浴',
+		10:'安保',
 	},
 
 	行业软件: {
@@ -128,8 +129,10 @@ var app = new Vue({
 		10005:'金禧租赁',
 		10006:'Xhotel',
 		10007:'湛江公寓',
+		10008:'黑龙江旅业',
 		20000:'佛山曇京',
-		60001:'华舜'
+		60001:'华舜',
+		70001:'内保智感安防',
 	},
 
 	旅馆行业: {
@@ -174,6 +177,11 @@ var app = new Vue({
 		60001:'园区访客',
 		60002:'酒店访客',
 		60003:'重点单位来访系统',
+		60004:'大型展会活动系统',
+	},
+
+	安保行业:{
+		70001:'内保智感安防',
 	},
 
 	充电行业:{
@@ -412,6 +420,10 @@ var app = new Vue({
       }
       else if(admin.softwareVersion == 60003){
         location.href = '../na_sha_csxx/index.html'
+        return
+      }
+      else if(admin.softwareVersion == 60004){
+        location.href = '../exhibition_bkyj/black_list.html'
         return
       }
       else if(admin.type == 1){

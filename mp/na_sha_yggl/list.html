@@ -174,9 +174,9 @@
 
                 <a class="btn btn-sm btn-primary" @click="getView(-1)">新增员工</a>
 
-<!--                 <a class="btn btn-sm btn-default" @click="批量导入员工()">批量导入员工</a>
+                <a class="btn btn-sm btn-default" @click="批量导入员工()">批量导入员工</a>
 
-                <a class="btn btn-sm btn-default" @click="批量导入头像()">批量导入头像</a>
+<!--                 <a class="btn btn-sm btn-default" @click="批量导入头像()">批量导入头像</a>
 
                 <a class="btn btn-sm btn-default" @click="批量下发人员()">批量下发人员</a> -->
 
@@ -451,10 +451,9 @@
           <div class="modal-body">
 
 <div class="bge6 p20">
-• 请使用模板上传，点击下载：<a href="http://update.zzb110.cn/templates/xls/人员信息模板.xls" class="u text-danger"><i class="fa fa-download"></i> 人员信息模板.xls</a><br>
+• 请使用模板上传，点击下载：<a href="http://update.zzb110.cn/templates/xls/职工人员导入模板.xls" class="u text-danger"><i class="fa fa-download"></i> 人员信息模板.xls</a><br>
 • 每次最多导入 1000 个员工，超出1000请分批上传<br>
-• 模板所有信息为必填，请认真核对<br>
-• 导入信息后，请继续导入头像
+• 模板所有信息为必填，请认真核对
 </div>
 
 <br>
@@ -470,7 +469,10 @@
 
           </div>
           <div class="modal-footer">
-            <a class="btn btn-primary" @click="批量导入员工_提交()">确定</a>
+            <a class="btn btn-primary" @click="批量导入员工_提交()">
+              确定
+              <i class="fa fa-spinner fa-spin" id="批量导入员工菊花" style="display: none;"></i>
+            </a>
           </div>
         </div>
       </div>
@@ -778,7 +780,8 @@ var app = new Vue({
 		6:'访客',
 		7:'充电',
 		8:'出租屋',
-		9:'足浴'
+		9:'足浴',
+		10:'安保',
 	},
 
 	行业软件: {
@@ -798,8 +801,10 @@ var app = new Vue({
 		10005:'金禧租赁',
 		10006:'Xhotel',
 		10007:'湛江公寓',
+		10008:'黑龙江旅业',
 		20000:'佛山曇京',
-		60001:'华舜'
+		60001:'华舜',
+		70001:'内保智感安防',
 	},
 
 	旅馆行业: {
@@ -844,6 +849,11 @@ var app = new Vue({
 		60001:'园区访客',
 		60002:'酒店访客',
 		60003:'重点单位来访系统',
+		60004:'大型展会活动系统',
+	},
+
+	安保行业:{
+		70001:'内保智感安防',
 	},
 
 	充电行业:{
@@ -1239,6 +1249,8 @@ var app = new Vue({
     },
     批量导入员工: function(){
 
+      $('#file1').val('')
+
       $('#批量导入员工').modal('show')
     },
     批量导入员工_文件检测: function(){
@@ -1267,12 +1279,14 @@ var app = new Vue({
     },
     批量导入员工_提交: function(){
 
+      $('#批量导入员工菊花').show()
+
       var formData = new FormData();
       formData.append('file', $('#file1').get(0).files[0] )
 
       $.ajax({
         type: 'POST',
-        url: mp_api + 'mp/personImport?type=STAFF',
+        url: mp_api + 'mp/importNaShaStaff',
         data: formData,
         dataType: 'json',
         processData: false,
@@ -1281,6 +1295,8 @@ var app = new Vue({
           request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
         },
         success: function(re){
+
+          $('#批量导入员工菊花').hide()
 
           try {
             var msg = JSON.parse(re.rspHead.retMsg)
@@ -1297,6 +1313,7 @@ var app = new Vue({
           $('#提示 .modal-body').html(msg)
           $('#提示').modal('show')
 
+          $('#file1').val('')
 
           _this.getList()
 
@@ -1712,13 +1729,16 @@ var app = new Vue({
 
 
     if(this.admin.softwareVersion == 60001){
-      var url = '../../db/menu-mp-company.json'
+      var url = '../../db/menu-mp-60001.json'
     }
     else if(this.admin.softwareVersion == 60002){
-      var url = '../../db/menu-mp-hotel.json'
+      var url = '../../db/menu-mp-60002.json'
     }
     else if(this.admin.softwareVersion == 60003){
-      var url = '../../db/menu-mp-fang-kong.json'
+      var url = '../../db/menu-mp-60003.json'
+    }
+    else if(this.admin.softwareVersion == 60004){
+      var url = '../../db/menu-mp-60004.json'
     }
     else if(this.admin.type == 1 || this.admin.type == 2){
       var url = '../../db/menu-mp-agent.json'

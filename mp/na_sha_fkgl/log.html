@@ -158,16 +158,16 @@
           <div class="nav-tabs-custom">
 
             <ul class="nav nav-tabs">
-              <li><a href="#操作" data-toggle="tab" aria-expanded="true">操作</a></li>
+              <!-- <li><a href="#操作" data-toggle="tab" aria-expanded="true ">操作</a></li> -->
               <li class="active"><a href="#搜索" data-toggle="tab" aria-expanded="false">搜索</a></li>
             </ul>
 
             <div class="tab-content">
-              <div class="tab-pane" id="操作">
+<!--               <div class="tab-pane" id="操作">
 
                 <a class="btn btn-sm btn-primary" @click="上下班时间调整()">上下班时间调整</a>
 
-              </div>
+              </div> -->
               <div class="tab-pane active" id="搜索">
 
                 <div class="form-horizontal">
@@ -188,21 +188,21 @@
                   <div class="form-group">
                     <label class="col-sm-2 control-label">访客姓名</label>
                     <div class="col-sm-5">
-                      <input type="text" class="form-control" v-model="list.post.realName">
+                      <input type="text" class="form-control" v-model="list.post.visitName">
                     </div>
                   </div>
 
                   <div class="form-group">
                     <label class="col-sm-2 control-label">手机号码</label>
                     <div class="col-sm-5">
-                      <input type="text" class="form-control" v-model="list.post.mobile">
+                      <input type="text" class="form-control" v-model="list.post.visitMobile">
                     </div>
                   </div>
 
                   <div class="form-group">
                     <label class="col-sm-2 control-label">身份证号</label>
                     <div class="col-sm-5">
-                      <input type="text" class="form-control" v-model="list.post.identityCard">
+                      <input type="text" class="form-control" v-model="list.post.visitCard">
                     </div>
                   </div>
 
@@ -211,6 +211,9 @@
                       <button class="btn btn-primary" @click="list.post.pageNum = 1; getList()">
                         查找
                         <i class="fa fa-spinner fa-spin" v-if="list.loading == 1"></i>
+                      </button>
+                      <button class="btn btn-default" @click="导出()">
+                        导出
                       </button>
                     </div>
                   </div>
@@ -637,7 +640,8 @@ var app = new Vue({
 		6:'访客',
 		7:'充电',
 		8:'出租屋',
-		9:'足浴'
+		9:'足浴',
+		10:'安保',
 	},
 
 	行业软件: {
@@ -657,8 +661,10 @@ var app = new Vue({
 		10005:'金禧租赁',
 		10006:'Xhotel',
 		10007:'湛江公寓',
+		10008:'黑龙江旅业',
 		20000:'佛山曇京',
-		60001:'华舜'
+		60001:'华舜',
+		70001:'内保智感安防',
 	},
 
 	旅馆行业: {
@@ -703,6 +709,11 @@ var app = new Vue({
 		60001:'园区访客',
 		60002:'酒店访客',
 		60003:'重点单位来访系统',
+		60004:'大型展会活动系统',
+	},
+
+	安保行业:{
+		70001:'内保智感安防',
 	},
 
 	充电行业:{
@@ -853,8 +864,8 @@ var app = new Vue({
 
       }
 
-      this.list.post.accessTimeBegin = $('#日期时间开始').val()
-      this.list.post.accessTimeEnd = $('#日期时间结束').val()
+      this.list.post.visitTimeBegin = $('#日期时间开始').val()
+      this.list.post.visitTimeEnd = $('#日期时间结束').val()
 
       var data = {
         "reqHead":
@@ -1045,6 +1056,47 @@ var app = new Vue({
       })
     },
 
+    导出(){
+
+      var data = {
+        "reqHead":
+        {
+          clientType: 1,
+          format: "json",
+          version: "1.0",
+          sign: "2A71F91102AE746493B3CDF67FCCDCF3"
+        },
+        "reqBody":{
+          visitName:this.list.post.visitName,
+          visitCard:this.list.post.visitCard,
+          visitMobile:this.list.post.visitMobile,
+          visitTimeBegin:$('#日期时间开始').val(),
+          visitTimeEnd:$('#日期时间结束').val(),
+        }
+      }
+
+      $.ajax({
+        type: 'POST',
+        url: mp_api + 'mp/exportNaShaVisitorLog/interface',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        beforeSend: function(request){
+          request.setRequestHeader('Authorization', 'Bearer ' + _this.admin.token )
+        },
+        success: function(re){
+
+          if(re.rspHead.retCode != '1'){
+            alert(re.rspHead.retMsg)
+            return
+          }
+
+          location.href = re.rspBody.file
+
+        }
+      })
+
+    },
+
   },
   mounted() {
     _this = this
@@ -1082,13 +1134,16 @@ var app = new Vue({
 
 
     if(this.admin.softwareVersion == 60001){
-      var url = '../../db/menu-mp-company.json'
+      var url = '../../db/menu-mp-60001.json'
     }
     else if(this.admin.softwareVersion == 60002){
-      var url = '../../db/menu-mp-hotel.json'
+      var url = '../../db/menu-mp-60002.json'
     }
     else if(this.admin.softwareVersion == 60003){
-      var url = '../../db/menu-mp-fang-kong.json'
+      var url = '../../db/menu-mp-60003.json'
+    }
+    else if(this.admin.softwareVersion == 60004){
+      var url = '../../db/menu-mp-60004.json'
     }
     else if(this.admin.type == 1 || this.admin.type == 2){
       var url = '../../db/menu-mp-agent.json'
@@ -1156,12 +1211,19 @@ var app = new Vue({
 
 
     var date = new Date()
-    var now_date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+    var last_date = new Date(date.getFullYear(), (date.getMonth() + 1), 0).getDate()
 
-    // $('#日期时间开始').val(now_date + ' 00:00')
-    // $('#日期时间结束').val(now_date + ' 23:59')
+    $('#日期时间开始').val(date.getFullYear()
+      + '-' + (Array(2).join('0') + (date.getMonth() + 1)).slice(-2)
+      + '-' + '01 00:00:00')
+    $('#日期时间结束').val(date.getFullYear()
+      + '-' + (Array(2).join('0') + (date.getMonth() + 1)).slice(-2)
+      + '-' + last_date + ' 23:59:59')
 
-    $(".datetimepicker").datetimepicker()
+
+    $(".datetimepicker").datetimepicker({
+      format: 'Y-m-d H:i:s'
+    })
 
     this.通行设备get()
 

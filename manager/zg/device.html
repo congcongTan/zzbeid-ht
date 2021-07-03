@@ -430,6 +430,16 @@
                 </div>
               </div>
 
+              <div class="form-group">
+                <label class="col-sm-3 control-label">健康码开关</label>
+                <div class="col-sm-4">
+                  <select class="form-control" v-model="view.healthCodeSwitch">
+                    <option value="">--请选择--</option>
+                    <option :value="`${i}`" v-for="(v, i) in 健康码开关">{{v}}</option>
+                  </select>
+                </div>
+              </div>
+
               <hr>
 
               <div class="form-group">
@@ -450,6 +460,26 @@
               </div>
 
               <div class="form-group">
+                <label class="col-sm-3 control-label">二代证核验收费</label>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control input-sm" v-model="view.idcardComparisonCost">
+                </div>
+                <div class="col-sm-5">
+                  * 默认0，表示不收费
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">无证核验收费</label>
+                <div class="col-sm-4">
+                  <input type="number" class="form-control input-sm" v-model="view.faceComparisonCost">
+                </div>
+                <div class="col-sm-5">
+                  * 默认0，表示不收费
+                </div>
+              </div>
+
+              <div class="form-group">
                 <label class="col-sm-3 control-label">销售模式</label>
                 <div class="col-sm-4">
                   <select class="form-control" v-model="view.salesModel">
@@ -464,12 +494,18 @@
                 <div class="col-sm-4">
                   <input type="number" class="form-control input-sm" v-model="view.monthlyMaintenanceCostOfEquipment">
                 </div>
+                <div class="col-sm-5">
+                  * 默认0，表示不收费
+                </div>
               </div>
 
               <div class="form-group">
                 <label class="col-sm-3 control-label">年度维护费</label>
                 <div class="col-sm-4">
                   <input type="number" class="form-control input-sm" v-model="view.annualMaintenanceCostOfEquipment">
+                </div>
+                <div class="col-sm-5">
+                  * 默认0，表示不收费
                 </div>
               </div>
 
@@ -806,6 +842,8 @@ var app = new Vue({
 		10:'人证机网吧标准版',
 		1001:'访客机标准版',
 		1002:'访客机简化版',
+		1003:'访客机大竖屏版',
+		1004:'人证机双屏版',
 	},
 
 	app类型:{
@@ -841,7 +879,8 @@ var app = new Vue({
 		6:'访客',
 		7:'充电',
 		8:'出租屋',
-		9:'足浴'
+		9:'足浴',
+		10:'安保',
 	},
 
 	软件版本:{
@@ -884,10 +923,13 @@ var app = new Vue({
 		10005:'金禧租赁',
 		10006:'Xhotel',
 		10007:'湛江公寓',
+		10008:'黑龙江旅业',
 		20000:'佛山曇京',
 		60001:'园区访客',
 		60002:'酒店访客',
 		60003:'重点单位来访系统',
+		60004:'大型展会活动系统',
+		70001:'内保智感安防',
 	},
 
 	状态: {
@@ -984,7 +1026,14 @@ var app = new Vue({
       3: '人证机标准版',
       4: '人证机简化版',
       5: '人证机PDA',
+      6: '人证机双屏版',
       10003: '人证机网吧标准版',
+    },
+
+    健康码开关: {
+      0: '禁用',
+      1: '国康码1.0',
+      2: '国康码2.0',
     },
 
     销售模式: {
